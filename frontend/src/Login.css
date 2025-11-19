@@ -1,0 +1,18 @@
+.Text {
+    text-align: center;
+}
+
+.BackButton {
+    padding: 7px 10px;
+    background-color: #a47af7;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 2px solid #664ce6;
+    margin: 2px;
+}
+
+.BackButton:hover {
+    transform: scale(1.05);
+}

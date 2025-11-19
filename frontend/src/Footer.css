@@ -1,0 +1,19 @@
+.Footer {
+    background-color: #8E94F2;
+    color: #272550ff;
+    height: auto;
+    padding: 10px 0;
+    text-align: left;
+    margin: 0px;
+    width: 100%;
+}
+
+;
+
+.TextBox div {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 5px 0 5px 20px;
+}
+
+;

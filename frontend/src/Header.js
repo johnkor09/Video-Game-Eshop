@@ -1,35 +1,22 @@
-export default function Header(){
+import './Header.css';
+import { useNavigate } from 'react-router-dom';
+export default function Header() {
+    let navigate = useNavigate();
     return (
-        <header style={headerStyle}>
-            <h1 style={TitleStyle}>Brasidas Store HD</h1>
-            <left>
-                <button style={buttonStyle}>Sing up</button>
-                <button style={buttonStyle}>Login</button>
-            </left>
+        <header className="Header">
+            <h1 className="Title">Brasidas Store HD</h1>
+            <div className="Header-Buttons">
+
+                <button
+                    className="Button"
+                    onClick={() => navigate('/signup')}
+                >Sing up</button>
+
+                <button className="Button"
+                    onClick={() => navigate('/login')}
+                >Login
+                </button>
+            </div>
         </header>
     );
 }
-
-const headerStyle = {
-    display: 'flex',    //eidikos antonis
-    justifyContent: 'space-between',
-    backgroundColor: '#346eeb', // blue alla eidiko blue
-    color: 'white',
-    padding: '5px',     //the height of header
-    textAlign: 'left',
-    margin: '0px',
-};
-
-const TitleStyle = {
-    fontSize: '25px',
-    margin: '5px',
-};
-
-const buttonStyle = {
-    padding: '7px 10px',      // button size
-    backgroundColor: 'white', // Button background
-    color: 'black',         // Button text color
-    cursor: 'pointer',        // Change cursor to pointer when hovering over button
-    borderRadius: '5px',      // Rounded corners for the button
-    margin: '2px',          //distance between buttons
-};

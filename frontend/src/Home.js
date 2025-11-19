@@ -1,13 +1,9 @@
-function Profile() {
-    return (
-        <button>cool</button>
-    );
-}
+import './Home.css'
 export default function Home() {
     return (
-        <center>
-            <h2>Test this</h2>
-            <Profile/>
-        </center>
+        <div className="Text">
+            <div>"You are at the home page ;)"</div>
+        </div>
+
     );
 }
