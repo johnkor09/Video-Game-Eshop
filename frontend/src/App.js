@@ -1,5 +1,6 @@
 import Home from './Home.js';
 import Header from './Header.js';
+import ItemTab from './ItemTab.js';
 import Footer from './Footer.js';
 import Login from './Login.js';
 import Signup from './SignUp.js';
@@ -12,6 +13,7 @@ function App() {
       <div className="App">
         <Header />
         <div className="Body">
+           <ItemTab/>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />

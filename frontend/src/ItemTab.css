@@ -1,0 +1,22 @@
+.ItemTabStyle {
+    display: flex;
+    background-Color: #7077dc;
+    color: white;
+    text-Align: left;
+    gap: 10px;
+    z-index: 1000;
+    margin-top: -50px
+}
+
+
+.CategoryStyle {
+    padding: 3px 10px;
+    cursor: pointer;
+    margin: 0px;
+}
+
+
+.BoxStyle {
+    position: absolute;
+    background-Color: #BBC4EB;
+}
