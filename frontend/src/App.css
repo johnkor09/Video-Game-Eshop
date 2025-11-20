@@ -1,12 +1,14 @@
 .Body {
   padding-top: 150px;
   flex-grow: 1;
-  min-height: 1500px;
-  min-height: 100vh;
+  background-image: url('../public/backround.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .App {
-  background-color: #d0cbffff;
+  background-color: rgb(242, 241, 252);
   min-height: 100vh;
   display: flex;
   flex-direction: column;

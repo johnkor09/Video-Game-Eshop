@@ -2,17 +2,99 @@
     text-align: center;
 }
 
-.BackButton {
+
+.loginPanel {
+    background-color: rgba(253, 210, 255, 0.349);
+    border-radius: 5px;
+    border: 2px solid rgba(246, 227, 247, 0.13);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    max-width: 450px;
+    max-height: 300px;
+    box-sizing: border-box;
+    align-content: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    margin-right: 20%;
+}
+
+.group label {
+
+    font-size: 16px;
+    margin-right: 10px;
+    width: 100px;
+    text-align: right;
+}
+
+.group input {
+    background-color: rgba(255, 255, 255, 0.295);
+    flex-grow: 1;
+    padding: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+
+.loginButton:hover {
+    transform: scale(1.05);
+}
+
+.Buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.loginButton {
     padding: 7px 10px;
-    background-color: #a47af7;
+    background-color: rgba(108, 32, 179, 0.479);
     color: rgb(255, 255, 255);
     font-weight: bold;
     cursor: pointer;
     border-radius: 5px;
-    border: 2px solid #664ce6;
+    border: 2px solid #dcb4f74b;
     margin: 2px;
 }
 
-.BackButton:hover {
+.cancelButton {
+    padding: 7px 10px;
+    background-color: rgba(108, 32, 179, 0.479);
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 2px solid #dcb4f74b;
+    margin: 2px;
+}
+
+.cancelButton:hover {
     transform: scale(1.05);
+}
+
+
+.noAccMsg {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    color: black;
+    opacity: 50%;
+}
+
+.LoginText {
+    color: azure;
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+    margin-bottom: 20px;
 }

@@ -1,7 +1,10 @@
 .Header {
     display: flex;
     justify-content: space-between;
-    background-color: #8E94F2;
+    background-image: url('../public/header_backround.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     color: white;
     padding: 50px;
     border-bottom: 4px solid #7077dc;
@@ -19,7 +22,7 @@
     font-size: 50px;
     margin: 0px;
     position: absolute;
-    left: 0%;
+    left: 2%;
     top: 5%;
 }
 
