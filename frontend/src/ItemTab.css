@@ -13,6 +13,21 @@
     padding: 3px 10px;
     cursor: pointer;
     margin: 0px;
+    position:relative;
+}
+
+.CategoryStyle2 {
+    padding: 3px 10px;
+    cursor: pointer;
+    margin: 0px;
+}
+
+.CategoryStyle2:hover{
+    border: 1px groove  black;
+}
+
+.CategoryStyle2:active{
+    transform: scale(1.05);
 }
 
 

@@ -1,7 +1,9 @@
 import './ItemTab.css';
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export default function ItemTab() {
+    const navigate= useNavigate();
     const [isHovered, setIsHovered] = useState(false);
     return (
         <div>
@@ -15,13 +17,23 @@ export default function ItemTab() {
             {isHovered && (
                 <div className="BoxStyle" onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}>
-                <u1>
-                    <h6 className="CategoryStyle">Nintendo Games</h6>
-                    <h6 className="CategoryStyle">Playstation Games</h6>
-                    <h6 className="CategoryStyle">Xbox Games</h6>
-                    <h6 className="CategoryStyle">Pc Games</h6>
-                    <h6 className="CategoryStyle">Giftcards</h6>
-                </u1>
+                <div>
+                    <div className="CategoryStyle2"
+                    onClick={() => navigate('/')}
+                    >Nintendo Games</div>
+                    <div className="CategoryStyle2"
+                    onClick={() => navigate('/')}
+                    >Playstation Games</div>
+                    <div className="CategoryStyle2"
+                    onClick={() => navigate('/')}
+                    >Xbox Games</div>
+                    <div className="CategoryStyle2"
+                    onClick={() => navigate('/')}
+                    >Pc Games</div>
+                    <div className="CategoryStyle2"
+                    onClick={() => navigate('/')}
+                    >Giftcards</div>
+                </div>
             </div>)}
         </div>
     );
