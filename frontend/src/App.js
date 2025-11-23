@@ -4,6 +4,7 @@ import ItemTab from './ItemTab.js';
 import Footer from './Footer.js';
 import Login from './Login.js';
 import Signup from './SignUp.js';
+import PageOfItem from './PageOfItem.js';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/PageOfItem" element={<PageOfItem />} />
           </Routes>
         </div>
         <Footer />

@@ -1,0 +1,20 @@
+{
+  "name": "video-game-eshop",
+  "version": "1.0.0",
+  "description": "Εργασία για το Πανεπιστημιο Δυτικής Αττικής . Ένα E-shop για video games με react, node.js, MySQL.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnkor09/Video-Game-Eshop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnkor09/Video-Game-Eshop/issues"
+  },
+  "homepage": "https://github.com/johnkor09/Video-Game-Eshop#readme"
+}
