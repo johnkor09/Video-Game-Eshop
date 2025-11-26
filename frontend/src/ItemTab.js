@@ -13,6 +13,7 @@ export default function ItemTab() {
                     className="CategoryStyle">Games</h4>
                 <h4 className="CategoryStyle">Accesories</h4>
                 <h4 className="CategoryStyle">Collectables</h4>
+                <input type="text" className="SerchBox" />
             </div>
             {isHovered && (
                 <div className="BoxStyle" onMouseEnter={() => setIsHovered(true)}
