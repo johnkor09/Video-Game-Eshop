@@ -1,6 +1,7 @@
 import './ItemTab.css';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { HiSearch } from "react-icons/hi";
 
 export default function ItemTab() {
     const navigate= useNavigate();
@@ -13,6 +14,7 @@ export default function ItemTab() {
                     className="CategoryStyle">Games</h4>
                 <h4 className="CategoryStyle">Accesories</h4>
                 <h4 className="CategoryStyle">Collectables</h4>
+                <HiSearch className="SearchButton" />
                 <input type="text" className="SerchBox" />
             </div>
             {isHovered && (

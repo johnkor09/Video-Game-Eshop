@@ -1,6 +1,7 @@
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingBasket } from "react-icons/fa";
+
 export default function Header() {
     let navigate = useNavigate();
     return (
