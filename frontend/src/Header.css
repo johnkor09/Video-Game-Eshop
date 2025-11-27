@@ -48,3 +48,19 @@
 .Button:hover {
     transform: scale(1.05);
 }
+
+.basket{
+    height: 25px;
+    width: 25px;
+    padding: 5px;
+    cursor: pointer;
+    color: #DAB6FC;
+    
+}
+
+.basket:hover{
+    transform: scale(1.5);
+   transition:  color  5s;
+    color: black;
+}
+

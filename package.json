@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/johnkor09/Video-Game-Eshop/issues"
   },
-  "homepage": "https://github.com/johnkor09/Video-Game-Eshop#readme"
+  "homepage": "https://github.com/johnkor09/Video-Game-Eshop#readme",
+  "dependencies": {
+    "react-icons": "^5.5.0"
+  }
 }
