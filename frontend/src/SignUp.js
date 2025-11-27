@@ -13,11 +13,11 @@ export default function SignUp() {
                 </div>
                 <div className='group'>
                     <label className="nameText">Name:</label>
-                    <input type="text" id="name" maxLength={30} />
+                    <input  id="name" maxLength={30} />
                 </div>
                 <div className='group'>
                     <label className="surnameText">Surname:</label>
-                    <input type="text" id="surnname" maxLength={30} />
+                    <input  id="surnname" maxLength={30} />
                 </div>
                 <div className='group'>
                     <label className="emailText">Email:</label>

@@ -1,6 +1,7 @@
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingBasket } from "react-icons/fa";
+import { CiLogin } from "react-icons/ci";
 
 export default function Header() {
     let navigate = useNavigate();
@@ -14,10 +15,8 @@ export default function Header() {
                     onClick={() => navigate('/signup')}
                 >Sing up</button>
 
-                <button className="Button"
-                    onClick={() => navigate('/login')}
-                >Login
-                </button>
+                <CiLogin  className="logginButton"
+                    onClick={() => navigate('/login')}/>
 
                <FaShoppingBasket className='basket'/>
             </div>

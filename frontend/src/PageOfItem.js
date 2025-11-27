@@ -1,5 +1,6 @@
 import "./PageOfItem.css"
 import { useNavigate } from "react-router-dom";
+import logo from "./IMGTODELETE/frierent.png"
 function PageOfItem()
 {
     const navigate = useNavigate();
@@ -8,7 +9,7 @@ function PageOfItem()
         <div className="PageOfItem">
             <div className="CentralPart">
             <div className="image">
-             <img src="C:\Users\antonio\OneDrive\Έγγραφα\GitHub\Video-Game-Eshop\frontend\src\IMGTODELETE\frierent.png" alt="placeholder einai cringe kai den fortonei h eikona deite to sto arxeio"></img>
+              <img src = {logo} alt="ERROR" />;
             </div>
              
               <div className="Description">

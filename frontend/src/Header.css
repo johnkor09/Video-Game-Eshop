@@ -36,17 +36,29 @@
 
 .Button {
     padding: 7px 10px;
-    background-color: #DAB6FC;
-    color: black;
+    background-color: #dab6fc00;
+    color: rgb(255, 255, 255);
     font-weight: bold;
     cursor: pointer;
-    border-radius: 5px;
-    border: 2px solid #BBADFF;
+    border: 0px;
+    margin: 2px;
+}
+
+.logginButton{
+    height: 25px;
+    width: 25px;
+    padding: 5px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    cursor: pointer;
     margin: 2px;
 }
 
 .Button:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
+}
+.logginButton:hover {
+    transform: scale(1.1);
 }
 
 .basket{
@@ -54,12 +66,12 @@
     width: 25px;
     padding: 5px;
     cursor: pointer;
-    color: #DAB6FC;
+    color: #ffffff;
     
 }
 
 .basket:hover{
-    transform: scale(1.5);
+    transform: scale(1.1);
    transition:  color  5s;
-    color: black;
+   color:#ffffff;
 }
