@@ -42,7 +42,8 @@ input[type=text] {
     padding: 0;
     height: 20px;
     outline: none;
-    right: 20px
+    right: 20px;
+    border:0px solid #dcb4f74b;
 }
 
 .SearchButton {

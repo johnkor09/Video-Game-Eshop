@@ -7,26 +7,27 @@ import Signup from './SignUp.js';
 import PageOfItem from './PageOfItem.js';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './AuthContext';
 
 function App() {
   return (
-    
-    <BrowserRouter>
-      <div className="App">
-        <Header />
-        <div className="Body">
-           <ItemTab/>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/PageOfItem" element={<PageOfItem />} />
-          </Routes>
+    <AuthProvider>
+      <BrowserRouter>
+        <div className="App">
+          <Header />
+          <div className="Body">
+            <ItemTab/>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/PageOfItem" element={<PageOfItem />} />
+            </Routes>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </BrowserRouter>
-    
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

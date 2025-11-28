@@ -75,3 +75,11 @@
    transition:  color  5s;
    color:#ffffff;
 }
+
+.WelcomeText{
+    height: 25px;
+    padding: 5px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    margin: 2px;
+}
