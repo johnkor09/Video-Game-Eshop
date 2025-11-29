@@ -1,0 +1,16 @@
+drop database if EXISTS eshop;
+CREATE database eshop;
+
+use eshop;
+CREATE table users(
+    user_id int not null AUTO_INCREMENT primary key,
+    password_ varchar(64) not null,
+    first_name varchar(30) not null,
+    surname varchar(30) not null,
+    email varchar(100) unique not null,
+    phone varchar(20) default null,
+    registration_date datetime default current_timestamp,
+    admin_status boolean default 0
+);
+
+INSERT INTO users (password_,first_name,surname,email,phone) VALUES('1234','John','Pork','johnpork@gmail.com','6912345678');

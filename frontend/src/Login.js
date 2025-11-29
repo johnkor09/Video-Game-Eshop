@@ -3,12 +3,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { VscEyeClosed, VscEye } from "react-icons/vsc";
 import { useState } from 'react';
+import { useAuth } from './AuthContext';
 
 export default function Login() {
-    let navigate = useNavigate();
-    const [showPassword, setShowPassword] = useState(false);
+    let navigate = useNavigate(); //αυτο ειναι για την αλλαγη σελιδας
+    const { login } = useAuth(); // Παιρνουμε τη συναρτηση login από το AuthContext
+    const [showPassword, setShowPassword] = useState(false); // αυτο ειναι για το κουμπι εμφανισης κωδικου
 
-    const [Data, setData] = useState({
+    const [Data, setData] = useState({ 
+        //αρχικοποιηση
         email: '',
         password: ''
     });
@@ -18,18 +21,24 @@ export default function Login() {
         setData({ ...Data, [e.target.id]: e.target.value });
     };
 
+    //οταν πατησουμε το login κουμπι τοτε αυτο εκτελειται!
     const handleLogin = async () => {
         setError('');
         try {
             const api_url = 'http://localhost:5000/api/login';
+            //εδω στελνουμε ενα request στο api δλδ στον backend server με τα δεδομενα δλδ email, password
             const response = await axios.post(api_url, Data);
+
+            //αν το succes ειναι true δλδ ειναι σωστα τα στοιχεια τοτε εκτελειται
+            //το data ειναι το json απο τον backend σερβερ
+
             if (response.data.success) {
-                localStorage.setItem('userToken', response.data.token);
-                alert(response.data.message);
-                navigate('/')
-                window.location.reload(false);
+                // Το response.data.token εiναι το JWT string
+                login(response.data.token); //την συναρτηση αυτη την παιρνουμε απο το AuthContext
+                //alert(response.data.message);
+                navigate('/'); 
             }
-        } catch (err) {
+        } catch (err) {//error handling
             if (err.response && err.response.data && err.response.data.message) {
                 setError(err.response.data.message);
             } else {
