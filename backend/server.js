@@ -64,6 +64,66 @@ app.post('/api/login', (req, res) => {
     });
 });
 
+app.post('/api/signup', (req, res) => {
+    //εδω τσεκαρει αν υπαρχει ο χρηστης με τα στοιχεια αυτα
+    const { name, surname, email, pass1} = req.body;
+    const sql1 = "SELECT * FROM users WHERE email = ?";
+    connection.query(sql1, [email], function (err, result) {
+        if (result.length > 0) {
+            return res.json({
+                success: false,
+                message: "Email already in use!"
+            });
+        }
+        if (err) {
+            //error handling
+            console.error(err);
+            return res.status(500).send('Database error.');
+        }
+        if (result.length === 0) {
+            const sql2 = "INSERT INTO users (password_,first_name,surname,email) VALUES(?,?,?,?)";
+            connection.query(sql2, [pass1, name, surname, email], function (signup_error, signup_result) {
+                if (signup_error) {
+                    console.error(signup_error);
+                    return res.status(500).send('Database error.');
+                }
+                const sql3 = "SELECT * FROM users WHERE email = ? AND password_ = ?";
+                connection.query(sql3, [email, pass1], function (err, result) {
+                    if (err) {
+                        //error handling
+                        console.error(err);
+                        return res.status(500).send('Database error.');
+                    }
+                    if (result.length > 0) {
+                        const user = result[0]; // Παιρνουμε τον πρωτο χρηστη
+                        const data = {
+                            id: user.user_id,
+                            email: user.email,
+                            role: user.admin_status
+                        };
+
+                        // υπογραφη του token, δλδ φτιαχνει ενα κρυπτογραφημενο token 
+                        // μεσα εχει το id και το email του χρηστη
+                        const token = jwt.sign(data, JWT_SECRET, { expiresIn: '2h' });
+
+                        return res.json({
+                            success: true,
+                            message: "Logged in successfully:)",
+                            token: token, // το κρυπτογραφημενο token
+                            user: data // στελνει και τα user data για ευκολια
+                        });
+                    } else {//αν δεν βρει χρηστη
+                        return res.status(401).json({
+                            success: false,
+                            message: "Sign-up error!!Don't panic o.O"
+                        });
+                    }
+                });
+            });
+        }
+    });
+});
+
 app.listen(port, () => {
     console.log('Server listening at http://localhost:' + port);
 });

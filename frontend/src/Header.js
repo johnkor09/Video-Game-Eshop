@@ -26,12 +26,6 @@ export default function Header() {
                     </>
                 ) : (
                     <>
-                        <button
-                            className="Button"
-                            onClick={() => navigate('/signup')}
-                        >
-                            Sign up
-                        </button>
                         <CiLogin
                             className="logginButton"
                             onClick={() => navigate('/login')}

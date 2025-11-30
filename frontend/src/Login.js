@@ -10,7 +10,7 @@ export default function Login() {
     const { login } = useAuth(); // Παιρνουμε τη συναρτηση login από το AuthContext
     const [showPassword, setShowPassword] = useState(false); // αυτο ειναι για το κουμπι εμφανισης κωδικου
 
-    const [Data, setData] = useState({ 
+    const [Data, setData] = useState({
         //αρχικοποιηση
         email: '',
         password: ''
@@ -36,7 +36,7 @@ export default function Login() {
                 // Το response.data.token εiναι το JWT string
                 login(response.data.token); //την συναρτηση αυτη την παιρνουμε απο το AuthContext
                 //alert(response.data.message);
-                navigate('/'); 
+                navigate('/');
             }
         } catch (err) {//error handling
             if (err.response && err.response.data && err.response.data.message) {
@@ -48,10 +48,6 @@ export default function Login() {
     };
 
     return (
-        <div>
-            <div className="Text">
-                <div>You are at the login page :O</div>
-            </div>
             <div className="loginPanel">
                 <div className='LoginText'>
                     <label>Login</label>
@@ -95,19 +91,12 @@ export default function Login() {
                 </div>
                 {error && <div style={{ color: 'red', textAlign: 'center', marginBottom: '10px' }}>{error}</div>}
 
-                <div className='Buttons'>
-                    <button className='loginButton'
-                        onClick={handleLogin}
-                    >Login</button>
-                    <button className='cancelButton'
-                        onClick={() => navigate('/')}
-                    >Cancel</button>
-                </div>
+                <button className='loginButton' onClick={handleLogin}>LOGIN</button>
+                <Link className= 'cancel'to={"/"}>Cancel</Link>
                 <div className='noAccMsg'>
                     <label >Don't have an account yet?</label>
                     <Link to={"/signup"}>Create a new Account</Link>
                 </div>
             </div>
-        </div>
     );
 }

@@ -1,26 +1,6 @@
-.Text {
-    text-align: center;
-}
-
-.BackButton {
-    padding: 7px 10px;
-    background-color: #a47af7;
-    color: rgb(255, 255, 255);
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 5px;
-    border: 2px solid #664ce6;
-    margin: 2px;
-}
-
-.BackButton:hover {
-    transform: scale(1.05);
-}
-
-
 
 .signupPanel {
-    background-color: rgba(253, 210, 255, 0.349);
+    background-color: rgb(255, 255, 255);
     border-radius: 5px;
     border: 2px solid rgba(246, 227, 247, 0.13);
     position: absolute;
@@ -30,15 +10,15 @@
     width: 90%;
     height: 90%;
     max-width: 450px;
-    max-height: 450px;
+    max-height: 500px;
     box-sizing: border-box;
+    display: flex;
     align-content: center;
     flex-direction: column;
     justify-content: center;
 }
 
 .group {
-    display: flex;
     align-items: center;
     margin-bottom: 15px;
     margin-right: 20%;
@@ -66,42 +46,38 @@
     transform: scale(1.05);
 }
 
-.Buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
 
 .signupButton {
-    padding: 7px 10px;
-    background-color: rgba(108, 32, 179, 0.479);
+    width: 70%;
+    align-self: center;
+    padding: 10px;
+    background-image: url('../public/backround.jpg');
     color: rgb(255, 255, 255);
     font-weight: bold;
     cursor: pointer;
-    border-radius: 5px;
-    border: 2px solid #dcb4f74b;
-    margin: 2px;
-}
-
-.cancelButton {
-    padding: 7px 10px;
-    background-color: rgba(108, 32, 179, 0.479);
-    color: rgb(255, 255, 255);
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 5px;
-    border: 2px solid #dcb4f74b;
-    margin: 2px;
-}
-
-.cancelButton:hover {
-    transform: scale(1.05);
+    border-radius: 10px;
+    border: 0px solid ;
+    margin: 5px;
 }
 
 .signupText {
-    color: azure;
+    color: rgb(0, 0, 0);
     text-align: center;
     font-weight: bold;
     font-size: 30px;
     margin-bottom: 20px;
+}
+
+.AlreadyGotAccMsg{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    color: black;
+    opacity: 50%;
+}
+
+.cancel{
+    opacity: 50%;
+    align-self: center;
+    text-decoration: none;
 }
