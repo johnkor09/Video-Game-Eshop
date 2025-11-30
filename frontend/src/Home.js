@@ -5,7 +5,7 @@ export default function Home() {
     return (
         <>
         <div className="Text">
-            <div>"You are at the home page ;)"</div>
+            You are at the home page ;)
         </div>
         
         <Itemtest/>      

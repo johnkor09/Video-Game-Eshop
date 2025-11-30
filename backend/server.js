@@ -41,6 +41,7 @@ app.post('/api/login', (req, res) => {
             const user = result[0]; // Παιρνουμε τον πρωτο χρηστη
             const data = {
                 id: user.user_id,
+                name: user.first_name,
                 email: user.email,
                 role: user.admin_status
             };
@@ -98,6 +99,7 @@ app.post('/api/signup', (req, res) => {
                         const user = result[0]; // Παιρνουμε τον πρωτο χρηστη
                         const data = {
                             id: user.user_id,
+                            name: user.first_name,
                             email: user.email,
                             role: user.admin_status
                         };

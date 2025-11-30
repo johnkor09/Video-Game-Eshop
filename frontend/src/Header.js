@@ -1,8 +1,9 @@
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingBasket } from "react-icons/fa";
-import { CiLogin } from "react-icons/ci";
-import { useAuth } from './AuthContext';
+import { CiLogin, CiLogout } from "react-icons/ci";
+import { GrUserAdmin } from "react-icons/gr";
+import { useAuth } from './Authentication/AuthContext';
 
 export default function Header() {
     let navigate = useNavigate();
@@ -13,26 +14,31 @@ export default function Header() {
             <div className="Header-Buttons">
                 {isLoggedIn ? (
                     <>
-                        <span className="WelcomeText">
-                            Welcome, {user?.email}
-                        </span>
+                        <div >
+                            {user.role ? (
+                                <>
+                                    <GrUserAdmin className='button'
+                                    onClick={() => navigate('/admin-panel')}
+                                        />
+                                </>) : (<></>)}
+                        </div>
 
-                        <button
-                            className="Button"
+                        <span className="WelcomeText">
+                            Welcome, {user?.name}
+                        </span>
+                        <CiLogout
+                            className="button"
                             onClick={logout}
-                        >
-                            Logout
-                        </button>
+                        />
                     </>
                 ) : (
                     <>
-                        <CiLogin
-                            className="logginButton"
+                        <CiLogin className="button"
                             onClick={() => navigate('/login')}
                         />
                     </>
                 )}
-                <FaShoppingBasket className='basket' onClick={() => navigate('/basket')} />
+                <FaShoppingBasket className='button' onClick={() => navigate('/basket')} />
             </div>
         </header>
     );

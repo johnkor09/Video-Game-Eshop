@@ -1,0 +1,17 @@
+.text {
+    text-align: center;
+}
+.backbutton{
+    text-align: center;
+    border-radius: 5px;
+    color: red;
+    height: 25px;
+    width: 50px;
+    padding: 5px;
+    cursor: pointer;
+    background-color: #000000;
+    margin: 2px;
+}
+.backbutton:hover{
+    transform: scale(1.1);
+}

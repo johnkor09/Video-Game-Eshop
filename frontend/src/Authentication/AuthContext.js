@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
                     } else {
                         // Το token ειναι σωστο
                         setToken(storedToken);
-                        setUser(decoded); // Το decoded περιέχει id, email, iat, exp
+                        setUser(decoded); // Το decoded περιέχει id,name, email, iat, exp
                     }
                 } catch (error) {
                     // Αν το token εχει προβλημα
