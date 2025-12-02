@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import GameItemPanel from './Items/GameItemPanel.js';
 import './Home.css'
 
@@ -35,24 +35,24 @@ export default function Home() {
         );
     }
 
-    if(error){
-        return(
+    if (error) {
+        return (
             <div className='home error'>
                 <div className='Text error'>Κατι πηγε στραβα με την φορτωση παιχνιδιων! Error:{error}</div>
             </div>
         );
     }
 
-    return(
+    return (
         <div className="home">
-            <h1 className="title">Video Games!</h1>
-            
+            <h1 className="title">All platforms</h1>
+
             {games.length === 0 ? (
-                 <div className="Text noGamesMessage">No games found :(</div>
+                <div className="Text noGamesMessage">No games found :(</div>
             ) : (
                 <div className="gamesGrid">
                     {games.map(game => (
-                        <GameItemPanel key={game.game_id} game={game} />
+                        <GameItemPanel game={game} key={game.game_id} />
                     ))}
                 </div>
             )}

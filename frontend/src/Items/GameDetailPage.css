@@ -71,15 +71,23 @@ box-sizing: border-box;
     border-radius: 5px;
 }
 
+.price{
+    font-size: 20px;
+}
+
 .Buttons{
-    flex-grow: 1;
     margin-left: 5%;
+    display: flex;
+    flex-direction: 0;
+    gap: 50px;
 }
 .cartButton{
+    align-items: center;
+    font-size: 20px;
     font-weight: bold;
     cursor: pointer;
     border-radius: 5px;
-    padding: 10px 60px;
+    padding: 5px 50px;
     color: aliceblue;
     background: #ff69a7;
 background: linear-gradient(145deg, rgba(255, 105, 167, 1) 0%, rgba(48, 145, 255, 1) 100%);

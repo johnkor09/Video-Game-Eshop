@@ -78,10 +78,11 @@ const GameDetailPage = () => {
                     <p><strong>Publisher:</strong> {game.publisher || 'N/A'}</p>
                     <p><strong>Genres:</strong> {game.genres || 'N/A'}</p>
                     <p><strong>Release Date:</strong> {game.release_date ? new Date(game.release_date).toLocaleDateString('el-GR') : 'N/A'}</p>
-                    <p className="price"><strong>Price:</strong> €{game.price.toFixed(2)}</p>
                     <p><strong>Stock:</strong> {game.stock_quantity > 0 ? game.stock_quantity + ' in stock' : 'Out of Stock'}</p>
                 </div>
+                
                     <div className='Buttons'>
+                        <p className="price"><strong>Price:</strong> €{game.price.toFixed(2)}</p>
                         <button className='cartButton' onClick={()=> navigate('/')}><FaShoppingBasket/> Add to cart</button>
                     </div>    
                     <div className='description'>

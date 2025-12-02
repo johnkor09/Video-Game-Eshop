@@ -1,10 +1,11 @@
 .game-panel-container {
     border-radius: 2%;
-    background-color: aliceblue;
+    background-color: rgb(255, 255, 255);
     border: 2px solid rgba(255, 255, 255, 0.5);
-    padding: 0px;
+    padding: 10px;
     margin: 10px;
     width: 250px;
+    cursor: pointer;
 }
 
 .game-panel-link{
@@ -24,6 +25,7 @@
 }
 
 .game-panel-title{
+    color: rgb(0, 0, 0);
     font-size: 1.2em;
     margin: 0 0 5px 0;
 }
@@ -35,5 +37,5 @@
 
 .game-panel-platform{
     font-size: 0.8em;
-    color: grey;
+    color: gray;
 }

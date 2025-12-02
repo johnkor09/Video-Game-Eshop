@@ -12,7 +12,9 @@ export default function Header() {
     return (
         <>
         <header className="Header">
-            <h1 className="Title">Brasidas Store HD</h1>
+            <h1 className="Title"
+                onClick={() => navigate('/')}
+            >Brasidas Store HD</h1>
             <div className="Header-Buttons">
                 {isLoggedIn ? (
                     <>
