@@ -13,4 +13,30 @@ CREATE table users(
     admin_status boolean default 0
 );
 
+INSERT INTO users (password_,first_name,surname,email,admin_status) VALUES('admin','BestAdminEver','Goku','admin@gmail.com','1');
 INSERT INTO users (password_,first_name,surname,email,phone) VALUES('1234','John','Pork','johnpork@gmail.com','6912345678');
+
+CREATE table video_games (
+    game_id int not null AUTO_INCREMENT primary key,
+    title varchar(100) not null,
+    price decimal(10, 2) not null,
+    stock_quantity int default 0,
+    release_date date,
+    developer varchar(50),
+    publisher varchar(50),
+    genres varchar(100),
+    platform varchar(50) not null,
+    description_ text,
+    cover_image_url varchar(255),
+    is_active boolean default 1,
+    date_added datetime default current_timestamp
+);
+
+insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('Donkey Kong Bananza'
+, 79.89, 100, '2025-07-17', 'Nintendo EPD', 'Nintendo', 'Platform,action-adventure', 'Nintendo Switch 2',
+'A ground-breaking adventure starring Donkey Kong.
+The big guy is back. Donkey Kong swings onto the Nintendo Switch 2 system with a brand-new action adventure.
+Help Donkey Kong make his way through the depths of the Underground World; the deeper he goes, the more amazing places he finds.
+There\'s no shortage of things DK can pulverize with his powerful punches. Let loose in this truly destructive adventure and help DK get his bananas back.
+Donkey Kong Bananza —only on Nintendo Switch 2.',
+'Donkey-Kong-Bananza-Physical.jpg');

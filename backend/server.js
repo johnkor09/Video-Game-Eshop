@@ -67,7 +67,7 @@ app.post('/api/login', (req, res) => {
 
 app.post('/api/signup', (req, res) => {
     //εδω τσεκαρει αν υπαρχει ο χρηστης με τα στοιχεια αυτα
-    const { name, surname, email, pass1} = req.body;
+    const { name, surname, email, pass1 } = req.body;
     const sql1 = "SELECT * FROM users WHERE email = ?";
     connection.query(sql1, [email], function (err, result) {
         if (result.length > 0) {
@@ -123,6 +123,26 @@ app.post('/api/signup', (req, res) => {
                 });
             });
         }
+    });
+});
+
+app.get('/api/games', (req, res) => {
+    const sql = 'SELECT game_id, title, price, platform, cover_image_url FROM video_games WHERE is_active = 1';
+    connection.query(sql, (err, results) => {
+        if (err) throw err;
+        res.json(results);
+    });
+});
+
+app.get('/api/games/:platform/:gameId', (req, res) => {
+    const { platform, gameId } = req.params;
+    const sql = 'SELECT * FROM video_games WHERE game_id = ? AND platform = ? AND is_active = 1';
+    connection.query(sql, [gameId, platform], (err, results) => {
+        if (err) throw err;
+        if (results.length == 0) {
+            return res.status(404).json({ message: 'Game not found.' });
+        }
+        res.json(results[0]);
     });
 });
 

@@ -4,7 +4,6 @@ import { jwtDecode } from "jwt-decode";
      */
 
 const AuthContext = createContext(null);
-
 export const useAuth = () => {
     return useContext(AuthContext);
 };
@@ -64,7 +63,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
+    const logout = (navigate) => {
         localStorage.removeItem('userToken');
         setToken(null);
         setUser(null);

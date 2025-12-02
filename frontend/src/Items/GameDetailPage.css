@@ -1,0 +1,90 @@
+.detailsPage {
+    background-color: aliceblue;
+    padding: 20px;
+    min-height: calc(100vh - 140px);
+}
+
+.gameTitle {
+    padding: 10px;
+    text-align: center;
+    font-size: 30px;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+/*https://unused-css.com/tools/border-gradient-generator ειναι για το border gradient.*/
+.coverImage {
+    flex-shrink: 0;
+    
+    background: radial-gradient(circle at 100% 100%, #ffffff 0, #ffffff 5px, transparent 5px) 0% 0%/10px 10px no-repeat,
+            radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 5px, transparent 5px) 100% 0%/10px 10px no-repeat,
+            radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 5px, transparent 5px) 0% 100%/10px 10px no-repeat,
+            radial-gradient(circle at 0 0, #ffffff 0, #ffffff 5px, transparent 5px) 100% 100%/10px 10px no-repeat,
+            linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 10px) calc(100% - 20px) no-repeat,
+            linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 20px) calc(100% - 10px) no-repeat,
+            linear-gradient(120deg, rgba(255,105,167,1) 0%, rgba(48,145,255,1) 100%);
+border-radius: 5px;
+padding: 9px;
+box-sizing: border-box;
+    display: flex;
+    max-height: 400px;
+    width: 400px;
+    object-fit: cover;
+    justify-self: center;
+}
+
+.info {
+    flex-grow: 1;
+    margin-left: 5%;
+    background-color: aliceblue;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.description {
+    text-align: center;
+    background-color: rgb(226, 243, 255);
+    padding: 10px;
+    border-radius: 10px;
+}
+.descriptionText{
+    padding: 10px;
+    font-size: 20px;
+    background-color: white;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    text-align: start;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.descriptionInfo {
+    padding: 10px;
+    background-color: white;
+    justify-self: center;
+    text-align:start;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+.Buttons{
+    flex-grow: 1;
+    margin-left: 5%;
+}
+.cartButton{
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 10px 60px;
+    color: aliceblue;
+    background: #ff69a7;
+background: linear-gradient(145deg, rgba(255, 105, 167, 1) 0%, rgba(48, 145, 255, 1) 100%);
+}
+
+.cartButton:hover{
+    transform: scale(1.05);
+}

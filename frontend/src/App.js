@@ -4,32 +4,35 @@ import ItemTab from './ItemTab.js';
 import Footer from './Footer.js';
 import Login from './Authentication/Login.js';
 import Signup from './Authentication/SignUp.js';
-import PageOfItem from './PageOfItem.js';
 import AdminPanel from './AdminPanel';
+import GameDetailPage from './Items/GameDetailPage';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './Authentication/AuthContext';
+import { useAuth } from './Authentication/AuthContext';
 
 function App() {
+  const { user } = useAuth();
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <div className="App">
-          <Header />
-          <div className="Body">
-            <ItemTab/>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/PageOfItem" element={<PageOfItem />} />
-              <Route path="/admin-panel" element={<AdminPanel/>}/>
-            </Routes>
-          </div>
-          <Footer />
+
+    <BrowserRouter>
+      <div className="App">
+        <Header />
+        <ItemTab/>
+        <div className="Body">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/Item/:platform/:gameId" element={<GameDetailPage />} />
+            <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+            {user && user.role ? (<>
+              <Route path="/admin-panel" element={<AdminPanel />} />
+            </>) : (null)}
+          </Routes>
         </div>
-      </BrowserRouter>
-    </AuthProvider>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 

@@ -1,3 +1,13 @@
+.itemTab{
+    position: fixed;
+    top: 120px;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background-color: #333; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
 .ItemTabStyle {
     display: flex;
     background-Color: #7077dc;
@@ -5,12 +15,12 @@
     text-Align: left;
     gap: 10px;
     z-index:1000;
-    padding: 0;
 }
 
 
 .CategoryStyle {
-    padding: 3px 10px;
+    height: 100%;
+    padding: 10px 10px;
     cursor: pointer;
     margin: 0px;
     position:relative;
@@ -38,21 +48,18 @@
 }
 
 input[type=text] {
-    align-self: center;
-    position: absolute;
+    align-self:center;
+    position: relative;
     margin: 0;
-    padding: 2px 0px;
-    height: 20px;
+    padding: 5px 30px;
     outline: none;
-    right: 20px;
     border:0px solid #dcb4f74b;
 }
 
 .SearchButton {
-    position: absolute;
+    position: relative;
     align-self: center;
     cursor: pointer;
-    right: 190px;
     height: 20px;
     width: 20px;
     padding: 2px;
@@ -61,4 +68,12 @@ input[type=text] {
 .SearchButton:hover {
     color: black;
     transform: scale(1.1);
+}
+
+.searchBar{
+    position: relative;
+    padding: 5px 40px;
+    display: flex;
+    align-items: center;
+    width: 80%;
 }

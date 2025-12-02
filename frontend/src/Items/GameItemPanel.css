@@ -1,0 +1,39 @@
+.game-panel-container {
+    border-radius: 2%;
+    background-color: aliceblue;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    padding: 0px;
+    margin: 10px;
+    width: 250px;
+}
+
+.game-panel-link{
+    text-decoration: none;
+    color: inherit;
+}
+
+.game-panel-image{
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.game-panel-info{
+    text-decoration: none;
+    color: inherit;
+}
+
+.game-panel-title{
+    font-size: 1.2em;
+    margin: 0 0 5px 0;
+}
+
+.game-panel-price{
+    color: green;
+    font-weight: bold;
+}
+
+.game-panel-platform{
+    font-size: 0.8em;
+    color: grey;
+}

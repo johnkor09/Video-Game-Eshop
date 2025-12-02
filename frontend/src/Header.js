@@ -5,10 +5,12 @@ import { CiLogin, CiLogout } from "react-icons/ci";
 import { GrUserAdmin } from "react-icons/gr";
 import { useAuth } from './Authentication/AuthContext';
 
+
 export default function Header() {
     let navigate = useNavigate();
     const { isLoggedIn, user, logout } = useAuth();
     return (
+        <>
         <header className="Header">
             <h1 className="Title">Brasidas Store HD</h1>
             <div className="Header-Buttons">
@@ -27,8 +29,7 @@ export default function Header() {
                             Welcome, {user?.name}
                         </span>
                         <CiLogout
-                            className="button"
-                            onClick={logout}
+                            className="button" onClick={() => {logout(); navigate('/');} }
                         />
                     </>
                 ) : (
@@ -40,6 +41,9 @@ export default function Header() {
                 )}
                 <FaShoppingBasket className='button' onClick={() => navigate('/basket')} />
             </div>
+            
         </header>
+        
+        </>
     );
 }

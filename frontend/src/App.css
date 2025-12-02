@@ -1,5 +1,7 @@
 .Body {
-  padding-top: 120px;
+  overflow-y:auto;
+  padding-top: 140px;
+  padding-bottom: 0;
   flex-grow: 1;
   background-image: url('../public/backround.jpg');
   background-size: cover;
