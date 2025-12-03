@@ -39,13 +39,13 @@ The big guy is back. Donkey Kong swings onto the Nintendo Switch 2 system with a
 Help Donkey Kong make his way through the depths of the Underground World; the deeper he goes, the more amazing places he finds.
 There\'s no shortage of things DK can pulverize with his powerful punches. Let loose in this truly destructive adventure and help DK get his bananas back.
 Donkey Kong Bananza —only on Nintendo Switch 2.',
-'Donkey-Kong-Bananza-Physical.jpg');
+'Donkey-Kong-Bananza-Physical.webp');
 
 insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('Marvel\'s Spider-Man 2 Standard Edition'
 , 79.90, 100, '2025-10-20', 'Insomniac Games', 'Sony Interactive Entertainment', 'Action-adventure', 'Playstation 5',
 'Spider-Men, Peter Parker and Miles Morales, return for an exciting new adventure in the critically acclaimed Marvel’s Spider-Man franchise for PS5.
 Swing, jump and utilise the new Web Wings to travel across Marvel’s New York, quickly switching between Peter Parker and Miles Morales to experience different stories and epic new powers, as the iconic villain Venom threatens to destroy their lives, their city and the ones they love.',
-'Marvel-Spiderman-2-ps5.jpg');
+'Marvel-Spiderman-2-ps5.webp');
 
 insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('Street Fighter 6'
 , 49.99, 100, '2023-6-02', 'CAPCOM', 'CAPCOM', 'Fighting', 'Xbox Series',
@@ -53,4 +53,4 @@ insert into video_games (title, price, stock_quantity, release_date, developer, 
 Powered by Capcom\'s proprietary RE ENGINE, the Street Fighter 6 experience spans across three distinct game modes - Fighting Ground, World Tour and Battle Hub.
 Your path to becoming a World Warrior starts here.
 Your moment. Your fight.',
-'Street-Fighter-6-xbox.jpg');
+'Street-Fighter-6-xbox.webp');
