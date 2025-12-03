@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom';
 import './GameItemPanel.css';
 
 const GameItemPanel = ({ game }) => {
-    const detailUrl = '/Item/'+game.platform+'/'+game.game_id;
+    const detailUrl = '/Games/'+game.platform+'/'+game.game_id;
 
     return (
         <div className="game-panel-container">

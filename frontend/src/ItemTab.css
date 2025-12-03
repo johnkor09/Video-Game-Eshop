@@ -72,8 +72,10 @@ input[type=text] {
 
 .searchBar{
     position: relative;
-    padding: 5px 40px;
     display: flex;
     align-items: center;
-    width: 80%;
+}
+
+.SerchBox{
+    padding: 5px 100px;
 }

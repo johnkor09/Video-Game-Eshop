@@ -1,4 +1,5 @@
-import Home from './Home.js';
+import HomePage from './HomePage.js';
+import Games from './Games.js';
 import Header from './Header.js';
 import ItemTab from './ItemTab.js';
 import Footer from './Footer.js';
@@ -20,10 +21,11 @@ function App() {
         <ItemTab/>
         <div className="Body">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/Games" element={<Games />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/Item/:platform/:gameId" element={<GameDetailPage />} />
+            <Route path="/Games/:platform/:gameId" element={<GameDetailPage />} />
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
             {user && user.role ? (<>
               <Route path="/admin-panel" element={<AdminPanel />} />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import GameItemPanel from './Items/GameItemPanel.js';
-import './Home.css'
+import './Games.css'
 
 export default function Home() {
     const [games, setGames] = useState([]);
@@ -56,6 +56,49 @@ export default function Home() {
                     ))}
                 </div>
             )}
+
+            <div className='Platform'>
+                <h1 className='title-Nintendo'>Nintendo Switch 2</h1>
+
+                {games.length === 0 ? (
+                    <div className="Text noGamesMessage">No games found :(</div>
+                ) : (
+                    <div className="gamesGrid">
+                        {games.filter(game => game.platform === "Nintendo Switch 2").map(game => (
+                                <GameItemPanel game={game} key={game.game_id} />
+                            ))}
+                    </div>
+                )}
+            </div>
+
+            
+            <div className='Platform'>
+                <h1 className='title-Playstation5'>Playstation 5</h1>
+
+                {games.length === 0 ? (
+                    <div className="Text noGamesMessage">No games found :(</div>
+                ) : (
+                    <div className="gamesGrid">
+                        {games.filter(game => game.platform === "Playstation 5").map(game => (
+                                <GameItemPanel game={game} key={game.game_id} />
+                            ))}
+                    </div>
+                )}
+            </div>
+
+            <div className='Platform'>
+                <h1 className='title-XboxSeries'>Xbox Series</h1>
+
+                {games.length === 0 ? (
+                    <div className="Text noGamesMessage">No games found :(</div>
+                ) : (
+                    <div className="gamesGrid">
+                        {games.filter(game => game.platform === "Xbox Series").map(game => (
+                                <GameItemPanel game={game} key={game.game_id} />
+                            ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

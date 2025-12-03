@@ -11,7 +11,9 @@ export default function ItemTab() {
             <div className="ItemTabStyle">
                 <h4 onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => { setIsHovered(false) }}
-                    className="CategoryStyle">Games</h4>
+                    className="CategoryStyle"
+                    onClick={() => navigate('/Games')}
+                    >Games</h4>
                 <h4 className="CategoryStyle">Accesories</h4>
                 <h4 className="CategoryStyle">Collectables</h4>
                 <div className='searchBar'>
