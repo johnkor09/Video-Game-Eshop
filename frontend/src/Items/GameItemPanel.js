@@ -15,7 +15,7 @@ const GameItemPanel = ({ game }) => {
                 />
                 <div className="game-panel-info">
                     <h3 className="game-panel-title">{game.title}</h3>
-                    <p className="game-panel-price">€{game.price ? game.price.toFixed(2) : 'N/A'}</p>
+                    <p className="game-panel-price">€{game.price ? game.price : 'N/A'}</p>
                     <p className="game-panel-platform">Platform: {game.platform}</p>
                 </div>
             </Link>

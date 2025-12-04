@@ -26,7 +26,7 @@ export default function ItemTab() {
                     onMouseLeave={() => setIsHovered(false)}>
                     <div>
                         <div className="CategoryStyle2"
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/Games/Nintendo')}
                         >Nintendo Games</div>
                         <div className="CategoryStyle2"
                             onClick={() => navigate('/')}

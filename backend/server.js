@@ -2,52 +2,39 @@ let express = require('express');
 let cors = require('cors');
 let app = express();
 let port = 5000;
-let mysql = require('mysql');
+const { sequelize } = require('./config/db');
+const UserModelDefinition = require('./models/User');
+const UserModel = UserModelDefinition(sequelize);
+const GameModelDefinition = require('./models/Game');
+const GameModel = GameModelDefinition(sequelize);
 const jwt = require('jsonwebtoken');
 require('dotenv').config(); // Για να διαβάζει το .env
 
 // αυτο ειναι το μυστικο κλειδι κρυπτογραφησης jwt και καποια στιγμη πρεπει να το βαλουμε σε .env αρχειο
 const JWT_SECRET = process.env.JWT_SECRET || 'so_long_gay_bowesr_67';
 
-let connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-    database: "eshop",
-    user: "root",
-    password: ""
-});
-//εδω κανω connect με mysql server δλδ πρωτη χειραψια και μενει ανοικτη η συνδεση μεχρι να την κλεισουμε
-connection.connect(function (err) {
-    if (err) {
-        console.log("error occurred while connecting");
-    } else {
-        console.log("connection created with mysql successfully");
-    }
-});
 app.use(cors());
 app.use(express.json());
 
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
     //εδω τσεκαρει αν υπαρχει ο χρηστης με τα στοιχεια αυτα
     const { email, password } = req.body;
-    const sql = "SELECT * FROM users WHERE email = ? AND password_ = ?";
-    connection.query(sql, [email, password], function (err, result) {
-        if (err) {
-            //error handling
-            console.error(err);
-            return res.status(500).send('Database error.');
-        }
-        if (result.length > 0) {
-            const user = result[0]; // Παιρνουμε τον πρωτο χρηστη
+    try {
+        const user = await UserModel.findOne({
+            where: {
+                email: email,
+                password_: password
+            },
+            attributes: ['user_id', 'first_name', 'email', 'admin_status']
+        });
+
+        if (user) {
             const data = {
                 id: user.user_id,
                 name: user.first_name,
                 email: user.email,
                 role: user.admin_status
             };
-
-            // υπογραφη του token, δλδ φτιαχνει ενα κρυπτογραφημενο token 
-            // μεσα εχει το id και το email του χρηστη
             const token = jwt.sign(data, JWT_SECRET, { expiresIn: '2h' });
 
             return res.json({
@@ -62,88 +49,105 @@ app.post('/api/login', (req, res) => {
                 message: "Wrong email or password."
             });
         }
-    });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Database error');
+    }
 });
 
-app.post('/api/signup', (req, res) => {
+app.post('/api/signup', async (req, res) => {
     //εδω τσεκαρει αν υπαρχει ο χρηστης με τα στοιχεια αυτα
     const { name, surname, email, pass1 } = req.body;
-    const sql1 = "SELECT * FROM users WHERE email = ?";
-    connection.query(sql1, [email], function (err, result) {
-        if (result.length > 0) {
+    try {
+        const existingUser = await UserModel.findOne({ where: { email: email } });
+
+        if (existingUser) {
             return res.json({
                 success: false,
                 message: "Email already in use!"
             });
         }
-        if (err) {
-            //error handling
-            console.error(err);
-            return res.status(500).send('Database error.');
-        }
-        if (result.length === 0) {
-            const sql2 = "INSERT INTO users (password_,first_name,surname,email) VALUES(?,?,?,?)";
-            connection.query(sql2, [pass1, name, surname, email], function (signup_error, signup_result) {
-                if (signup_error) {
-                    console.error(signup_error);
-                    return res.status(500).send('Database error.');
-                }
-                const sql3 = "SELECT * FROM users WHERE email = ? AND password_ = ?";
-                connection.query(sql3, [email, pass1], function (err, result) {
-                    if (err) {
-                        //error handling
-                        console.error(err);
-                        return res.status(500).send('Database error.');
-                    }
-                    if (result.length > 0) {
-                        const user = result[0]; // Παιρνουμε τον πρωτο χρηστη
-                        const data = {
-                            id: user.user_id,
-                            name: user.first_name,
-                            email: user.email,
-                            role: user.admin_status
-                        };
 
-                        // υπογραφη του token, δλδ φτιαχνει ενα κρυπτογραφημενο token 
-                        // μεσα εχει το id και το email του χρηστη
-                        const token = jwt.sign(data, JWT_SECRET, { expiresIn: '2h' });
+        const newUser = await UserModel.create({
+            password_: pass1,
+            first_name: name,
+            surname: surname,
+            email: email,
+            admin_status: 0
+        });
 
-                        return res.json({
-                            success: true,
-                            message: "Logged in successfully:)",
-                            token: token, // το κρυπτογραφημενο token
-                            user: data // στελνει και τα user data για ευκολια
-                        });
-                    } else {//αν δεν βρει χρηστη
-                        return res.status(401).json({
-                            success: false,
-                            message: "Sign-up error!!Don't panic o.O"
-                        });
-                    }
-                });
-            });
-        }
-    });
+        const data = {
+            id: newUser.user_id,
+            name: newUser.name,
+            email: newUser.email,
+            role: newUser.admin_status
+        };
+
+        const token = jwt.sign(data, JWT_SECRET, { expiresIn: '2h' });
+
+        return res.json({
+            success: true,
+            message: "Logged in successfully :)",
+            token: token,
+            user: data
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Database error.');
+    }
+
 });
 
-app.get('/api/games', (req, res) => {
-    const sql = 'SELECT game_id, title, price, platform, cover_image_url FROM video_games WHERE is_active = 1';
-    connection.query(sql, (err, results) => {
-        if (err) throw err;
-        res.json(results);
-    });
+app.get('/api/games', async (req, res) => {
+    try {
+        const games = await GameModel.findAll({
+            where: {
+                is_active: 1
+            },
+            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
+        });
+        res.json(games)
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Database error.');
+    }
 });
 
-app.get('/api/games/:platform/:gameId', (req, res) => {
+app.get('/api/games/nintendo', async (req, res) => {
+    try {
+        const games = await GameModel.findAll({
+            where: {
+                is_active: 1,
+                platform: 'Nintendo Switch 2'
+            },
+            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
+        });
+        res.json(games)
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Database error.');
+    }
+});
+
+app.get('/api/games/:platform/:gameId', async (req, res) => {
     const { platform, gameId } = req.params;
-    const sql = 'SELECT * FROM video_games WHERE game_id = ? AND platform = ? AND is_active = 1';
-    connection.query(sql, [gameId, platform], (err, results) => {
-        if (err) throw err;
-        if (results.length == 0) {
+    try {
+        const game = await GameModel.findOne({
+            where: {
+                platform: platform,
+                game_id: gameId
+            },
+            attributes: ['game_id', 'title', 'price', 'stock_quantity', 'release_date'
+                , 'developer', 'publisher', 'genres', 'platform', 'description_', 'cover_image_url', 'is_active']
+        });
+        if (!game) {
             return res.status(404).json({ message: 'Game not found.' });
         }
-        res.json(results[0]);
-    });
+        res.json(game);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Database error.');
+    }
 });
 
 app.listen(port, () => {

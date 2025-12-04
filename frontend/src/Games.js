@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import GameItemPanel from './Items/GameItemPanel.js';
 import './Games.css'
 
@@ -10,13 +11,8 @@ export default function Home() {
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await fetch('/api/games');
-
-                if (!response.ok) {
-                    throw new Error('HTTP error! Status: ' + response.status + '. Failed to get games data.');
-                }
-                const data = await response.json();
-                setGames(data);
+                const response = await axios.get('/api/games');
+                setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);
                 setError("Προβλημα με τον server!");

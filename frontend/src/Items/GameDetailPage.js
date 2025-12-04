@@ -82,7 +82,7 @@ const GameDetailPage = () => {
                 </div>
                 
                     <div className='Buttons'>
-                        <p className="price"><strong>Price:</strong> €{game.price.toFixed(2)}</p>
+                        <p className="price"><strong>Price:</strong> €{game.price}</p>
                         <button className='cartButton' onClick={()=> navigate('/')}><FaShoppingBasket/> Add to cart</button>
                     </div>    
                     <div className='description'>
