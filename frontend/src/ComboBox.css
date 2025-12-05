@@ -1,0 +1,18 @@
+.ComboBox {
+    position: fixed;
+    top: 239px;
+    left: 10px;
+    width: 100%;
+}
+
+.ComboBoxStyle {
+    display: flex;
+    background-Color: #e6e3e8;
+    border-block: 3.5px;
+    border-style: solid;
+    border-color: #7077dc;
+    color: black;
+    text-Align: left;
+    gap: 10px;
+    z-index: 1000;
+}

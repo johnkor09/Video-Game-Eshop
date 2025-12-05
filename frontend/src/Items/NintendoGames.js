@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import GameItemPanel from './GameItemPanel.js';
+import ComboBox from '../ComboBox.js';
 import './NintendoGames.css'
 
 export default function NintendoGames() {
@@ -43,6 +44,7 @@ export default function NintendoGames() {
         <div className="home">
             <div className='Platform'>
                 <h1 className='title-Nintendo-NintendoGames'>Nintendo Switch 2</h1>
+                <ComboBox/>
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (

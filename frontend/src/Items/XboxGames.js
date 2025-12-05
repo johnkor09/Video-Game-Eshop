@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import GameItemPanel from './GameItemPanel.js';
 import './XboxGames.css'
-
+import ComboBox from '../ComboBox.js';
 export default function XboxGames() {
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -43,7 +43,7 @@ export default function XboxGames() {
         <div className="home">
             <div className='Platform'>
                 <h1 className='title-Xbox-XboxGames'>Xbox Series</h1>
-
+                <ComboBox/>
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (
