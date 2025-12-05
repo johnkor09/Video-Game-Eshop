@@ -35,7 +35,7 @@ export default function SignUp() {
         {setError('Password must contain 8 characters, at least one letter, one number and one @$!%*#!');}
         else {
             try {
-                const api_url = 'http://localhost:5000/api/signup';
+                const api_url = 'http://localhost:4000/api/signup';
                 //εδω στελνουμε ενα request στο api δλδ στον backend server με τα δεδομενα
                 const response = await axios.post(api_url, Data);
                 //αν το succes ειναι true δλδ ειναι σωστα τα στοιχεια τοτε εκτελειται

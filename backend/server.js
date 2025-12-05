@@ -1,13 +1,14 @@
 let express = require('express');
 let cors = require('cors');
 let app = express();
-let port = 5000;
+let port = 4000;
 const { sequelize } = require('./config/db');
 const UserModelDefinition = require('./models/User');
 const UserModel = UserModelDefinition(sequelize);
 const GameModelDefinition = require('./models/Game');
 const GameModel = GameModelDefinition(sequelize);
 const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
 require('dotenv').config(); // Για να διαβάζει το .env
 
 // αυτο ειναι το μυστικο κλειδι κρυπτογραφησης jwt και καποια στιγμη πρεπει να το βαλουμε σε .env αρχειο
@@ -119,7 +120,7 @@ app.get('/api/games/nintendo', async (req, res) => {
         const games = await GameModel.findAll({
             where: {
                 is_active: 1,
-                platform: 'Nintendo Switch 2'
+                platform: { [Op.in]: ['Nintendo Switch 2', 'Nintendo Switch'] }
             },
             attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
         });
@@ -135,7 +136,7 @@ app.get('/api/games/playstation', async (req, res) => {
         const games = await GameModel.findAll({
             where: {
                 is_active: 1,
-                platform: 'Playstation 5'
+                platform: { [Op.in]: ['Playstation 5','Playstation 4'] }
             },
             attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
         });

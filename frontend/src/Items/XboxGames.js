@@ -11,7 +11,7 @@ export default function XboxGames() {
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/games/xbox');
+                const response = await axios.get('http://localhost:4000/api/games/xbox');
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);

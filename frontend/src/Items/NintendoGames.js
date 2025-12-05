@@ -11,7 +11,7 @@ export default function NintendoGames() {
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/games/nintendo');
+                const response = await axios.get('http://localhost:4000/api/games/nintendo');
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);
@@ -43,7 +43,6 @@ export default function NintendoGames() {
         <div className="home">
             <div className='Platform'>
                 <h1 className='title-Nintendo-NintendoGames'>Nintendo Switch 2</h1>
-
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (

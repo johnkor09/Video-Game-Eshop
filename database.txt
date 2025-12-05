@@ -74,3 +74,14 @@ Sparking Boost Pack: An in-game boost pack that includes Zeni, additional charac
 Bonus Arenas: Two exclusive battle arenas inspired by iconic locations in Dragon Ball Z, available only in the Collector’s Edition.
 ',
 'PC-DRAGON-BALL-SPARKING-ZERO-COLLECTOR.webp');
+
+insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('Metroid Prime 4 Beyond - Nintendo Switch'
+, 55.9, 10, '2025-12-4', 'Retro Studios', 'Nintendo', 'FPS,Action-adventure', 'Nintendo Switch',
+'A world unknown. A mind unleashed.
+
+Samus Aran, the galaxy’s greatest bounty hunter, must explore the mysterious planet of Viewros, wielding new psychic abilities to find a way home in Metroid Prime 4: Beyond on Nintendo Switch.
+
+Scan stone statues and ruins for clues on how to progress, unlocking more mysterious psychic abilities as you learn more about the Lamorn – an ancient alien race that once inhabited Viewros.
+
+Battle abhorrent alien creatures, ride across the landscape on the Vi-O-La vehicle, and confront Sylux – an enigmatic bounty hunter with a deep-seated grudge against the Galactic Federation...and Samus.',
+'metroid-prime-4-beyond-nintendo-switch-1.webp');
