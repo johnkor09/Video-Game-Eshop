@@ -29,13 +29,13 @@ export default function ItemTab() {
                             onClick={() => navigate('/Games/Nintendo')}
                         >Nintendo Games</div>
                         <div className="CategoryStyle2"
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/Games/Playstation')}
                         >Playstation Games</div>
                         <div className="CategoryStyle2"
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/Games/Xbox')}
                         >Xbox Games</div>
                         <div className="CategoryStyle2"
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/Games/Pc')}
                         >Pc Games</div>
                         <div className="CategoryStyle2"
                             onClick={() => navigate('/')}

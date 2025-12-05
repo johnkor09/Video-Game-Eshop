@@ -95,6 +95,20 @@ export default function Home() {
                     </div>
                 )}
             </div>
+
+            <div className='Platform'>
+                <h1 className='title-PC'>PC</h1>
+
+                {games.length === 0 ? (
+                    <div className="Text noGamesMessage">No games found :(</div>
+                ) : (
+                    <div className="gamesGrid">
+                        {games.filter(game => game.platform === "PC").map(game => (
+                                <GameItemPanel game={game} key={game.game_id} />
+                            ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

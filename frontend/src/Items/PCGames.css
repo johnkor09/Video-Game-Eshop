@@ -1,0 +1,19 @@
+.gamesGrid {
+    flex-wrap: wrap;
+    display: flex;
+    gap: 10px;
+}
+
+
+.title-PC-PCGames {
+    color: white;
+    font-size: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+    background: #000000;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgb(80, 80, 80) 50%, rgba(0, 0, 0, 1) 100%);
+    margin-top: 20px;
+    align-self: center;
+    text-align: center;
+}

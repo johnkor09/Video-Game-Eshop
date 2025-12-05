@@ -54,3 +54,23 @@ Powered by Capcom\'s proprietary RE ENGINE, the Street Fighter 6 experience span
 Your path to becoming a World Warrior starts here.
 Your moment. Your fight.',
 'Street-Fighter-6-xbox.webp');
+
+insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('Dragon Ball: Sparking! Zero Collector\'s Edition - PC'
+, 180.00, 100, '2024-10-11', 'Spike Chunsoft Co', 'Bandai Namco Entertainment', 'Fighting,Anime', 'PC',
+'The Dragon Ball Sparking Zero Collector’s Edition is a must-have for die-hard Dragon Ball fans, delivering a premium experience packed with exclusive collectibles, enhanced game features, and nostalgia for the legendary Dragon Ball Z series. This Collector’s Edition celebrates the return of the Sparking! (known as Budokai Tenkaichi in the West) series, known for its fast-paced combat, enormous character roster, and intense battles that capture the essence of Dragon Ball. From custom figures to exclusive in-game content, this edition brings players closer to the world of Dragon Ball like never before.
+
+Collector\'s Edition Contents
+
+Full Game: Dragon Ball Sparking Zero on PS5, Xbox Series X|S, or PC.
+Exclusive Goku vs. Frieza Figurine: A high-quality, hand-painted figurine of Goku and Frieza in their iconic face-off on Planet Namek. The figurine showcases dynamic poses and intricate details, capturing the intensity of their legendary battle.
+SteelBook Case: A collector’s SteelBook case featuring exclusive artwork of Goku, Vegeta, and iconic Dragon Ball Z scenes.
+Art Book: A full-color art book with concept art, character designs, and a behind-the-scenes look at the game’s development, featuring classic and new characters alike.
+Soundtrack CD: The game’s soundtrack, including remastered versions of iconic Dragon Ball tracks and new compositions that bring the battles to life.
+Collector\'s Box: A specially designed box with artwork from Akira Toriyama, perfect for displaying and storing the collection.
+In-Game Features for Collector\'s Edition Owners
+Early Access: Get a 48-hour head start to experience Dragon Ball Sparking Zero before standard edition players.
+Exclusive Character Skins: Access unique skins for fan-favorite characters like Goku, Vegeta, and Piccolo, inspired by rare and nostalgic designs from the manga and anime.
+Sparking Boost Pack: An in-game boost pack that includes Zeni, additional character slots, and an XP multiplier to help players level up characters faster.
+Bonus Arenas: Two exclusive battle arenas inspired by iconic locations in Dragon Ball Z, available only in the Collector’s Edition.
+',
+'PC-DRAGON-BALL-SPARKING-ZERO-COLLECTOR.webp');

@@ -8,6 +8,9 @@ import Signup from './Authentication/SignUp.js';
 import AdminPanel from './AdminPanel';
 import GameDetailPage from './Items/GameDetailPage';
 import NintendoGames from './Items/NintendoGames';
+import XboxGames from './Items/XboxGames';
+import PCGames from './Items/PCGames';
+import PlaystationGames from './Items/PlaystationGames';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useAuth } from './Authentication/AuthContext';
@@ -27,6 +30,9 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path='/Games/Nintendo' element={<NintendoGames/>}/>
+            <Route path='/Games/Playstation' element={<PlaystationGames/>}/>
+            <Route path='/Games/Xbox' element={<XboxGames/>}/>
+            <Route path='/Games/Pc' element={<PCGames/>}/>
             <Route path="/Games/:platform/:gameId" element={<GameDetailPage />} />
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
             {user && user.role ? (<>

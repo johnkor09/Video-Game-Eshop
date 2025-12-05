@@ -11,6 +11,6 @@ sequelize.authenticate()
         console.log("connection created with mysql successfully");
     })
     .catch(err => {
-        console.log("error occurred while connecting");
+        console.log("error occurred while connecting", err);
     });
 module.exports = { sequelize, DataTypes };

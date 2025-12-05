@@ -129,6 +129,55 @@ app.get('/api/games/nintendo', async (req, res) => {
     }
 });
 
+app.get('/api/games/playstation', async (req, res) => {
+    try {
+        const games = await GameModel.findAll({
+            where: {
+                is_active: 1,
+                platform: 'Playstation 5'
+            },
+            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
+        });
+        res.json(games)
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Database error.');
+    }
+});
+
+
+app.get('/api/games/xbox', async (req, res) => {
+    try {
+        const games = await GameModel.findAll({
+            where: {
+                is_active: 1,
+                platform: 'Xbox Series'
+            },
+            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
+        });
+        res.json(games)
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Database error.');
+    }
+});
+
+app.get('/api/games/pc', async (req, res) => {
+    try {
+        const games = await GameModel.findAll({
+            where: {
+                is_active: 1,
+                platform: 'PC'
+            },
+            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
+        });
+        res.json(games)
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Database error.');
+    }
+});
+
 app.get('/api/games/:platform/:gameId', async (req, res) => {
     const { platform, gameId } = req.params;
     try {
