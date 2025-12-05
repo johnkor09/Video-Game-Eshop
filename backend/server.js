@@ -106,6 +106,7 @@ app.get('/api/games', async (req, res) => {
             },
             attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
         });
+        console.log("done");
         res.json(games)
     } catch (err) {
         console.error(err);

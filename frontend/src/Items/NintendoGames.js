@@ -11,7 +11,7 @@ export default function NintendoGames() {
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get('/api/games/nintendo');
+                const response = await axios.get('http://localhost:5000/api/games/nintendo');
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);

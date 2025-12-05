@@ -21,7 +21,7 @@ const GameDetailPage = () => {
                 return;
             }
             try {
-                const response = await axios.get('/api/games/' + platform + '/' + gameId);
+                const response = await axios.get('http://localhost:5000/api/games/' + platform + '/' + gameId);
                 setGame(response.data);
             } catch (err) {
                 console.error("Failed to get game details.", err);

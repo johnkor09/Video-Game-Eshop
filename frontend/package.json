@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "name": "frontend",
     "version": "1.0.0",
     "private": true,
@@ -41,4 +42,50 @@
         ]
     },
     "proxy": "http://localhost:5000"
+=======
+  "name": "test1",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.13.2",
+    "create-react-app": "^5.1.0",
+    "jwt-decode": "^4.0.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "react-icons": "^5.5.0",
+    "react-native": "^0.82.1",
+    "react-router-dom": "^7.10.1",
+    "react-scripts": "^5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+
+>>>>>>> 5c4b02fd3635bac39ae4d0ad8fa1b26fda33f6e4
 }
