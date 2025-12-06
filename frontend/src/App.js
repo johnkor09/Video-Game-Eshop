@@ -5,7 +5,7 @@ import ItemTab from './ItemTab.js';
 import Footer from './Footer.js';
 import Login from './Authentication/Login.js';
 import Signup from './Authentication/SignUp.js';
-import AdminPanel from './AdminPanel';
+import AdminPanel from './Admin/AdminPanel';
 import GameDetailPage from './Items/GameDetailPage';
 import NintendoGames from './Items/NintendoGames';
 import XboxGames from './Items/XboxGames';

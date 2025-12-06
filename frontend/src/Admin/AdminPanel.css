@@ -1,0 +1,271 @@
+.AdminPanel {
+    align-items: center;
+    justify-content: center;
+    display: grid;
+    gap: 10px;
+    margin-bottom: 50px;
+}
+
+.AllAnalytics-grid {
+    display: flex;
+    gap: 5px;
+}
+
+.AdminPanel-grid {
+    gap: 20px;
+    display: flex;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    padding: 5px;
+}
+
+.Analytics-title {
+    text-align: center;
+    margin: 20px;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 20px 100px;
+    background-color: lightgrey;
+    position: relative;
+    text-align: center;
+    align-self: center;
+}
+
+.Analytics-panel {
+    border-radius: 10px;
+    box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.25);
+    padding: 0px 20px;
+    padding-bottom: 30px;
+    margin-left: 50px;
+    margin-top: 50px;
+    background-color: rgb(255, 255, 255);
+
+}
+
+.Sales-grid {
+    gap: 10px;
+    display: flex;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.Sales-panel {
+    background: radial-gradient(circle at 100% 100%, #ffffff 0, #ffffff 5px, transparent 5px) 0% 0%/10px 10px no-repeat,
+        radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 5px, transparent 5px) 100% 0%/10px 10px no-repeat,
+        radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 5px, transparent 5px) 0% 100%/10px 10px no-repeat,
+        radial-gradient(circle at 0 0, #ffffff 0, #ffffff 5px, transparent 5px) 100% 100%/10px 10px no-repeat,
+        linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 10px) calc(100% - 20px) no-repeat,
+        linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 20px) calc(100% - 10px) no-repeat,
+        linear-gradient(145deg, #e5b7ff 0%, #a6e0ff 100%);
+    border-radius: 10px;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.Sales-title {
+    padding: 10px;
+    font-weight: bold;
+    position: relative;
+    text-align: center;
+    align-self: center;
+    border-bottom: 1px solid black;
+}
+
+.Income {
+    position: relative;
+    flex-wrap: wrap;
+    display: flex;
+    font-weight: bold;
+    margin-top: 10px;
+    padding: 0px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    border-right: 2px solid black;
+}
+
+.Incometxt {
+    font-weight: bold;
+    display: flex;
+}
+
+.money {
+    font-weight: bold;
+    color: green;
+    display: flex;
+}
+
+.amount {
+    font-weight: bold;
+    padding-right: 20px;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.TotalAnalytics-panel {
+    border-radius: 10px;
+    box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.25);
+    padding: 0px 20px;
+    padding-bottom: 30px;
+    margin-left: 50px;
+    margin-top: 50px;
+    background-color: rgb(255, 255, 255);
+}
+
+.TotalAnalytics-title {
+    text-align: center;
+    margin: 20px;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 20px 15px;
+    background-color: lightgrey;
+    position: relative;
+    text-align: center;
+    align-self: center;
+}
+
+.TotalAnalytics-grid {
+    background: radial-gradient(circle at 100% 100%, #ffffff 0, #ffffff 5px, transparent 5px) 0% 0%/10px 10px no-repeat,
+        radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 5px, transparent 5px) 100% 0%/10px 10px no-repeat,
+        radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 5px, transparent 5px) 0% 100%/10px 10px no-repeat,
+        radial-gradient(circle at 0 0, #ffffff 0, #ffffff 5px, transparent 5px) 100% 100%/10px 10px no-repeat,
+        linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 10px) calc(100% - 20px) no-repeat,
+        linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 20px) calc(100% - 10px) no-repeat,
+        linear-gradient(145deg, #e5b7ff 0%, #a6e0ff 100%);
+    border-radius: 10px;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.NewGameForm-panel {
+    border-radius: 10px;
+    box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.25);
+    padding: 0px 20px;
+    padding-bottom: 30px;
+    margin-left: 50px;
+    margin-top: 50px;
+    background-color: rgb(255, 255, 255);
+}
+
+.NewGameForm-title {
+    text-align: center;
+    margin: 20px;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 20px 100px;
+    background-color: lightgrey;
+    position: relative;
+    text-align: center;
+    align-self: center;
+}
+
+.NewGameForm-info-grid {
+    gap: 30px;
+    display: flex;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.ImageInsert-button {
+    border: 2px solid rgb(0, 0, 0);
+    opacity: 50%;
+    border-radius: 10px;
+    padding: 100px 100px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+
+.image-icon{
+    transform: scale(3);
+}
+
+.info-grid{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.info-input{
+    width: 100%;
+    height: 100%;
+    padding-left: 100px;
+    border: 1px solid rgba(0, 0, 0, 0.5) ;
+    font-size: 16px;
+    border-radius: 4px;
+    height: 30px;
+}
+
+.Button-grid-info{
+    display:grid;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 15px;
+}
+
+.button-info{
+    margin-left: 20px;
+    align-self: center;
+    padding: 10px 10px;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    border: 2px solid black;
+    cursor: pointer;
+    opacity: 50%;
+}
+
+.button-info:hover{
+    transform: scale(1.1);
+    opacity: 100%;
+}
+.button-info:active{
+    transform: scale(0.9);
+}
+
+.buttonicon{
+    transform: scale(1.5);
+}
+
+.NewGameInfo-description{
+    margin-top: 20px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.NewGameInfo-descr-title{
+    margin: 20px;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 10px 100px;
+    background-color: lightgrey;
+    text-align: center;
+}
+
+.NewGameInfo-descr-input{
+    margin-top: 10px;
+    height: 400px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.5) ;
+    font-size: 16px;
+    border-radius: 5px;
+    resize:none;
+}
