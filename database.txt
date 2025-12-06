@@ -85,3 +85,34 @@ Scan stone statues and ruins for clues on how to progress, unlocking more myster
 
 Battle abhorrent alien creatures, ride across the landscape on the Vi-O-La vehicle, and confront Sylux – an enigmatic bounty hunter with a deep-seated grudge against the Galactic Federation...and Samus.',
 'metroid-prime-4-beyond-nintendo-switch-1.webp');
+
+
+insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('Trails in the Sky 1st Chapter - Nintendo Switch'
+, 53.4, 7, '2025-09-12', 'Falcom', 'Nintendo', 'JRPG,Adventure', 'Nintendo Switch',
+'Brace yourself for adventure! This beloved classic follows Estelle Bright
+and her adoptive brother, Joshua, as they begin their journey to
+become senior bracers. What starts as a simple mission grows into a
+battle against a mysterious organization threatening their homeland. As
+they uncover hidden conspiracies, Estelle and Joshua face increasing
+dangers that test their courage and strengthen their bond.
+
+    Take flight into the 1st Chapter of the legendary series from Falcom.
+    This stunning JRPG reimagines the beloved classic with new
+    breathtaking visuals and refined gameplay.
+    Swap seamlessly between traditional turn-based combat and an all-new real-time action system to suit your style of adventure.
+    Meet unforgettable characters brought to life with brand-new voiceovers.
+    Discover the story that redefined the JRPG genre and set the Trails series on its legendary path!
+    Enjoy English and Japanese in-game voice and English, French, German, and Spanish in-game text.',
+'Trails_in_the_Sky_1st_Chapter_NSW.webp');
+
+
+insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('Ghost of Yōtei - PS5'
+, 78.9, 15, '2025-10-02', 'Sucker Punch', 'Sony', 'Action-Adventure', 'Playstation 5',
+'At the Northern edge of Japan, a new warrior rises
+
+Set 300 years after the critically acclaimed Ghost of Tsushima, Ghost of Yōtei is a standalone experience set in 1600s rural Japan. The story follows a haunted, lone mercenary named Atsu. Thirsty for revenge, she travels through the beautiful, rugged landscapes of northern Japan, hunting those who killed her family many years earlier.
+
+Sixteen years after her family’s death, Atsu’s quest across Ezo brings her to unexplored lands in search of a gang of six outlaws, but she finds much more than vengeance. 
+
+Throughout her journey, Atsu will discover unlikely allies, and greater bonds than she could have imagined.',
+'Ghost-YOTEI-hero-560x560.webp');

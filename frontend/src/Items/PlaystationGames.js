@@ -7,11 +7,11 @@ export default function PlaystationGames() {
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [sortBy, setSortBy] = useState('Recent');
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/api/games/playstation');
+                const response = await axios.get(`http://localhost:4000/api/games/playstation?sortBy=${sortBy}`);
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);
@@ -22,7 +22,7 @@ export default function PlaystationGames() {
         };
 
         getGames();
-    }, []);
+    }, [sortBy]);
     if (loading) {
         return (
             <div className="home loading">
@@ -43,7 +43,7 @@ export default function PlaystationGames() {
         <div className="home">
             <div className='Platform'>
                 <h1 className='title-Playstation-PlaystationGames'>Playstation 5</h1>
-                <ComboBox/>
+                <ComboBox setSortBy={setSortBy} />
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (

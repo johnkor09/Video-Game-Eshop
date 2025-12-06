@@ -8,11 +8,11 @@ export default function PCGames() {
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [sortBy, setSortBy] = useState('Recent');
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/api/games/pc');
+                const response = await axios.get(`http://localhost:4000/api/games/pc?sortBy=${sortBy}`);
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);
@@ -23,7 +23,7 @@ export default function PCGames() {
         };
 
         getGames();
-    }, []);
+    }, [sortBy]);
     if (loading) {
         return (
             <div className="home loading">
@@ -44,7 +44,7 @@ export default function PCGames() {
         <div className="home">
             <div className='Platform'>
                 <h1 className='title-PC-PCGames'>PC</h1>
-                <ComboBox/>
+                <ComboBox setSortBy={setSortBy} />
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (

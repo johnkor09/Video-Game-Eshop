@@ -13,7 +13,21 @@ require('dotenv').config(); // Για να διαβάζει το .env
 
 // αυτο ειναι το μυστικο κλειδι κρυπτογραφησης jwt και καποια στιγμη πρεπει να το βαλουμε σε .env αρχειο
 const JWT_SECRET = process.env.JWT_SECRET || 'so_long_gay_bowesr_67';
-
+function Get_SortBy(sortBy) {
+    if (sortBy === 'Low-High') {
+        sortField = 'price';
+        sortOrder = 'ASC'; //ascending
+    } else if (sortBy === 'High-Low') {
+        sortField = 'price';
+        sortOrder = 'DESC';//descending
+    } else if (sortBy === 'Recent') {
+        sortField = 'game_id';
+        sortOrder = 'DESC';//descending
+    } else if (sortBy === 'Alphabetical') {
+        sortField = 'title';
+        sortOrder = 'ASC';
+    }
+}
 app.use(cors());
 app.use(express.json());
 
@@ -116,13 +130,16 @@ app.get('/api/games', async (req, res) => {
 });
 
 app.get('/api/games/nintendo', async (req, res) => {
+    const { sortBy } = req.query;  // get sort method
     try {
+        Get_SortBy(sortBy);
         const games = await GameModel.findAll({
             where: {
                 is_active: 1,
                 platform: { [Op.in]: ['Nintendo Switch 2', 'Nintendo Switch'] }
             },
-            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
+            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url'],
+            order: [ [sortField, sortOrder] ],
         });
         res.json(games)
     } catch (err) {
@@ -132,13 +149,17 @@ app.get('/api/games/nintendo', async (req, res) => {
 });
 
 app.get('/api/games/playstation', async (req, res) => {
+    const { sortBy } = req.query;  // get sort method
     try {
+        Get_SortBy(sortBy);
+        console.log('Received sortBy:', sortBy); 
         const games = await GameModel.findAll({
             where: {
                 is_active: 1,
                 platform: { [Op.in]: ['Playstation 5','Playstation 4'] }
             },
-            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
+            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url'],
+            order: [[sortField, sortOrder]],
         });
         res.json(games)
     } catch (err) {
@@ -149,13 +170,17 @@ app.get('/api/games/playstation', async (req, res) => {
 
 
 app.get('/api/games/xbox', async (req, res) => {
+    const { sortBy } = req.query;  // get sort method
     try {
+        Get_SortBy(sortBy);
+        console.log('Received sortBy:', sortBy); 
         const games = await GameModel.findAll({
             where: {
                 is_active: 1,
                 platform: 'Xbox Series'
             },
-            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
+            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url'],
+            order: [[sortField, sortOrder]],
         });
         res.json(games)
     } catch (err) {
@@ -165,13 +190,17 @@ app.get('/api/games/xbox', async (req, res) => {
 });
 
 app.get('/api/games/pc', async (req, res) => {
+    const { sortBy } = req.query;  // get sort method
     try {
+        Get_SortBy(sortBy);
+        console.log('Received sortBy:', sortBy); 
         const games = await GameModel.findAll({
             where: {
                 is_active: 1,
                 platform: 'PC'
             },
-            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
+            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url'],
+            order: [[sortField, sortOrder]],
         });
         res.json(games)
     } catch (err) {
