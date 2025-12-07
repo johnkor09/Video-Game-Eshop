@@ -44,11 +44,11 @@ export default function NintendoGames() {
         <div className="home">
             <div className='Platform'>
                 <h1 className='title-Nintendo-NintendoGames'>Nintendo Switch 2</h1>
-                <ComboBox setSortBy={setSortBy} />
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (
-                    <div className="gamesGrid">
+                        <div className="gamesGrid">
+                            <ComboBox setSortBy={setSortBy} />
                         {games.map(game => (
                                 <GameItemPanel game={game} key={game.game_id} />
                             ))

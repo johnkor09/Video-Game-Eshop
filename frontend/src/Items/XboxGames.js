@@ -43,11 +43,12 @@ export default function XboxGames() {
         <div className="home">
             <div className='Platform'>
                 <h1 className='title-Xbox-XboxGames'>Xbox Series</h1>
-                <ComboBox setSortBy={setSortBy} />
+               
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (
-                    <div className="gamesGrid">
+                        <div className="gamesGrid">
+                            <ComboBox setSortBy={setSortBy} />
                         {games.map(game => (
                                 <GameItemPanel game={game} key={game.game_id} />
                             ))

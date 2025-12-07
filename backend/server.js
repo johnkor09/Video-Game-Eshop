@@ -114,12 +114,15 @@ app.post('/api/signup', async (req, res) => {
 });
 
 app.get('/api/games', async (req, res) => {
+    const { sortBy } = req.query;  // get sort method
     try {
+        Get_SortBy(sortBy);
         const games = await GameModel.findAll({
             where: {
                 is_active: 1
             },
-            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url']
+            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url'],
+            order: [[sortField, sortOrder]],
         });
         console.log("done");
         res.json(games)
@@ -212,13 +215,14 @@ app.get('/api/games/pc', async (req, res) => {
 app.get('/api/games/:platform/:gameId', async (req, res) => {
     const { platform, gameId } = req.params;
     try {
+        Get_SortBy(sortBy);
         const game = await GameModel.findOne({
             where: {
                 platform: platform,
                 game_id: gameId
             },
             attributes: ['game_id', 'title', 'price', 'stock_quantity', 'release_date'
-                , 'developer', 'publisher', 'genres', 'platform', 'description_', 'cover_image_url', 'is_active']
+                , 'developer', 'publisher', 'genres', 'platform', 'description_', 'cover_image_url', 'is_active'],
         });
         if (!game) {
             return res.status(404).json({ message: 'Game not found.' });

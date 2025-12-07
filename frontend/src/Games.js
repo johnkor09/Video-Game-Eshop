@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import GameItemPanel from './Items/GameItemPanel.js';
 import './Games.css'
-
+import ComboBox from './ComboBox.js';
 export default function Home() {
+    const navigate = useNavigate();
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [sortBy, setSortBy] = useState('Recent');
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/api/games');
+                const response = await axios.get(`http://localhost:4000/api/games?sortBy=${sortBy}`);
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);
@@ -22,7 +24,7 @@ export default function Home() {
         };
 
         getGames();
-    }, []);
+    }, [sortBy]);
     if (loading) {
         return (
             <div className="home loading">
@@ -42,25 +44,27 @@ export default function Home() {
     return (
         <div className="home">
             <h1 className="title">All platforms</h1>
-
+            
             {games.length === 0 ? (
                 <div className="Text noGamesMessage">No games found :(</div>
             ) : (
-                <div className="gamesGrid">
-                    {games.map(game => (
+
+                    <div className="gamesGrid">
+                        <ComboBox setSortBy={setSortBy} />
+                        {games.map(game => (
                         <GameItemPanel game={game} key={game.game_id} />
                     ))}
                 </div>
             )}
 
             <div className='Platform'>
-                <h1 className='title-Nintendo'>Nintendo Switch 2</h1>
+                <h1 className='title-Nintendo' onClick={() => navigate('/Games/Nintendo')}>Nintendo Switch 2</h1>
 
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (
-                    <div className="gamesGrid">
-                        {games.filter(game => game.platform === "Nintendo Switch 2").map(game => (
+                     <div className="gamesGrid">
+                            {games.filter(game => game.platform === "Nintendo Switch 2" || game.platform === "Nintendo Switch").map(game => (
                                 <GameItemPanel game={game} key={game.game_id} />
                             ))}
                     </div>
@@ -69,13 +73,13 @@ export default function Home() {
 
             
             <div className='Platform'>
-                <h1 className='title-Playstation5'>Playstation 5</h1>
+                <h1 className='title-Playstation5' onClick={() => navigate('/Games/Playstation')}>Playstation 5</h1>
 
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (
-                    <div className="gamesGrid">
-                        {games.filter(game => game.platform === "Playstation 5").map(game => (
+                        <div className="gamesGrid">
+                            {games.filter(game => game.platform === "Playstation 5" || game.platform === "Playstation 4").map(game => (
                                 <GameItemPanel game={game} key={game.game_id} />
                             ))}
                     </div>
@@ -83,12 +87,12 @@ export default function Home() {
             </div>
 
             <div className='Platform'>
-                <h1 className='title-XboxSeries'>Xbox Series</h1>
+                <h1 className='title-XboxSeries' onClick={() => navigate('/Games/Xbox')}>Xbox Series</h1>
 
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (
-                    <div className="gamesGrid">
+                        <div className="gamesGrid">
                         {games.filter(game => game.platform === "Xbox Series").map(game => (
                                 <GameItemPanel game={game} key={game.game_id} />
                             ))}
@@ -97,12 +101,12 @@ export default function Home() {
             </div>
 
             <div className='Platform'>
-                <h1 className='title-PC'>PC</h1>
+                <h1 className='title-PC' onClick={() => navigate('/Games/Pc')}>PC</h1>
 
                 {games.length === 0 ? (
                     <div className="Text noGamesMessage">No games found :(</div>
                 ) : (
-                    <div className="gamesGrid">
+                        <div className="gamesGrid">
                         {games.filter(game => game.platform === "PC").map(game => (
                                 <GameItemPanel game={game} key={game.game_id} />
                             ))}

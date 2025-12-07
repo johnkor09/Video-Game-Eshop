@@ -1,8 +1,9 @@
 .ComboBox {
-    position: fixed;
-    top: 239px;
-    left: 10px;
-    width: 100%;
+    position: relative;
+    top: -21px;
+    left: 21px;
+    width: 0%;
+    gap: 0px;
 }
 
 .ComboBoxStyle {
