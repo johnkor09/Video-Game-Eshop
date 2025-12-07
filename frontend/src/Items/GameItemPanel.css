@@ -1,41 +1,55 @@
 .game-panel-container {
-    border-radius: 2%;
+    border-radius: 5px;
     background-color: rgb(255, 255, 255);
     border: 2px solid rgba(255, 255, 255, 0.5);
-    padding: 10px;
     margin: 10px;
+    height: 400px;
     width: 250px;
     cursor: pointer;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    
+    padding: 10px;
 }
 
-.game-panel-link{
+.game-panel-link {
     text-decoration: none;
     color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
 }
 
-.game-panel-image{
-    width: 100%;
-    height: auto;
+.game-panel-image {
+    width: 200px;
+    height: 200px;
+    object-fit:contain;
     margin-bottom: 10px;
 }
 
-.game-panel-info{
+.game-panel-info {
     text-decoration: none;
     color: inherit;
 }
 
-.game-panel-title{
+.game-panel-title {
     color: rgb(0, 0, 0);
     font-size: 1.2em;
     margin: 0 0 5px 0;
 }
 
-.game-panel-price{
+.game-panel-price {
     color: green;
     font-weight: bold;
 }
 
-.game-panel-platform{
+.game-panel-platform {
     font-size: 0.8em;
     color: gray;
 }
