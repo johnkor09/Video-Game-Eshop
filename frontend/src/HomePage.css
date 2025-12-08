@@ -1,0 +1,60 @@
+.slider{
+    border-style: solid;
+    border-radius: 30px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 400px;
+    width: 1000px;
+    position:relative;
+    
+}
+
+.image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 30px;
+    cursor: pointer;
+    
+    
+}
+
+
+
+.leftArrow{
+    all:unset;
+    position: absolute;
+    left:0;
+    top:40%;
+    transition: opacity 2s;
+    opacity:0.1;
+    height: 100px;
+    color:rgb(218, 73, 218);
+    background-Color: #7077dc;
+     cursor: pointer;
+    border-color: #7077dc;
+}
+
+.leftArrow:hover{
+     opacity:0.9;
+}
+
+.rightArrow{
+    all:unset;
+    position: absolute;
+    right:0;
+    top:40%;
+    transition: opacity 2s;
+    opacity:0.1;
+    height: 100px;
+    background-Color: rgb(218, 73, 218);
+    Color: #7077dc;
+    cursor: pointer;
+    border-color: rgb(218, 73, 218);
+     
+}
+
+.rightArrow:hover{
+     opacity:0.9;
+}
