@@ -34,6 +34,8 @@
     background-Color: #7077dc;
      cursor: pointer;
     border-color: #7077dc;
+    height:70px;
+    width: 30px;;
 }
 
 .leftArrow:hover{
@@ -52,9 +54,27 @@
     Color: #7077dc;
     cursor: pointer;
     border-color: rgb(218, 73, 218);
+    height:70px;
+    width: 30px;
+    
      
 }
 
 .rightArrow:hover{
      opacity:0.9;
+}
+
+.arrowL{
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+.arrowR{
+    margin-right: 5px;
+    margin-left: 8px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+
 }
