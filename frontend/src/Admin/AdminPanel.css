@@ -292,6 +292,7 @@
     margin-left: 50px;
     margin-top: 50px;
     background-color: rgb(255, 255, 255);
+
 }
 
 .EditExistingProducts-title {
@@ -308,5 +309,8 @@
 }
 
 .EditExistingProducts-gamelist{
-    padding: 10px 100px;
+    margin-left: 10%;
+    padding-top: 10px;
+    border-radius: 5px;
+    width: 80%
 }

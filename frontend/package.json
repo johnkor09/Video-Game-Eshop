@@ -16,6 +16,7 @@
     "react-native": "^0.82.1",
     "react-router-dom": "^7.10.1",
     "react-scripts": "^5.0.1",
+    "react-select": "^5.10.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -42,5 +43,4 @@
       "last 1 safari version"
     ]
   }
-
 }

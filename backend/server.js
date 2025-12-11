@@ -233,7 +233,7 @@ app.post('/api/games/upload', checkAuthAndAdmin, async (req, res) => {
             title: game.title,
             price: game.price,
             stock_quantity: game.stock_quantity,
-            release_date: game.release_date,
+            release_date: game.release_date ? new Date(game.release_date) : null,
             developer: game.developer,
             publisher: game.publisher,
             genres: game.genres,
@@ -254,23 +254,49 @@ app.post('/api/games/upload', checkAuthAndAdmin, async (req, res) => {
 
 app.put('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
     const gameId = req.params.gameId;
-    const { title, developer, publisher, releaseDate, genres, price, stock_quantity, description_ } = req.body;
-    const releaseDateValue = releaseDate ? new Date(releaseDate) : null;
+    const game = req.body;
+    const imageFile = req.files ? req.files.coverImage : null;
+    let gameData = {
+        title: game.title,
+        price: game.price,
+        stock_quantity: game.stock_quantity,
+        release_date: game.release_date ? new Date(game.release_date) : null,
+        developer: game.developer,
+        publisher: game.publisher,
+        genres: game.genres,
+        platform: game.platform,
+        description_: game.description_
+    }
     try {
+        if (imageFile) {
+            const titleSlug = gameData.title.trim()
+                .replace(/\s+/g, '_')
+                .replace(/[^a-zA-Z0-9_]/g, '')
+                .toLowerCase();
+            const platformSlug = gameData.platform.trim()
+                .replace(/\s+/g, '_')
+                .replace(/[^a-zA-Z0-9_]/g, '')
+                .toLowerCase();
+            const fileExtension = path.extname(imageFile.name);
+            const fileName = `${titleSlug}_${platformSlug}${fileExtension}`;
+            const uploadPath = path.join(UPLOAD_DIR, fileName);
+
+            try {
+                // Αποθήκευση του αρχείου στον δίσκο
+                await imageFile.mv(uploadPath);
+                gameData.cover_image_url = fileName; // Αποθηκεύουμε μόνο το όνομα/path στη DB
+                console.log(`Το αρχείο αποθηκεύτηκε ως: ${fileName}`);
+            } catch (err) {
+                console.error("File upload error:", err);
+                return res.status(500).json({ message: 'Αποτυχία αποθήκευσης αρχείου στον δίσκο.' });
+            }
+
+        }
         const game = await GameModel.findOne({ where: { game_id: gameId } });
 
-
         const [updatedRows] = await GameModel.update(
-            {
-                title: title,
-                developer: developer,
-                publisher: publisher,
-                release_date: releaseDate,
-                genres: genres,
-                price: price,
-                stock_quantity: stock_quantity,
-                description_: description_
-            },
+            gameData
+            ,
             { where: { game_id: gameId } }
         );
         if (updatedRows > 0) {
@@ -283,7 +309,8 @@ app.put('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
         console.error(err);
         return res.status(500).json({ success: false, message: 'Database error during update.' });
     }
-})
+
+});
 
 app.get('/api/games', async (req, res) => {
     const { sortBy } = req.query;  // get sort method

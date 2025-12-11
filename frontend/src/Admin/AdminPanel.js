@@ -1,5 +1,6 @@
 import { useAuth } from '../Authentication/AuthContext';
 import { useState, useEffect } from 'react';
+import Select from 'react-select'
 import axios from 'axios';
 import { RiImageAddLine } from "react-icons/ri";
 import { LuSave } from "react-icons/lu";
@@ -33,7 +34,7 @@ export default function AdminPanel() {
 
     const getGameDetails = async (gameId) => {
         try {
-            const response = await axios.get('/api/games/' + gameId);
+            const response = await axios.get('http://localhost:4000/api/games/' + gameId);
             setSelectedGame(response.data);
             setFormData(response.data);
         } catch (err) {
@@ -42,18 +43,31 @@ export default function AdminPanel() {
         }
     }
 
-    const handleGameSelect = (event) => {
-        const game = event.target.value;
+    const handleGameSelect = (selectedOption) => {
         setImageFile(null);
         setImagePreviewUrl(null);
-        if (game === 'none') {
+        if (!selectedOption || selectedOption.value === 'none') {
             setSelectedGame(null);
             setFormData({});
             return;
         }
 
-        getGameDetails(game);
+        getGameDetails(selectedOption.value);
     };
+
+    const gameOptions = games.map(game => ({
+        value: game.game_id,
+        label: game.title,
+    }));
+
+    const selectOptions = [
+        { value: 'none', label: '--- Select a Game or None ---' },
+        ...gameOptions
+    ];
+
+    const selectedValue = selectedGame
+        ? selectOptions.find(option => option.value === selectedGame.game_id)
+        : selectOptions.find(option => option.value === 'none') || null;
 
     const handleInputChange = (event) => {
         const { id, value } = event.target;
@@ -121,6 +135,10 @@ export default function AdminPanel() {
     };
 
     const handleSave = async () => {
+        if (!formData.title || !formData.price || !formData.platform || !formData.developer || !formData.description_ || !formData.genres || !formData.publisher || !formData.stock_quantity || !formData.release_date) {
+            alert('Συμπληρωσε τα κενα');
+            return;
+        }
         if (!selectedGame) {
             alert('Επιλεξε ενα παιχνιδι για επεξεργασια.');
             return;
@@ -130,9 +148,17 @@ export default function AdminPanel() {
             alert('Δεν είστε συνδεδεμένοι.');
             return;
         }
+        const form = new FormData();
+        Object.keys(formData).forEach(key => {
+            if (formData[key] !== null && formData[key] !== undefined) {
+                form.append(key, formData[key]);
+            }
+        });
+        if(imageFile)
+            {form.append('coverImage', imageFile);}
         try {
             const url = 'http://localhost:4000/api/games/' + selectedGame.game_id;
-            const response = await axios.put(url, formData, {
+            const response = await axios.put(url, form, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -152,7 +178,7 @@ export default function AdminPanel() {
     };
 
     const handleUpload = async () => {
-        if (!formData.title || !formData.price || !formData.platform || !formData.developer || !formData.description_ || !formData.genres || !formData.publisher || !formData.stock_quantity || !formData.releaseDate) {
+        if (!formData.title || !formData.price || !formData.platform || !formData.developer || !formData.description_ || !formData.genres || !formData.publisher || !formData.stock_quantity || !formData.release_date) {
             alert('Συμπληρωσε τα κενα');
             return;
         }
@@ -267,26 +293,16 @@ export default function AdminPanel() {
                 </div>
                 <div className="EditExistingProducts-panel">
                     <div className='EditExistingProducts-title'>Products</div>
-                    <select className="EditExistingProducts-gamelist"
+                    <Select className="EditExistingProducts-gamelist"
+                        isSearchable={true}
+                        isDisabled={false}
+                        isLoading={false}
+                        options={selectOptions}
+                        name="Game Selection"
                         onChange={handleGameSelect}
-                        value={selectedGame ? selectedGame.game_id : 'none'}
-                    >
-                        <option value="none">None</option>
-                        {games.length === 0 ? (
-                            <option value="no-games" disabled>No games found :(</option>
-                        ) : (
-                            <>
-                                {games.map(game => (
-                                    <option
-                                        key={game.game_id}
-                                        value={game.game_id}
-                                    >
-                                        {game.title}
-                                    </option>
-                                ))}
-                            </>
-                        )}
-                    </select>
+                        value={selectedValue}
+                        placeholder="Select a Game to Edit..."
+                    />
                 </div>
                 <div className='NewGameForm-panel'>
                     <div className='NewGameForm-title'
@@ -300,7 +316,6 @@ export default function AdminPanel() {
                                 style={{ display: 'none' }}
                                 accept=".webp"
                                 onChange={handleImageChange}
-                                disabled={selectedGame}
                             />
 
                             <label htmlFor="coverImageUpload" className='ImageInsert-button'>
@@ -357,8 +372,8 @@ export default function AdminPanel() {
                                 <label className='info-text'>Release Date:</label>
                                 <input className='info-input'
                                     type='date'
-                                    id='releaseDate'
-                                    value={formData.releaseDate || ''}
+                                    id='release_date'
+                                    value={formData.release_date ? new Date(formData.release_date).toISOString().split('T')[0] : ''}
                                     onChange={handleInputChange}
                                 />
                             </div>
