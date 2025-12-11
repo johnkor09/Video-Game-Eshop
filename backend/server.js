@@ -332,6 +332,7 @@ app.get('/api/games', async (req, res) => {
 
 app.get('/api/games/:platform/:gameId', async (req, res) => {
     const { platform, gameId } = req.params;
+    const { sortBy } = req.query;
     try {
         Get_SortBy(sortBy);
         const game = await GameModel.findOne({
