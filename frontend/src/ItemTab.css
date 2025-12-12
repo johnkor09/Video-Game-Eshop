@@ -1,6 +1,6 @@
 .itemTab{
     position: fixed;
-    top: 119px;
+    top: 120px;
     left: 0;
     width: 100%;
     z-index: 999;
@@ -13,10 +13,10 @@
     background-Color: #7077dc;
     color: white;
     text-Align: left;
-    gap: 10px;
+    align-items: center;
+    gap: 0px;
     z-index:1000;
 }
-
 
 .CategoryStyle {
     height: 100%;
@@ -50,7 +50,7 @@
 input[type=text] {
     align-self:center;
     position: relative;
-    margin: 0;
+    margin: 2px;
     padding: 5px 30px;
     outline: none;
     border:0px solid #dcb4f74b;
@@ -71,11 +71,16 @@ input[type=text] {
 }
 
 .searchBar{
+    margin-left: auto;
+    margin-right: 20px;
     position: relative;
     display: flex;
     align-items: center;
+    padding: 0px 20px;
 }
 
 .SerchBox{
-    padding: 5px 100px;
+    padding: 5px;
+    margin-left: 5px;
+    border-radius: 20px;
 }

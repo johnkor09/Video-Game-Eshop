@@ -2,13 +2,12 @@ import './Footer.css';
 
 export default function Footer() {
     return (
-        <div className="Footer">
+        <footer className="Footer">
             <div className="TextBox">
-                <div >&copy;Brasidas Store HD</div>
-                <div >Our team: AM:22390111, AM:22390022, AM:22390304, AM:22390232</div>
+                <p>&copy; Copyright {new Date().getFullYear()} Brasidas Store HD.</p>
+                <p>Our team: AM:22390111, AM:22390022, AM:22390304, AM:22390232</p>
             </div>
-        </div>
+        </footer>
     );
 
 };
-
