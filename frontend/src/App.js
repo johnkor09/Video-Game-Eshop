@@ -11,6 +11,7 @@ import NintendoGames from './Items/NintendoGames';
 import XboxGames from './Items/XboxGames';
 import PCGames from './Items/PCGames';
 import PlaystationGames from './Items/PlaystationGames';
+import Basket from './UserFunctions/Basket.js';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useAuth } from './Authentication/AuthContext';
@@ -34,6 +35,7 @@ function App() {
             <Route path='/Games/Xbox' element={<XboxGames/>}/>
             <Route path='/Games/Pc' element={<PCGames/>}/>
             <Route path="/Games/:platform/:gameId" element={<GameDetailPage />} />
+            <Route path='/:userId/basket' element={<Basket/>}/>
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
             {user && user.role ? (<>
               <Route path="/admin-panel" element={<AdminPanel />} />

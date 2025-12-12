@@ -422,9 +422,9 @@ export default function AdminPanel() {
                             </div>
                         </div>
                         <div className="Button-grid-info">
-                            <button className="button-info" onClick={() => handleTrashClick()}><FaRegTrashCan className="buttonicon" /></button>
-                            <button className="button-info" onClick={handleSave} disabled={!selectedGame}><LuSave className="buttonicon" /></button>
-                            <button className="button-info" onClick={handleUpload} disabled={selectedGame}><LuHardDriveUpload className="buttonicon" /></button>
+                            <button className="button-info"  onClick={() => handleTrashClick()}><FaRegTrashCan className="buttonicon" color='red' /></button>
+                            <button className="button-info" onClick={handleSave} disabled={!selectedGame}><LuSave className="buttonicon" color='green'/></button>
+                            <button className="button-info" onClick={handleUpload} disabled={selectedGame}><LuHardDriveUpload className="buttonicon" color='blue'/></button>
                         </div>
                     </div>
                     <div className="NewGameInfo-description">

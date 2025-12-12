@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaShoppingBasket } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../Authentication/AuthContext';
 import './GameDetailPage.css';
 
 const GameDetailPage = () => {
-    let navigate = useNavigate();
 
     const { platform, gameId } = useParams();
     const [game, setGame] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { user, token } = useAuth();
+
 
     useEffect(() => {
         const getGameDetails = async () => {
@@ -25,7 +26,7 @@ const GameDetailPage = () => {
                 setGame(response.data);
             } catch (err) {
                 console.error("Failed to get game details.", err);
-                let errorMessage = "Προβλημα με τον server!";if (err.response && err.response.status === 404) {
+                let errorMessage = "Προβλημα με τον server!"; if (err.response && err.response.status === 404) {
                     errorMessage = "Δεν βρεθηκε το παιχνιδι.";
                 } else if (err.request) {
                     errorMessage = "Προβλημα συνδεσης με backend";
@@ -39,6 +40,20 @@ const GameDetailPage = () => {
         getGameDetails();
 
     }, [platform, gameId]);
+
+    const handleAddToCart = async () => {
+        if (!user || !token) {
+            alert("Πρέπει να συνδεθείτε για να προσθέσετε προϊόντα στο καλάθι.");
+            return;
+        }
+        try {
+            const res = await axios.post('http://localhost:4000/api/cart/add', {gameId: gameId, quantity: 1}, {headers:{'Authorization': `Bearer ${token}`}});
+            alert(res.data.message);
+        } catch (err) {
+            console.error("Failed to add game to cart.");
+            alert('Error:'+ err.response.data.message);
+        }
+    };
     if (loading) {
         return (
             <div className="loading">
@@ -80,16 +95,16 @@ const GameDetailPage = () => {
                     <p><strong>Release Date:</strong> {game.release_date ? new Date(game.release_date).toLocaleDateString('el-GR') : 'N/A'}</p>
                     <p><strong>Stock:</strong> {game.stock_quantity > 0 ? game.stock_quantity + ' in stock' : 'Out of Stock'}</p>
                 </div>
-                
-                    <div className='Buttons'>
-                        <p className="price"><strong>Price:</strong> €{game.price}</p>
-                        <button className='cartButton' onClick={()=> navigate('/')}><FaShoppingBasket/> Add to cart</button>
-                    </div>    
-                    <div className='description'>
-                        <h3 className="descriptionText">Περιγραφή</h3>
-                        <p className="descriptionInfo">{game.description_ || 'Δεν υπάρχει διαθέσιμη περιγραφή.'}</p>
-                    </div>
-                
+
+                <div className='Buttons'>
+                    <p className="price"><strong>Price:</strong> €{game.price}</p>
+                    <button className='cartButton' onClick={() => handleAddToCart()}><FaShoppingBasket /> Add to cart</button>
+                </div>
+                <div className='description'>
+                    <h3 className="descriptionText">Περιγραφή</h3>
+                    <p className="descriptionInfo">{game.description_ || 'Δεν υπάρχει διαθέσιμη περιγραφή.'}</p>
+                </div>
+
             </div>
 
         </div>

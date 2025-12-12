@@ -230,18 +230,15 @@
     align-self: center;
     padding: 10px 10px;
     background-color: rgba(255, 255, 255, 0);
-    color: rgb(0, 0, 0);
     font-weight: bold;
     cursor: pointer;
     border-radius: 10px;
     border: 2px solid black;
     cursor: pointer;
-    opacity: 50%;
 }
 
 .button-info:hover {
     transform: scale(1.1);
-    opacity: 100%;
 }
 
 .button-info:active {

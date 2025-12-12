@@ -3,10 +3,11 @@ let cors = require('cors');
 let app = express();
 let port = 4000;
 const { sequelize } = require('./config/db');
-const UserModelDefinition = require('./models/User');
-const UserModel = UserModelDefinition(sequelize);
-const GameModelDefinition = require('./models/Game');
-const GameModel = GameModelDefinition(sequelize);
+const db = require('./models/index')(sequelize);
+const UserModel = db.User;
+const GameModel = db.Game;
+const CartModel = db.Cart;
+const CartItemModel = db.CartItem;
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const fileUpload = require('express-fileupload');
@@ -62,6 +63,24 @@ function checkAuthAndAdmin(req, res, next) {
         } else {
             return res.status(403).json({ message: 'Forbidden. Admin access required.' });
         }
+    } catch (ex) {
+        return res.status(401).json({ message: 'Invalid token.' });
+    }
+}
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Access denied. No token provided.' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded;
+        next();
     } catch (ex) {
         return res.status(401).json({ message: 'Invalid token.' });
     }
@@ -249,6 +268,101 @@ app.post('/api/games/upload', checkAuthAndAdmin, async (req, res) => {
     } catch (err) {
         console.error("Create Error:", err);
         return res.status(500).json({ message: 'Database error during creation.' });
+    }
+});
+
+app.post('/api/cart/add', authenticateToken, async (req, res) => {
+    const userId = req.user.id;
+    const { gameId, quantity = 1 } = req.body;
+    const parsedGameId = parseInt(gameId);
+    const parsedQuantity = parseInt(quantity);
+
+    if (!parsedGameId || isNaN(parsedGameId) || parsedQuantity < 1 || isNaN(parsedQuantity)) {
+        return res.status(400).json({ message: 'Μη έγκυρο Game ID ή Ποσότητα.' });
+    }
+
+    try {
+        const game = await GameModel.findByPk(parsedGameId);
+
+        if (!game || game.is_active === 0) {
+            return res.status(400).json({ message: 'Gane not found or unavailable!' });
+        }
+        if (game.stock_quantity < parsedQuantity) {
+            return res.status(400).json({ message: 'No stock available' });
+        }
+
+        const gamePrice = game.price;
+        const [cart, created] = await CartModel.findOrCreate({
+            where: { user_id: userId },
+            defaults: { user_id: userId }
+        });
+
+        const cartId = cart.cart_id;
+        const [cartItem, itemCreated] = await CartItemModel.findOrCreate({
+            where: { cart_id: cartId, game_id: parsedGameId },
+            defaults: {
+                cart_id: cartId,
+                game_id: parsedGameId,
+                quantity: parsedQuantity,
+                price_at_addition: gamePrice
+            }
+        });
+
+        if (!itemCreated) {
+            const newQuantity = cartItem.quantity + parsedQuantity;
+
+            if (game.stock_quantity < newQuantity) {
+                return res.status(400).json({ message: 'No stock available' });
+            }
+
+            await cartItem.update({
+                quantity: newQuantity
+            });
+
+            return res.status(200).json({
+                message: 'Quantity of item was updated to ' + newQuantity,
+                cartItem: cartItem
+            });
+        }
+        return res.status(201).json({
+            message: 'Item added to cart.',
+            cartItem: cartItem
+        });
+    } catch (err) {
+        console.error('Cart error', err);
+        return res.status(500).json({ message: 'Error adding item to cart!' });
+    }
+});
+
+app.get('/api/cart/content', authenticateToken, async (req, res) => {
+    const userId = req.user.id;
+    try {
+        const [cart, created] = await CartModel.findOrCreate({
+            where: { user_id: userId },
+            defaults: { user_id: userId }
+        });
+
+        const cartId = cart.cart_id;
+        const cartItemsList = await CartItemModel.findAll({
+            where: { cart_id: cartId },
+            include: [{
+                model: GameModel,
+                as: 'game',
+                attributes: ['title', 'platform', 'cover_image_url', 'stock_quantity']
+            }],
+            // sort
+            order: [['item_id', 'ASC']]
+        });
+
+        if (cartItemsList.length> 0) {
+            return res.status(200).json(cartItemsList);
+        }
+        else{
+            return res.status(200).json([]);
+        }
+    } catch (err) {
+        console.error('Error with sending cart items', err);
+        return res.json({ success: false, message: 'Error with getting cart items' });
     }
 });
 
