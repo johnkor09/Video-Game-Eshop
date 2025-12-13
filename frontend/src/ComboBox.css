@@ -1,19 +1,19 @@
 .ComboBox {
-    position: relative;
-    top: -21px;
-    left: 21px;
-    width: 0%;
-    gap: 0px;
+    margin-left: 20px;
+    width: 100%;
 }
 
 .ComboBoxStyle {
     display: flex;
     background-Color: #e6e3e8;
-    border-block: 3.5px;
-    border-style: solid;
-    border-color: #7077dc;
+    border: 3px solid #7077dc;
+    border-radius: 10px;
     color: black;
     text-Align: left;
     gap: 10px;
     z-index: 1000;
+    padding: 5px 5px;
+    font-size: 1em;
+    cursor: pointer;
+    outline: none;
 }
