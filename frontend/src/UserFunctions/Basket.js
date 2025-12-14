@@ -13,31 +13,31 @@ export default function Basket() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const getBasketGames = async () => {
-            if (!user || !token) {
-                setError("Log in first.");
-                setLoading(false);
-                return;
-            }
-            try {
-                const response = await axios.get('http://localhost:4000/api/cart/content',
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    }
-                );
-                setBasketGames(response.data);
-            } catch (err) {
-                console.error("Failed to get games data.", err);
-                setError("Cant load cart items.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
         getBasketGames();
     }, [user, token]);
+
+    const getBasketGames = async () => {
+        if (!user || !token) {
+            setError("Log in first.");
+            setLoading(false);
+            return;
+        }
+        try {
+            const response = await axios.get('http://localhost:4000/api/cart/content',
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+            setBasketGames(response.data);
+        } catch (err) {
+            console.error("Failed to get games data.", err);
+            setError("Cant load cart items.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (loading) {
         return <div className="loading">Φόρτωση καλαθιού...</div>;
@@ -50,6 +50,55 @@ export default function Basket() {
         return BasketGames.reduce((acc, item) => {
             return acc + (parseFloat(item.price_at_addition) * item.quantity);
         }, 0).toFixed(2);
+    };
+
+    const handleItemRemoval = async (itemId) => {
+        if (!token) {
+            return;
+        }
+        try {
+            const response = await axios.delete('http://localhost:4000/api/cart/removeItem',
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    data: { itemId: itemId }
+                });
+            await getBasketGames();
+        } catch (err) {
+            const message = err.response?.data?.message || "Αποτυχία διαγραφής αντικειμένου.";
+            console.error("Failed to remove cart item.", err);
+            alert('Σφάλμα: ' + message);
+        }
+    };
+
+    const handleChangeQuantity = async (itemId, value) => {
+        if (!token) {
+            return;
+        }
+        const newQuantity = parseInt(value, 10);
+        if (newQuantity < 1 || isNaN(newQuantity)) return;
+
+        setBasketGames(prevGames => 
+        prevGames.map(item => 
+            item.item_id === itemId ? { ...item, quantity: newQuantity } : item
+        )
+    );
+
+        try {
+            const response = await axios.put('http://localhost:4000/api/cart/changeQuantity',
+                { itemId: itemId, NewQuantity: newQuantity },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
+        }catch(err){
+            const message = err.response?.data?.message || "Αποτυχία αλλαγης quantity.";
+            console.error("Failed to change cart item quantity.", err);
+            alert('Σφάλμα: ' + message);
+            await getBasketGames();
+        }
     };
 
 
@@ -79,12 +128,13 @@ export default function Basket() {
                                                 value={item.quantity}
                                                 min="1"
                                                 className='quantity-input'
+                                                onChange={(e) => handleChangeQuantity(item.item_id, e.target.value)}
                                             />
                                         </p>
                                         <p className='total-price'>
                                             Total price: €{(parseFloat(item.price_at_addition) * item.quantity).toFixed(2)}
                                         </p>
-                                        <FaRegTrashCan className='Basket-remove-button'/>
+                                        <FaRegTrashCan onClick={() => handleItemRemoval(item.item_id)} className='Basket-remove-button' />
                                     </div>
                                 </div>
                             ))
@@ -94,7 +144,7 @@ export default function Basket() {
                 <div className='Basket-Functions-Grid'>
                     <div className='Total-Text'>Total:</div>
                     <p className='grand-total'>Cart total price: €{calculateTotal()}</p>
-                    <button className='checkout-button'><IoBagCheckOutline color='greenyellow' className='Checkout-icon'/><div>Checkout</div></button>
+                    <button className='checkout-button'><IoBagCheckOutline color='greenyellow' className='Checkout-icon' /><div>Checkout</div></button>
                 </div>
             </div>
         </div>

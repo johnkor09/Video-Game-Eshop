@@ -271,6 +271,87 @@ app.post('/api/games/upload', checkAuthAndAdmin, async (req, res) => {
     }
 });
 
+app.delete('/api/cart/removeItem', authenticateToken, async (req, res) => {
+    const itemId = req.body.itemId;
+    const userId = req.user.id;
+    const parseditemId = parseInt(itemId);
+    if (!parseditemId || parseditemId <= 0) {
+        return res.status(400).json({ message: 'Μη έγκυρο Cart item ID.' });
+    }
+
+    try {
+        const cart = await CartModel.findOne({
+            where: { user_id: userId },
+            attributes: ['cart_id']
+        });
+
+        if (!cart) {
+            return res.status(400).json({ message: 'Δεν βρεθηκε το cart για τον χρηστη ' + userId });
+        }
+        const cartId = cart.cart_id;
+
+        const deletedCount = await CartItemModel.destroy({
+            where: {
+                item_id: parseditemId,
+                cart_id: cartId
+            }
+        });
+        if (deletedCount > 0) {
+            return res.status(200).json({ message: 'Item in cart removed successfully.' });
+        } else {
+            return res.status(400).json({ message: 'Cart item not found.' });
+        }
+    } catch (err) {
+        console.error("Item removal Error:", err);
+        return res.status(500).json({ message: 'Database error during removal.' });
+    }
+});
+
+app.put('/api/cart/changeQuantity', authenticateToken, async (req, res) => {
+    const userId = req.user.id;
+    const itemId = req.body.itemId;
+    const quantity = req.body.NewQuantity
+    const parsedItemId = parseInt(itemId);
+    const newQuantity = parseInt(quantity);
+
+    if (!parsedItemId || parsedItemId <= 0 || !newQuantity || newQuantity <= 0) {
+        return res.status(400).json({ message: 'invalid item id or invalid quantity' });
+    }
+    try {
+        const cart = await CartModel.findOne({
+            where: { user_id: userId }
+        });
+
+        if (!cart) {
+            return res.status(400).json({ message: 'no cart found for user ' + userId });
+        }
+        const cart_id = cart.cart_id;
+        const cartItem = await CartItemModel.findOne({
+            where: { item_id: parsedItemId, cart_id: cart_id },
+            include: [{ model: GameModel, as: 'game', attributes: ['stock_quantity'] }]
+        });
+
+        const availableStock = cartItem.game.stock_quantity;
+
+        if (newQuantity > availableStock) {
+            return res.status(400).json({
+                message: 'Not available Stock. Max stock: ' + availableStock,
+                maxQuantity: availableStock
+            });
+        }
+
+        await cartItem.update({ quantity: newQuantity });
+
+        return res.status(200).json({
+            message: 'Quantity updated succesfully to ' + newQuantity,
+            cartItem: cartItem
+        });
+    } catch (err) {
+        console.error("Cart Update Error:", err);
+        return res.status(500).json({ message: 'Quantity update issue' });
+    }
+});
+
 app.post('/api/cart/add', authenticateToken, async (req, res) => {
     const userId = req.user.id;
     const { gameId, quantity = 1 } = req.body;
@@ -354,10 +435,10 @@ app.get('/api/cart/content', authenticateToken, async (req, res) => {
             order: [['item_id', 'ASC']]
         });
 
-        if (cartItemsList.length> 0) {
+        if (cartItemsList.length > 0) {
             return res.status(200).json(cartItemsList);
         }
-        else{
+        else {
             return res.status(200).json([]);
         }
     } catch (err) {
@@ -406,7 +487,6 @@ app.put('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
             }
 
         }
-        const game = await GameModel.findOne({ where: { game_id: gameId } });
 
         const [updatedRows] = await GameModel.update(
             gameData
