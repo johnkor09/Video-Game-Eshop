@@ -11,14 +11,14 @@ export default function Basket() {
     const [BasketGames, setBasketGames] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [Checkout, setCheckout] = useState(false);
     useEffect(() => {
         getBasketGames();
     }, [user, token]);
 
     const getBasketGames = async () => {
         if (!user || !token) {
-            setError("Log in first.");
+            setError("Log in first to view your cart.");
             setLoading(false);
             return;
         }
@@ -100,15 +100,15 @@ export default function Basket() {
             await getBasketGames();
         }
     };
-
+    
 
     return (
         <div className='BasketPage'>
             <div className='Basket-Panel'>
                 <div className='Basket-Game-Grid'>
                     {BasketGames.length === 0 ?
-                        (
-                            <div>No Items in Cart</div>
+                        (                            <div>No Items in Cart</div>
+                         
                         ) :
                         (
                             BasketGames?.map(item => (
@@ -144,7 +144,15 @@ export default function Basket() {
                 <div className='Basket-Functions-Grid'>
                     <div className='Total-Text'>Total:</div>
                     <p className='grand-total'>Cart total price: €{calculateTotal()}</p>
-                    <button className='checkout-button'><IoBagCheckOutline color='greenyellow' className='Checkout-icon' /><div>Checkout</div></button>
+                    <button className='checkout-button' disabled={BasketGames.length === 0} onClick={() => setCheckout(true)}><IoBagCheckOutline color='greenyellow' className='Checkout-icon' /><div>Checkout</div></button>
+                    {Checkout && (
+                        <div className="Pop-up">
+                            <h2 className="Pop-header">Complete purchase?</h2>
+                            <div className="Pop-buttons">
+                                <button>Complete</button>
+                                <button onClick={() => setCheckout(false)}>Close</button>
+                            </div>
+                    </div> )}
                 </div>
             </div>
         </div>
