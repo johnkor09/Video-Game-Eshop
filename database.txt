@@ -87,23 +87,21 @@ Battle abhorrent alien creatures, ride across the landscape on the Vi-O-La vehic
 'metroid-prime-4-beyond-nintendo-switch-1.webp');
 
 
-insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('Trails in the Sky 1st Chapter - Nintendo Switch'
-, 53.4, 7, '2025-09-12', 'Falcom', 'Nintendo', 'JRPG,Adventure', 'Nintendo Switch',
-'Brace yourself for adventure! This beloved classic follows Estelle Bright
-and her adoptive brother, Joshua, as they begin their journey to
-become senior bracers. What starts as a simple mission grows into a
-battle against a mysterious organization threatening their homeland. As
-they uncover hidden conspiracies, Estelle and Joshua face increasing
-dangers that test their courage and strengthen their bond.
+insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('The Legend of Heroes: Trails in the Sky'
+, 15.99, 7, '2004-06-24', 'nihon Falcom', 'nihon Falcom', 'JRPG', 'PC','Modern society owes much to a mystical technology known as “orbal energy.” Fifty years ago, during what’s come to be known as the “Orbal Revolution,” 
+the invention of this technology and the “orbments” developed from it led to a period of rapid human advancement, birthing innovations of all shapes and sizes -- not the least of which was the airliner,
+ or “orbalship” industry. Although the positive impact of this revolution is obvious, every coin has a flipside; for every beneficial device developed with these new materials, so too were advanced weapons and other implements of war. Thus, 
+ the land became mired with turmoil, and remains in such a state even now.
+ Come join Estelle, Joshua, Scherazard, Olivier and the rest of the cast as they uncover the secret underbelly of Liberl in their first 50+ hour masterpiece, and see what Japanese gamers have been raving about for over ten years.'
+,
+'trails_in_the_sky_good.webp');
 
-    Take flight into the 1st Chapter of the legendary series from Falcom.
-    This stunning JRPG reimagines the beloved classic with new
-    breathtaking visuals and refined gameplay.
-    Swap seamlessly between traditional turn-based combat and an all-new real-time action system to suit your style of adventure.
-    Meet unforgettable characters brought to life with brand-new voiceovers.
-    Discover the story that redefined the JRPG genre and set the Trails series on its legendary path!
-    Enjoy English and Japanese in-game voice and English, French, German, and Spanish in-game text.',
-'Trails_in_the_Sky_1st_Chapter_NSW.webp');
+insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('Total war:Warhammer 3'
+, 49.99, 24, '2022-02-17', 'paradox', 'SEGA', 'RTS', 'PC','Total War: Warhammer III is the epic conclusion to the trilogy, blending turn-based grand strategy with massive real-time tactical battles,
+ plunging players into a world-ending conflict between the mortal realms and the Chaos gods, allowing them to lead diverse factions like Kislev, Grand Cathay, or demonic hordes, build empires, conquer vast lands, and engage in complex diplomacy or destructive warfare, 
+ culminating in the massive combined-map "Immortal Empires" for owners of all three games.'
+,
+'Total_War_Warhammer_3.webp');
 
 
 insert into video_games (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url) values ('Ghost of Yōtei - PS5'

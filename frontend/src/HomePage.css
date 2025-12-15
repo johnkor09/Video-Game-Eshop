@@ -1,6 +1,6 @@
 .slider{
     border-style: solid;
-    border-radius: 30px;
+   
     margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
@@ -9,72 +9,68 @@
     position:relative;
     
 }
-
+.animationPart{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+}
 .image{
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 30px;
+    
     cursor: pointer;
-    
-    
+    flex-grow: 0;
+    flex-shrink: 0;
+    transition: translate 300ms ease-in-out;
 }
 
 
 
 .leftArrow{
-    all:unset;
-    position: absolute;
-    left:0;
-    top:40%;
-    transition: opacity 2s;
-    opacity:0.1;
-    height: 100px;
-    color:rgb(218, 73, 218);
-    background-Color: #7077dc;
-     cursor: pointer;
-    border-color: #7077dc;
-    height:70px;
-    width: 30px;;
-}
+all:unset;
+display: block;
+position:absolute;
+top:20px;
+bottom:20px;
+cursor: pointer;
+left:0;
+opacity: 0;
 
-.leftArrow:hover{
-     opacity:0.9;
-}
-
-.rightArrow{
-    all:unset;
-    position: absolute;
-    right:0;
-    top:40%;
-    transition: opacity 2s;
-    opacity:0.1;
-    height: 100px;
-    background-Color: rgb(218, 73, 218);
-    Color: #7077dc;
-    cursor: pointer;
-    border-color: rgb(218, 73, 218);
-    height:70px;
-    width: 30px;
-    
-     
-}
-
-.rightArrow:hover{
-     opacity:0.9;
 }
 
 .arrowL{
-    margin-right: 5px;
-    margin-left: 5px;
-    margin-top: 25px;
-    margin-bottom: 20px;
+    margin: 5px;
+    color: white;
 }
 
 .arrowR{
-    margin-right: 5px;
-    margin-left: 8px;
-    margin-top: 25px;
-    margin-bottom: 20px;
+    margin: 5px;
+    color: white;
+}
+.rightArrow{
+all:unset;
+display: block;
+position:absolute;
+top:20px;
+bottom:20px;
+cursor: pointer;
+right:0;
+opacity: 0;   
+}
 
+
+.leftArrow:hover{
+    background-color: rgba(24, 23, 23, 0.888);
+    opacity: 0.6;
+    transition: opacity 2s;
+    
+}
+
+.rightArrow:hover{
+    background-color: rgba(24, 23, 23, 0.888);
+    opacity: 0.6;
+    transition: opacity 2s;
 }

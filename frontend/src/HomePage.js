@@ -1,4 +1,5 @@
 import './HomePage.css';
+import { useState } from 'react';
 import IMG1 from './slide_images/pvz.jpg'
 import IMG2 from './slide_images/asuka.jpg'
 import IMG3 from './slide_images/oguri.jpeg'
@@ -9,22 +10,41 @@ import { FaArrowLeft } from "react-icons/fa";
 
 export default function Home() {
     const pictures=[IMG1,IMG2,IMG3,IMG4,IMG5];
-    let index=0;
-   /*const next_image = () => {
-        if(index < 4)
-         index++
+    const [picIndex,setIndex]=useState(0);
+
+
+    function goNext()
+    {
+      setIndex(index=>{
+        if(index==pictures.length - 1) 
+          return 0;
         else
-          index =0;
-       
-    }*/
+          return index + 1;
+      })
+    }
+    
+    function goPrev()
+    {
+      setIndex(index=>{
+        if(index==0) 
+          return pictures.length -1;
+        else
+          return index-1;
+      })
+    }
+  
     return(
         <>
         <div className='slider'>
-         
+        
+         <div className='animationPart'>
+              {pictures.map(pic => (
+            <img key={pic} src={pic} className='image' style={{translate:`${-100 * picIndex}%` }}/> ))}
+         </div>
 
-          <button className='leftArrow' /*onClick={next_image}*/><FaArrowLeft className='arrowL' /></button>
-          <button className='rightArrow'><FaArrowRight className='arrowR'/></button>
-          <img src={pictures[index]} className='image' alt="error"></img>
+          <button className='leftArrow' onClick={goPrev} ><FaArrowLeft className='arrowL' /></button>
+          <button className='rightArrow' onClick={goNext}><FaArrowRight className='arrowR'/></button>
+          
          
         </div>
             
