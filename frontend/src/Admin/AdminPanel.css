@@ -9,13 +9,13 @@
 .AllAnalytics-grid {
     display: flex;
     gap: 5px;
+
 }
 
 .AdminPanel-grid {
     gap: 20px;
     display: flex;
     border-radius: 10px;
-    background-color: rgb(255, 255, 255);
     padding: 5px;
 }
 
@@ -26,7 +26,12 @@
     font-weight: bold;
     border-radius: 10px;
     padding: 20px 100px;
-    background-color: lightgrey;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     position: relative;
     text-align: center;
     align-self: center;
@@ -34,12 +39,17 @@
 
 .Analytics-panel {
     border-radius: 10px;
-    box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.25);
     padding: 0px 20px;
     padding-bottom: 30px;
     margin-left: 50px;
     margin-top: 50px;
-    background-color: rgb(255, 255, 255);
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.37);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
 
 }
 
@@ -52,13 +62,13 @@
 }
 
 .Sales-panel {
-    background: radial-gradient(circle at 100% 100%, #ffffff 0, #ffffff 5px, transparent 5px) 0% 0%/10px 10px no-repeat,
-        radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 5px, transparent 5px) 100% 0%/10px 10px no-repeat,
-        radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 5px, transparent 5px) 0% 100%/10px 10px no-repeat,
-        radial-gradient(circle at 0 0, #ffffff 0, #ffffff 5px, transparent 5px) 100% 100%/10px 10px no-repeat,
-        linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 10px) calc(100% - 20px) no-repeat,
-        linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 20px) calc(100% - 10px) no-repeat,
-        linear-gradient(145deg, #e5b7ff 0%, #a6e0ff 100%);
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.00);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: 10px;
     padding: 15px;
     box-sizing: border-box;
@@ -106,12 +116,16 @@
 
 .TotalAnalytics-panel {
     border-radius: 10px;
-    box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.25);
     padding: 0px 20px;
     padding-bottom: 30px;
     margin-left: 50px;
     margin-top: 50px;
-    background-color: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.37);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
 }
 
 .TotalAnalytics-title {
@@ -121,20 +135,18 @@
     font-weight: bold;
     border-radius: 10px;
     padding: 20px 15px;
-    background-color: lightgrey;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     position: relative;
     text-align: center;
     align-self: center;
 }
 
 .TotalAnalytics-grid {
-    background: radial-gradient(circle at 100% 100%, #ffffff 0, #ffffff 5px, transparent 5px) 0% 0%/10px 10px no-repeat,
-        radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 5px, transparent 5px) 100% 0%/10px 10px no-repeat,
-        radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 5px, transparent 5px) 0% 100%/10px 10px no-repeat,
-        radial-gradient(circle at 0 0, #ffffff 0, #ffffff 5px, transparent 5px) 100% 100%/10px 10px no-repeat,
-        linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 10px) calc(100% - 20px) no-repeat,
-        linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 20px) calc(100% - 10px) no-repeat,
-        linear-gradient(145deg, #e5b7ff 0%, #a6e0ff 100%);
     border-radius: 10px;
     padding: 15px;
     box-sizing: border-box;
@@ -142,12 +154,16 @@
 
 .NewGameForm-panel {
     border-radius: 10px;
-    box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.25);
     padding: 0px 20px;
     padding-bottom: 30px;
     margin-left: 50px;
     margin-top: 50px;
-    background-color: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.37);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
 }
 
 .NewGameForm-title {
@@ -157,7 +173,12 @@
     font-weight: bold;
     border-radius: 10px;
     padding: 20px 100px;
-    background-color: lightgrey;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     position: relative;
     text-align: center;
     align-self: center;
@@ -174,7 +195,12 @@
 .ImageInsert-button {
     width: 200px;
     height: 200px;
-    border: 2px solid rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     border-radius: 10px;
     box-sizing: border-box;
     cursor: pointer;
@@ -184,7 +210,7 @@
     overflow: hidden;
 }
 
-.img-info{
+.img-info {
     width: auto;
     height: 100%;
     object-fit: cover;
@@ -211,7 +237,12 @@
 .info-input {
     width: 200px;
     height: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     font-size: 16px;
     border-radius: 4px;
     height: 30px;
@@ -229,11 +260,15 @@
     margin-left: 20px;
     align-self: center;
     padding: 10px 10px;
-    background-color: rgba(255, 255, 255, 0);
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     font-weight: bold;
     cursor: pointer;
     border-radius: 10px;
-    border: 2px solid black;
     cursor: pointer;
 }
 
@@ -254,7 +289,12 @@
     padding-bottom: 5px;
     padding-left: 5px;
     padding-right: 5px;
-    border: 2px solid rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     border-radius: 10px;
     text-align: center;
 }
@@ -265,7 +305,12 @@
     font-weight: bold;
     border-radius: 10px;
     padding: 10px 100px;
-    background-color: lightgrey;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     text-align: center;
 }
 
@@ -275,7 +320,12 @@
     width: 80%;
     margin-bottom: 20px;
     padding: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.37);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     font-size: 16px;
     border-radius: 5px;
     resize: none;
@@ -283,12 +333,16 @@
 
 .EditExistingProducts-panel {
     border-radius: 10px;
-    box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.25);
     padding: 0px 20px;
     padding-bottom: 30px;
     margin-left: 50px;
     margin-top: 50px;
-    background-color: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.37);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
 
 }
 
@@ -299,15 +353,19 @@
     font-weight: bold;
     border-radius: 10px;
     padding: 20px 100px;
-    background-color: lightgrey;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
     position: relative;
     text-align: center;
     align-self: center;
 }
 
-.EditExistingProducts-gamelist{
+.EditExistingProducts-gamelist {
     margin-left: 10%;
     padding-top: 10px;
-    border-radius: 5px;
-    width: 80%
+    width: 80%; 
 }

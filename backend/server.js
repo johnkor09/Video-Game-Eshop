@@ -429,7 +429,7 @@ app.get('/api/cart/content', authenticateToken, async (req, res) => {
             include: [{
                 model: GameModel,
                 as: 'game',
-                attributes: ['title', 'platform', 'cover_image_url', 'stock_quantity']
+                attributes: ['title', 'platform', 'cover_image_url', 'stock_quantity', 'game_id']
             }],
             // sort
             order: [['item_id', 'ASC']]
