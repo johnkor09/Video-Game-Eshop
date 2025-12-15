@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from '../Authentication/AuthContext';
 import './Basket.css'
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { FaRegTrashCan } from "react-icons/fa6";
 import { IoBagCheckOutline } from "react-icons/io5";
 
@@ -12,11 +13,8 @@ export default function Basket() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [Checkout, setCheckout] = useState(false);
-    useEffect(() => {
-        getBasketGames();
-    }, [user, token]);
 
-    const getBasketGames = async () => {
+    const getBasketGames = useCallback(async () => {
         if (!user || !token) {
             setError("Log in first to view your cart.");
             setLoading(false);
@@ -37,7 +35,13 @@ export default function Basket() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [user, token]);
+
+    useEffect(() => {
+        getBasketGames();
+    }, [getBasketGames]);
+
+
 
     if (loading) {
         return <div className="loading">Φόρτωση καλαθιού...</div>;
@@ -57,6 +61,7 @@ export default function Basket() {
             return;
         }
         try {
+            // eslint-disable-next-line
             const response = await axios.delete('http://localhost:4000/api/cart/removeItem',
                 {
                     headers: {
@@ -79,13 +84,14 @@ export default function Basket() {
         const newQuantity = parseInt(value, 10);
         if (newQuantity < 1 || isNaN(newQuantity)) return;
 
-        setBasketGames(prevGames => 
-        prevGames.map(item => 
-            item.item_id === itemId ? { ...item, quantity: newQuantity } : item
-        )
-    );
+        setBasketGames(prevGames =>
+            prevGames.map(item =>
+                item.item_id === itemId ? { ...item, quantity: newQuantity } : item
+            )
+        );
 
         try {
+            // eslint-disable-next-line
             const response = await axios.put('http://localhost:4000/api/cart/changeQuantity',
                 { itemId: itemId, NewQuantity: newQuantity },
                 {
@@ -93,36 +99,38 @@ export default function Basket() {
                         'Authorization': `Bearer ${token}`
                     },
                 });
-        }catch(err){
+        } catch (err) {
             const message = err.response?.data?.message || "Αποτυχία αλλαγης quantity.";
             console.error("Failed to change cart item quantity.", err);
             alert('Σφάλμα: ' + message);
             await getBasketGames();
         }
     };
-    
+
 
     return (
         <div className='BasketPage'>
             <div className='Basket-Panel'>
                 <div className='Basket-Game-Grid'>
                     {BasketGames.length === 0 ?
-                        (                            <div>No Items in Cart</div>
-                         
+                        (<div className='Empty-cart-text'>Looks like your cart is empty...</div>
                         ) :
                         (
                             BasketGames?.map(item => (
-                                <div key={item.item_id} className='Basket-Item'>
-                                    <img
-                                        src={'/game_images/' + item.game.cover_image_url || './game_images/placeholder.jpg'}
-                                        alt={'Cover for' + item.game.title}
-                                        className='Basket-Item-coverImage'
-                                        onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x400/444444/ffffff?text=Image+Missing'; }}
-                                    />
+                                <div key={item.item_id} className='Basket-Item' >
+                                    <Link to={'/Games/' + item.game.platform + '/' + item.game.game_id}  >
+                                        <img
+                                            src={'/game_images/' + item.game.cover_image_url || './game_images/placeholder.jpg'}
+                                            alt={'Cover for' + item.game.title}
+                                            className='Basket-Item-coverImage'
+                                            onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x400/444444/ffffff?text=Image+Missing'; }}
+                                        />
+                                    </Link>
                                     <div className='Basket-Item-Details'>
-                                        <div className='Basket-Item-Details-Info'>{item.game.title} ({item.game.platform})</div>
-                                        <p>Price for one: €{parseFloat(item.price_at_addition).toFixed(2)}</p>
-                                        <p>Quantity:
+                                        <Link to={'/Games/' + item.game.platform + '/' + item.game.game_id}  >
+                                            <div className='Basket-Item-Details-Info'>{item.game.title} ({item.game.platform})</div>
+                                        </Link>
+                                        <div className='basket-quantity'>Quantity:
                                             <input
                                                 type="number"
                                                 value={item.quantity}
@@ -130,11 +138,15 @@ export default function Basket() {
                                                 className='quantity-input'
                                                 onChange={(e) => handleChangeQuantity(item.item_id, e.target.value)}
                                             />
-                                        </p>
-                                        <p className='total-price'>
-                                            Total price: €{(parseFloat(item.price_at_addition) * item.quantity).toFixed(2)}
-                                        </p>
-                                        <FaRegTrashCan onClick={() => handleItemRemoval(item.item_id)} className='Basket-remove-button' />
+                                            <FaRegTrashCan onClick={() => handleItemRemoval(item.item_id)} className='Basket-remove-button' />
+                                        </div>
+                                        <div className='total-price'>
+                                            <div >
+                                                Total price:
+                                            </div>
+                                            <div className='total-price-price'>€{(parseFloat(item.price_at_addition) * item.quantity).toFixed(2)}</div>
+                                        </div>
+
                                     </div>
                                 </div>
                             ))
@@ -152,7 +164,7 @@ export default function Basket() {
                                 <button>Complete</button>
                                 <button onClick={() => setCheckout(false)}>Close</button>
                             </div>
-                    </div> )}
+                        </div>)}
                 </div>
             </div>
         </div>

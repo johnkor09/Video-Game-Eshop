@@ -47,8 +47,8 @@ const GameDetailPage = () => {
             return;
         }
         try {
+            // eslint-disable-next-line
             const res = await axios.post('http://localhost:4000/api/cart/add', {gameId: gameId, quantity: 1}, {headers:{'Authorization': `Bearer ${token}`}});
-            alert(res.data.message);
         } catch (err) {
             console.error("Failed to add game to cart.");
             alert('Error:'+ err.response.data.message);

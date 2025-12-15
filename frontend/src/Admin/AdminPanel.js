@@ -154,8 +154,7 @@ export default function AdminPanel() {
                 form.append(key, formData[key]);
             }
         });
-        if(imageFile)
-            {form.append('coverImage', imageFile);}
+        if (imageFile) { form.append('coverImage', imageFile); }
         try {
             const url = 'http://localhost:4000/api/games/' + selectedGame.game_id;
             const response = await axios.put(url, form, {
@@ -239,6 +238,81 @@ export default function AdminPanel() {
             </div>
         );
     }
+
+    const customStyles = {
+        control: (base, state) => ({
+            ...base,
+            background: 'rgba(255, 255, 255, 0)',
+            borderRadius: '16px',
+            border: '1px solid rgba(255, 255, 255, 0.37)',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+            backdropFilter: 'blur(5.8px)',
+            WebkitBackdropFilter: 'blur(5.8px)',
+            color: 'black',
+            padding: '5px',
+            boxShadow: state.isFocused ? '0 0 0 1px rgba(255, 255, 255, 0.5)' : '0 4px 30px rgba(0, 0, 0, 0.1)',
+            '&:hover': {
+                border: '1px solid rgba(255, 255, 255, 0.8)',
+            }
+        }),
+        menu: (base) => ({
+            ...base,
+            background: 'rgba(255, 255, 255, 0)',
+            borderRadius: '10px',
+            backdropFilter: 'blur(10px)',
+            zIndex: 9999,
+            
+        }),
+        menuPortal: (base) => ({
+            ...base,
+            zIndex: 9999
+        }),
+        singleValue: (base) => ({
+            ...base,
+            color: 'black',
+            fontWeight: 'bold'
+        }),
+        input: (base) => ({
+            ...base,
+            color: 'black',
+            background: 'rgba(255, 255, 255, 0)'
+        }),
+        placeholder: (base) => ({
+            ...base,
+            color: 'rgba(0, 0, 0, 0.6)'
+        }),
+        menuList: (base) => ({
+        ...base,
+        backgroundColor: 'transparent',
+        '&::-webkit-scrollbar': {
+            width: '0px',
+            height: '0px',
+            background: 'transparent',
+        }}),
+        option: (base, state) => ({
+        ...base,
+        color: 'black',
+        borderRadius: '5px',
+        margin: '2px 5px',
+        width: 'auto',
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        ...(state.isSelected && {
+            backgroundColor: 'rgba(255, 255, 255, 0.5)', 
+            color: 'black',
+        }),
+        ...(state.isFocused && {
+            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            color: 'black',
+        }),
+        '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            backdropFilter: 'blur(20px)', // παραπανω BLUR στο hover
+            WebkitBackdropFilter: 'blur(20px)',
+            color: 'black',
+        },
+    }),
+    };
+
     return (
         <>
             <div className='AdminPanel'>
@@ -302,6 +376,9 @@ export default function AdminPanel() {
                         onChange={handleGameSelect}
                         value={selectedValue}
                         placeholder="Select a Game to Edit..."
+                        styles={customStyles}
+                        menuPortalTarget={document.body}
+                        menuPosition="fixed"
                     />
                 </div>
                 <div className='NewGameForm-panel'>
@@ -422,9 +499,9 @@ export default function AdminPanel() {
                             </div>
                         </div>
                         <div className="Button-grid-info">
-                            <button className="button-info"  onClick={() => handleTrashClick()}><FaRegTrashCan className="buttonicon" color='red' /></button>
-                            <button className="button-info" onClick={handleSave} disabled={!selectedGame}><LuSave className="buttonicon" color='green'/></button>
-                            <button className="button-info" onClick={handleUpload} disabled={selectedGame}><LuHardDriveUpload className="buttonicon" color='blue'/></button>
+                            <button className="button-info" onClick={() => handleTrashClick()}><FaRegTrashCan className="buttonicon" color='red' /></button>
+                            <button className="button-info" onClick={handleSave} disabled={!selectedGame}><LuSave className="buttonicon" color='green' /></button>
+                            <button className="button-info" onClick={handleUpload} disabled={selectedGame}><LuHardDriveUpload className="buttonicon" color='blue' /></button>
                         </div>
                     </div>
                     <div className="NewGameInfo-description">
