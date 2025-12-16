@@ -2,13 +2,21 @@ import {Link} from 'react-router-dom';
 import './GameItemPanel.css';
 
 const GameItemPanel = ({ game }) => {
-    const detailUrl = '/Games/'+game.platform+'/'+game.game_id;
+    const detailUrl = '/Games/'+game.platform+'/'+game.product_id;
+
+    let imageFolder = "/game_images/"; // Default φάκελος
+    if (game.category === 'Collectible') {
+        imageFolder = "/collectibles_images/";
+    }
+
+    const imageUrl = game.cover_image_url ? imageFolder + game.cover_image_url 
+        : './game_images/placeholder.jpg';
 
     return (
         <div className="game-panel-container">
             <Link to={detailUrl} className="game-panel-link" >
                 <img 
-                    src={"/game_images/"+game.cover_image_url || './game_images/placeholder.jpg'} 
+                    src={imageUrl}
                     alt={game.title} 
                     className="game-panel-image"
                     onError={(e) => { e.target.onerror = null; e.target.src = './game_images/placeholder.jpg'; }}

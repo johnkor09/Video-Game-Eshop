@@ -50,7 +50,7 @@ export default function XboxGames() {
                         <div className="gamesGrid">
                             <ComboBox setSortBy={setSortBy} />
                         {games.map(game => (
-                                <GameItemPanel game={game} key={game.game_id} />
+                                <GameItemPanel game={game} key={game.product_id} />
                             ))
                         }
                     </div>

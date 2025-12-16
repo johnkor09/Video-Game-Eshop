@@ -116,19 +116,26 @@ export default function Basket() {
                         (<div className='Empty-cart-text'>Looks like your cart is empty...</div>
                         ) :
                         (
-                            BasketGames?.map(item => (
+                            BasketGames?.map(item => {
+                                let folder = '/game_images/';
+                                if (item.product.category === 'Collectible') {
+                                    folder = '/collectibles_images/';
+                                }
+                                const imageUrl = item.product.cover_image_url ? folder + item.product.cover_image_url 
+                                    : '/game_images/placeholder.jpg';
+                                return (
                                 <div key={item.item_id} className='Basket-Item' >
-                                    <Link to={'/Games/' + item.game.platform + '/' + item.game.game_id}  >
+                                    <Link to={'/Games/' + item.product.platform + '/' + item.product.product_id}  >
                                         <img
-                                            src={'/game_images/' + item.game.cover_image_url || './game_images/placeholder.jpg'}
-                                            alt={'Cover for' + item.game.title}
+                                            src={imageUrl}
+                                            alt={'Cover for' + item.product.title}
                                             className='Basket-Item-coverImage'
                                             onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x400/444444/ffffff?text=Image+Missing'; }}
                                         />
                                     </Link>
                                     <div className='Basket-Item-Details'>
-                                        <Link to={'/Games/' + item.game.platform + '/' + item.game.game_id}  >
-                                            <div className='Basket-Item-Details-Info'>{item.game.title} ({item.game.platform})</div>
+                                        <Link to={'/Games/' + item.product.platform + '/' + item.product.product_id}  >
+                                            <div className='Basket-Item-Details-Info'>{item.product.title} ({item.product.platform})</div>
                                         </Link>
                                         <div className='basket-quantity'>Quantity:
                                             <input
@@ -149,7 +156,7 @@ export default function Basket() {
 
                                     </div>
                                 </div>
-                            ))
+                            )})
                         )
                     }
                 </div>

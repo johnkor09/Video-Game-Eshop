@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        game_id: {
+        product_id: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
@@ -32,9 +32,9 @@ module.exports = (sequelize) => {
         tableName: 'cart_items',
         timestamps: false,
         indexes: [{
-            name: 'unique_game_in_cart',
+            name: 'unique_product_in_cart',
             unique: true,
-            fields: ['cart_id', 'game_id']
+            fields: ['cart_id', 'product_id']
         }]
     });
     return CartItem;

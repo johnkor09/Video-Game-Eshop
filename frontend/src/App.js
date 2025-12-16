@@ -1,5 +1,6 @@
 import HomePage from './HomePage.js';
 import Games from './Games.js';
+import Collectibles from './Collectibles.js';
 import Header from './Header.js';
 import ItemTab from './ItemTab.js';
 import Footer from './Footer.js';
@@ -27,15 +28,22 @@ function App() {
         <div className="Body">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/Games" element={<Games />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path='/:userId/basket' element={<Basket/>}/>
+
+            <Route path="/Games" element={<Games />} />
             <Route path='/Games/Nintendo' element={<NintendoGames/>}/>
             <Route path='/Games/Playstation' element={<PlaystationGames/>}/>
             <Route path='/Games/Xbox' element={<XboxGames/>}/>
             <Route path='/Games/Pc' element={<PCGames/>}/>
             <Route path="/Games/:platform/:gameId" element={<GameDetailPage />} />
-            <Route path='/:userId/basket' element={<Basket/>}/>
+
+            <Route path="/Collectibles" element={<Collectibles />} />
+            <Route path="/Collectibles/Pops" element={<Collectibles />} />
+            <Route path="/Collectibles/Amiibo" element={<Collectibles />} />
+            <Route path="/Collectibles/Figures" element={<Collectibles />} />
+
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
             {user && user.role ? (<>
               <Route path="/admin-panel" element={<AdminPanel />} />

@@ -210,6 +210,29 @@
     overflow: hidden;
 }
 
+.Left-Column-Wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.category-selector {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 5px;
+}
+
+.category-selector .info-text {
+    margin-left: 5px;
+    font-size: 14px;
+}
+
+.category-selector .info-input {
+    width: 200px;
+}
+
 .img-info {
     width: auto;
     height: 100%;

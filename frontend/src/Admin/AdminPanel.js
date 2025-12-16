@@ -7,15 +7,17 @@ import { LuSave } from "react-icons/lu";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { LuHardDriveUpload } from "react-icons/lu";
 import './AdminPanel.css';
+
 export default function AdminPanel() {
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({ category: 'Game' });
     const [selectedGame, setSelectedGame] = useState(null);
     const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
     const [imageFile, setImageFile] = useState(null);
     const { token } = useAuth();
+    
     useEffect(() => {
         const getGames = async () => {
             try {
@@ -36,7 +38,7 @@ export default function AdminPanel() {
         try {
             const response = await axios.get('http://localhost:4000/api/games/' + gameId);
             setSelectedGame(response.data);
-            setFormData(response.data);
+            setFormData({ ...response.data, category: response.data.category || 'Game' });
         } catch (err) {
             console.error("Failed to get game details.", err);
             setError("Προβλημα με τον server!");
@@ -48,7 +50,7 @@ export default function AdminPanel() {
         setImagePreviewUrl(null);
         if (!selectedOption || selectedOption.value === 'none') {
             setSelectedGame(null);
-            setFormData({});
+            setFormData({ category: 'Game' });
             return;
         }
 
@@ -56,17 +58,17 @@ export default function AdminPanel() {
     };
 
     const gameOptions = games.map(game => ({
-        value: game.game_id,
+        value: game.product_id,
         label: game.title,
     }));
 
     const selectOptions = [
-        { value: 'none', label: '--- Select a Game or None ---' },
+        { value: 'none', label: '--- Select a Product or None ---' },
         ...gameOptions
     ];
 
     const selectedValue = selectedGame
-        ? selectOptions.find(option => option.value === selectedGame.game_id)
+        ? selectOptions.find(option => option.value === selectedGame.product_id)
         : selectOptions.find(option => option.value === 'none') || null;
 
     const handleInputChange = (event) => {
@@ -80,13 +82,13 @@ export default function AdminPanel() {
     const handleTrashClick = async () => {
         console.log("trashClick");
         if (!selectedGame) {
-            setFormData({});
+            setFormData({ category: 'Game' });
             setImageFile(null);
             setImagePreviewUrl(null);
             return;
         }
 
-        const confirmDelete = window.confirm(`Είσαι σίγουρος ότι θέλεις να διαγράψεις το παιχνίδι "${selectedGame.title}";`);
+        const confirmDelete = window.confirm(`Είσαι σίγουρος ότι θέλεις να διαγράψεις το "${selectedGame.title}";`);
 
         if (!confirmDelete) return;
 
@@ -96,7 +98,7 @@ export default function AdminPanel() {
         }
 
         try {
-            const url = 'http://localhost:4000/api/games/' + selectedGame.game_id;
+            const url = 'http://localhost:4000/api/games/' + selectedGame.product_id;
 
             await axios.delete(url, {
                 headers: {
@@ -106,10 +108,10 @@ export default function AdminPanel() {
 
             alert('Το παιχνίδι διαγράφηκε επιτυχώς!');
 
-            setGames(prevGames => prevGames.filter(g => g.game_id !== selectedGame.game_id));
+            setGames(prevGames => prevGames.filter(g => g.product_id !== selectedGame.product_id));
 
             setSelectedGame(null);
-            setFormData({});
+            setFormData({ category: 'Game' });
             setImagePreviewUrl(null);
 
         } catch (err) {
@@ -156,7 +158,7 @@ export default function AdminPanel() {
         });
         if (imageFile) { form.append('coverImage', imageFile); }
         try {
-            const url = 'http://localhost:4000/api/games/' + selectedGame.game_id;
+            const url = 'http://localhost:4000/api/games/' + selectedGame.product_id;
             const response = await axios.put(url, form, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -165,11 +167,11 @@ export default function AdminPanel() {
             alert('Το παιχνίδι ενημερώθηκε επιτυχώς!');
             setGames(prevGames =>
                 prevGames.map(g =>
-                    g.game_id === selectedGame.game_id ? response.data.game : g
+                    g.product_id === selectedGame.product_id ? response.data.product : g
                 )
             );
-            setSelectedGame(response.data.game);
-            setFormData(response.data.game);
+            setSelectedGame(response.data.product);
+            setFormData(response.data.product);
         } catch (err) {
             console.error("Failed to update game.", err);
             alert('Αποτυχία ενημέρωσης παιχνιδιού: ' + err.message);
@@ -202,6 +204,11 @@ export default function AdminPanel() {
                 form.append(key, formData[key]);
             }
         });
+
+        if (!formData.category) {
+            form.append('category', 'Game');
+        }
+
         form.append('coverImage', imageFile);
 
         try {
@@ -245,7 +252,6 @@ export default function AdminPanel() {
             background: 'rgba(255, 255, 255, 0)',
             borderRadius: '16px',
             border: '1px solid rgba(255, 255, 255, 0.37)',
-            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
             backdropFilter: 'blur(5.8px)',
             WebkitBackdropFilter: 'blur(5.8px)',
             color: 'black',
@@ -312,6 +318,11 @@ export default function AdminPanel() {
         },
     }),
     };
+
+    let folder = '/game_images/';
+    if (formData.category === 'Collectible') {
+        folder = '/collectibles_images/';
+    }
 
     return (
         <>
@@ -386,14 +397,15 @@ export default function AdminPanel() {
                     >{selectedGame ? `Edit Game: ${selectedGame.title}` : 'New Game Form'}
                     </div>
                     <div className='NewGameForm-info-grid'>
-                        <div className='ImageInsert-button-container'>
-                            <input
-                                type="file"
-                                id="coverImageUpload"
-                                style={{ display: 'none' }}
-                                accept=".webp"
-                                onChange={handleImageChange}
-                            />
+                        <div className='Left-Column-Wrapper'>
+                            <div className='ImageInsert-button-container'>
+                                <input
+                                    type="file"
+                                    id="coverImageUpload"
+                                    style={{ display: 'none' }}
+                                    accept=".webp"
+                                    onChange={handleImageChange}
+                                />
 
                             <label htmlFor="coverImageUpload" className='ImageInsert-button'>
                                 {selectedGame === null ?
@@ -410,13 +422,30 @@ export default function AdminPanel() {
                                     </>
                                     ) : (
                                         <img className='img-info'
-                                            src={imagePreviewUrl || "/game_images/" + formData.cover_image_url || './game_images/placeholder.jpg'}
+                                            src={imagePreviewUrl || (formData.cover_image_url ? folder + formData.cover_image_url : './game_images/placeholder.jpg')}
                                             alt={formData.title}
                                             onError={(e) => { e.target.onerror = null; e.target.src = './game_images/placeholder.jpg'; }}
                                         />
                                     )}
                             </label>
                         </div>
+
+                        <div className='info-grid category-selector'>
+                            <label className='info-text'>Category:</label>
+                            <select className='info-input'
+                                id='category'
+                                value={formData.category || 'Game'}
+                                onChange={handleInputChange}
+                                style={{ color: 'black' }}
+                            >
+                                <option value="Game">Game</option>
+                                <option value="Collectible">Collectible</option>
+                                <option value="Accessory">Accessory</option>
+                            </select>
+                        </div>
+
+                    </div>
+
                         <div className='info-panel'>
                             <div className='info-grid'>
                                 <label className='info-text'>Title:</label>

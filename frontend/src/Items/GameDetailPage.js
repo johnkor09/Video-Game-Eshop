@@ -48,7 +48,7 @@ const GameDetailPage = () => {
         }
         try {
             // eslint-disable-next-line
-            const res = await axios.post('http://localhost:4000/api/cart/add', {gameId: gameId, quantity: 1}, {headers:{'Authorization': `Bearer ${token}`}});
+            const res = await axios.post('http://localhost:4000/api/cart/add', {productId: gameId, quantity: 1}, {headers:{'Authorization': `Bearer ${token}`}});
         } catch (err) {
             console.error("Failed to add game to cart.");
             alert('Error:'+ err.response.data.message);
@@ -75,7 +75,14 @@ const GameDetailPage = () => {
             </div>
         );
     }
-    const imageUrl = '/game_images/' + game.cover_image_url || './game_images/placeholder.jpg';
+
+    let imageFolder = "/game_images/"; // Default φάκελος
+    if (game.category === 'Collectible') {
+        imageFolder = "/collectibles_images/";
+    }
+
+    const imageUrl = game.cover_image_url ? imageFolder + game.cover_image_url 
+        : './game_images/placeholder.jpg';
 
     return (
         <div className='detailsPage'>

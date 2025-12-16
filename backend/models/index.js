@@ -2,7 +2,7 @@ module.exports = (sequelize) => {
     const User = require('./User')(sequelize);
     const Cart = require('./Cart')(sequelize);
     const CartItem = require('./CartItem')(sequelize);
-    const Game = require('./Game')(sequelize);
+    const Product = require('./Product')(sequelize);
 
 User.hasOne(Cart,{
     foreignKey:'user_id',
@@ -26,20 +26,20 @@ CartItem.belongsTo(Cart, {
     as: 'cart'
 });
 
-Game.hasMany(CartItem, {
-    foreignKey: 'game_id',
+Product.hasMany(CartItem, {
+    foreignKey: 'product_id',
     as: 'cartItems'
 });
 
-CartItem.belongsTo(Game, {
-    foreignKey: 'game_id',
-    as: 'game'
+CartItem.belongsTo(Product, {
+    foreignKey: 'product_id',
+    as: 'product'
 });
 
 return {
         User,
         Cart,
         CartItem,
-        Game
+        Product
     };
 };
