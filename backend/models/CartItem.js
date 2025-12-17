@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
     const CartItem = sequelize.define('CartItem', {
-        item_id:{
+        item_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        game_id: {
+        product_id: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
@@ -20,12 +20,12 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1,
-            validate:{
+            validate: {
                 min: 1
             }
         },
         price_at_addition: {
-            type: DataTypes.DECIMAL(10,2),
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
         }
     }, {
@@ -34,7 +34,7 @@ module.exports = (sequelize) => {
         indexes: [{
             name: 'unique_game_in_cart',
             unique: true,
-            fields: ['cart_id', 'game_id']
+            fields: ['cart_id', 'product_id']
         }]
     });
     return CartItem;

@@ -1,45 +1,55 @@
-module.exports = (sequelize) => { 
+module.exports = (sequelize) => {
     const User = require('./User')(sequelize);
     const Cart = require('./Cart')(sequelize);
     const CartItem = require('./CartItem')(sequelize);
     const Game = require('./Game')(sequelize);
+    const Product = require('./Product')(sequelize);
 
-User.hasOne(Cart,{
-    foreignKey:'user_id',
-    as: 'cart',
-    onDelete: 'CASCADE'
-});
+    User.hasOne(Cart, {
+        foreignKey: 'user_id',
+        as: 'cart',
+        onDelete: 'CASCADE'
+    });
 
-Cart.belongsTo(User, {
-    foreignKey: 'user_id',
-    as: 'user'
-});
+    Product.hasOne(Game, {
+        foreignKey: 'product_id',
+        as: 'gameDetails'
+    });
+    Game.belongsTo(Product, {
+        foreignKey: 'product_id'
+    });
 
-Cart.hasMany(CartItem,{
-    foreignKey: 'cart_id',
-    as: 'items',
-    onDelete: 'CASCADE'
-});
+    Cart.belongsTo(User, {
+        foreignKey: 'user_id',
+        as: 'user'
+    });
 
-CartItem.belongsTo(Cart, {
-    foreignKey: 'cart_id',
-    as: 'cart'
-});
+    Cart.hasMany(CartItem, {
+        foreignKey: 'cart_id',
+        as: 'items',
+        onDelete: 'CASCADE'
+    });
 
-Game.hasMany(CartItem, {
-    foreignKey: 'game_id',
-    as: 'cartItems'
-});
+    CartItem.belongsTo(Cart, {
+        foreignKey: 'cart_id',
+        as: 'cart'
+    });
 
-CartItem.belongsTo(Game, {
-    foreignKey: 'game_id',
-    as: 'game'
-});
+    Game.hasMany(CartItem, {
+        foreignKey: 'product_id',
+        as: 'cartItems'
+    });
 
-return {
+    CartItem.belongsTo(Product, {
+        foreignKey: 'product_id',
+        as: 'product'
+    });
+
+    return {
         User,
         Cart,
         CartItem,
-        Game
+        Game,
+        Product
     };
 };

@@ -52,7 +52,7 @@ export default function Home() {
                     <div className="gamesGrid">
                         <ComboBox setSortBy={setSortBy} />
                         {games.map(game => (
-                        <GameItemPanel game={game} key={game.game_id} />
+                        <GameItemPanel game={game} key={game.product_id} />
                     ))}
                 </div>
             )}
@@ -65,7 +65,7 @@ export default function Home() {
                 ) : (
                      <div className="gamesGrid">
                             {games.filter(game => game.platform === "Nintendo Switch 2" || game.platform === "Nintendo Switch").map(game => (
-                                <GameItemPanel game={game} key={game.game_id} />
+                                <GameItemPanel game={game} key={game.product_id} />
                             ))}
                     </div>
                 )}
@@ -80,7 +80,7 @@ export default function Home() {
                 ) : (
                         <div className="gamesGrid">
                             {games.filter(game => game.platform === "Playstation 5" || game.platform === "Playstation 4").map(game => (
-                                <GameItemPanel game={game} key={game.game_id} />
+                                <GameItemPanel game={game} key={game.product_id} />
                             ))}
                     </div>
                 )}
@@ -94,7 +94,7 @@ export default function Home() {
                 ) : (
                         <div className="gamesGrid">
                         {games.filter(game => game.platform === "Xbox Series").map(game => (
-                                <GameItemPanel game={game} key={game.game_id} />
+                                <GameItemPanel game={game} key={game.product_id} />
                             ))}
                     </div>
                 )}
@@ -108,7 +108,7 @@ export default function Home() {
                 ) : (
                         <div className="gamesGrid">
                         {games.filter(game => game.platform === "PC").map(game => (
-                                <GameItemPanel game={game} key={game.game_id} />
+                                <GameItemPanel game={game} key={game.product_id} />
                             ))}
                     </div>
                 )}

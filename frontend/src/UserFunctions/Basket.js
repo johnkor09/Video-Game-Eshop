@@ -28,7 +28,11 @@ export default function Basket() {
                     }
                 }
             );
+            if (Array.isArray(response.data)) {
             setBasketGames(response.data);
+        } else {
+            setBasketGames(response.data.items || []);
+        }
         } catch (err) {
             console.error("Failed to get games data.", err);
             setError("Cant load cart items.");
@@ -118,17 +122,17 @@ export default function Basket() {
                         (
                             BasketGames?.map(item => (
                                 <div key={item.item_id} className='Basket-Item' >
-                                    <Link to={'/Games/' + item.game.platform + '/' + item.game.game_id}  >
+                                    <Link to={'/Games/' + item.platform + '/' + item.product_id}  >
                                         <img
-                                            src={'/game_images/' + item.game.cover_image_url || './game_images/placeholder.jpg'}
-                                            alt={'Cover for' + item.game.title}
+                                            src={'/game_images/' + item.cover_image_url || './game_images/placeholder.jpg'}
+                                            alt={'Cover for' + item.title}
                                             className='Basket-Item-coverImage'
                                             onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x400/444444/ffffff?text=Image+Missing'; }}
                                         />
                                     </Link>
                                     <div className='Basket-Item-Details'>
-                                        <Link to={'/Games/' + item.game.platform + '/' + item.game.game_id}  >
-                                            <div className='Basket-Item-Details-Info'>{item.game.title} ({item.game.platform})</div>
+                                        <Link to={'/Games/' + item.platform + '/' + item.product_id}  >
+                                            <div className='Basket-Item-Details-Info'>{item.title} ({item.platform})</div>
                                         </Link>
                                         <div className='basket-quantity'>Quantity:
                                             <input

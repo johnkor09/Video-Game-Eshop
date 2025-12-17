@@ -56,8 +56,8 @@ export default function AdminPanel() {
     };
 
     const gameOptions = games.map(game => ({
-        value: game.game_id,
-        label: game.title,
+        value: game.product_id,
+        label: `${game.title} (${game.platform || 'N/A'})`
     }));
 
     const selectOptions = [
@@ -66,7 +66,7 @@ export default function AdminPanel() {
     ];
 
     const selectedValue = selectedGame
-        ? selectOptions.find(option => option.value === selectedGame.game_id)
+        ? selectOptions.find(option => option.value === selectedGame.product_id)
         : selectOptions.find(option => option.value === 'none') || null;
 
     const handleInputChange = (event) => {
@@ -78,13 +78,21 @@ export default function AdminPanel() {
     };
 
     const handleTrashClick = async () => {
-        console.log("trashClick");
+        console.log("Selected Game State:", selectedGame);
+
         if (!selectedGame) {
             setFormData({});
             setImageFile(null);
             setImagePreviewUrl(null);
             return;
         }
+
+        if (!selectedGame || !selectedGame.product_id) {
+        alert("Δεν έχει επιλεγεί έγκυρο παιχνίδι προς διαγραφή (Missing ID)");
+        return;
+    }
+
+        
 
         const confirmDelete = window.confirm(`Είσαι σίγουρος ότι θέλεις να διαγράψεις το παιχνίδι "${selectedGame.title}";`);
 
@@ -96,7 +104,7 @@ export default function AdminPanel() {
         }
 
         try {
-            const url = 'http://localhost:4000/api/games/' + selectedGame.game_id;
+            const url = 'http://localhost:4000/api/games/' + selectedGame.product_id;
 
             await axios.delete(url, {
                 headers: {
@@ -106,7 +114,7 @@ export default function AdminPanel() {
 
             alert('Το παιχνίδι διαγράφηκε επιτυχώς!');
 
-            setGames(prevGames => prevGames.filter(g => g.game_id !== selectedGame.game_id));
+            setGames(prevGames => prevGames.filter(g => g.product_id !== selectedGame.product_id));
 
             setSelectedGame(null);
             setFormData({});
@@ -114,7 +122,6 @@ export default function AdminPanel() {
 
         } catch (err) {
             console.error("Failed to delete game.", err);
-            alert('Αποτυχία διαγραφής: ' + (err.response?.data?.message || err.message));
         }
     }
 
@@ -156,23 +163,22 @@ export default function AdminPanel() {
         });
         if (imageFile) { form.append('coverImage', imageFile); }
         try {
-            const url = 'http://localhost:4000/api/games/' + selectedGame.game_id;
+            const url = 'http://localhost:4000/api/games/' + selectedGame.product_id;
             const response = await axios.put(url, form, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
             alert('Το παιχνίδι ενημερώθηκε επιτυχώς!');
+            const updatedGame = response.data.game;
             setGames(prevGames =>
-                prevGames.map(g =>
-                    g.game_id === selectedGame.game_id ? response.data.game : g
-                )
+                prevGames.map(g => g.product_id === selectedGame.product_id ? updatedGame : g)
             );
-            setSelectedGame(response.data.game);
-            setFormData(response.data.game);
+            setSelectedGame(updatedGame);
+            setFormData(updatedGame);
         } catch (err) {
             console.error("Failed to update game.", err);
-            alert('Αποτυχία ενημέρωσης παιχνιδιού: ' + err.message);
+            alert('Αποτυχία ενημέρωσης παιχνιδιού: ' + (err.response?.data?.message || err.message));
         }
     };
 
@@ -261,7 +267,7 @@ export default function AdminPanel() {
             borderRadius: '10px',
             backdropFilter: 'blur(10px)',
             zIndex: 9999,
-            
+
         }),
         menuPortal: (base) => ({
             ...base,
@@ -282,35 +288,36 @@ export default function AdminPanel() {
             color: 'rgba(0, 0, 0, 0.6)'
         }),
         menuList: (base) => ({
-        ...base,
-        backgroundColor: 'transparent',
-        '&::-webkit-scrollbar': {
-            width: '0px',
-            height: '0px',
-            background: 'transparent',
-        }}),
+            ...base,
+            backgroundColor: 'transparent',
+            '&::-webkit-scrollbar': {
+                width: '0px',
+                height: '0px',
+                background: 'transparent',
+            }
+        }),
         option: (base, state) => ({
-        ...base,
-        color: 'black',
-        borderRadius: '5px',
-        margin: '2px 5px',
-        width: 'auto',
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        ...(state.isSelected && {
-            backgroundColor: 'rgba(255, 255, 255, 0.5)', 
+            ...base,
             color: 'black',
+            borderRadius: '5px',
+            margin: '2px 5px',
+            width: 'auto',
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            ...(state.isSelected && {
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                color: 'black',
+            }),
+            ...(state.isFocused && {
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                color: 'black',
+            }),
+            '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(20px)', // παραπανω BLUR στο hover
+                WebkitBackdropFilter: 'blur(20px)',
+                color: 'black',
+            },
         }),
-        ...(state.isFocused && {
-            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-            color: 'black',
-        }),
-        '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.7)',
-            backdropFilter: 'blur(20px)', // παραπανω BLUR στο hover
-            WebkitBackdropFilter: 'blur(20px)',
-            color: 'black',
-        },
-    }),
     };
 
     return (

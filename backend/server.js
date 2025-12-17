@@ -4,6 +4,7 @@ let app = express();
 let port = 4000;
 const { sequelize } = require('./config/db');
 const db = require('./models/index')(sequelize);
+const ProductModel = db.Product;
 const UserModel = db.User;
 const GameModel = db.Game;
 const CartModel = db.Cart;
@@ -18,7 +19,7 @@ require('dotenv').config(); // Για να διαβάζει το .env
 // αυτο ειναι το μυστικο κλειδι κρυπτογραφησης jwt και καποια στιγμη πρεπει να το βαλουμε σε .env αρχειο
 const JWT_SECRET = process.env.JWT_SECRET || 'so_long_gay_bowesr_67';
 
-let sortField = 'game_id';
+let sortField = 'product_id';
 let sortOrder = 'DESC';
 function Get_SortBy(sortBy) {
     if (sortBy === 'Low-High') {
@@ -28,7 +29,7 @@ function Get_SortBy(sortBy) {
         sortField = 'price';
         sortOrder = 'DESC';//descending
     } else if (sortBy === 'Recent') {
-        sortField = 'game_id';
+        sortField = 'product_id';
         sortOrder = 'DESC';//descending
     } else if (sortBy === 'Alphabetical') {
         sortField = 'title';
@@ -172,17 +173,16 @@ app.delete('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
     const gameId = req.params.gameId;
 
     try {
-        // 1. Βρείτε την εγγραφή για να πάρετε το URL της εικόνας
-        const gameToDelete = await GameModel.findOne({
-            where: { game_id: gameId },
+        const productToDelete = await ProductModel.findOne({
+            where: { product_id: gameId },
             attributes: ['cover_image_url']
         });
 
-        if (!gameToDelete) {
+        if (!productToDelete) {
             return res.status(404).json({ message: 'Game not found.' });
         }
 
-        const imageUrl = gameToDelete.cover_image_url;
+        const imageUrl = productToDelete.cover_image_url;
 
         if (imageUrl && imageUrl !== 'placeholder.jpg') {
             const imagePath = path.join(UPLOAD_DIR, imageUrl);
@@ -199,9 +199,8 @@ app.delete('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
             }
         }
 
-        // Η εντολή destroy διαγράφει την εγγραφή
-        const deletedCount = await GameModel.destroy({
-            where: { game_id: gameId }
+        const deletedCount = await ProductModel.destroy({
+            where: { product_id: gameId }
         });
 
         if (deletedCount > 0) {
@@ -218,7 +217,7 @@ app.delete('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
 app.post('/api/games/upload', checkAuthAndAdmin, async (req, res) => {
     const game = req.body;
     const imageFile = req.files ? req.files.coverImage : null;
-    let finalImageUrl = null;
+    let finalImageUrl = 'placeholder.jpg';
 
     if (imageFile) {
         const titleSlug = game.title.trim()
@@ -246,26 +245,34 @@ app.post('/api/games/upload', checkAuthAndAdmin, async (req, res) => {
         // Αν δεν ανέβηκε φωτογραφία, ίσως θέλετε ένα default όνομα:
         finalImageUrl = 'placeholder.jpg';
     }
+    const t = await sequelize.transaction();
 
     try {
-        const newGame = await GameModel.create({
+        const newProduct = await ProductModel.create({
             title: game.title,
             price: game.price,
             stock_quantity: game.stock_quantity,
+            product_type: 'game', // Σημαντικό!
+            description_: game.description_,
+            cover_image_url: finalImageUrl,
+            is_active: 1
+        }, { transaction: t });
+
+        await GameModel.create({
+            product_id: newProduct.product_id, // Το ID από το Product
             release_date: game.release_date ? new Date(game.release_date) : null,
             developer: game.developer,
             publisher: game.publisher,
             genres: game.genres,
-            platform: game.platform,
-            description_: game.description_,
-            cover_image_url: finalImageUrl
-        });
+            platform: game.platform
+        }, { transaction: t });
+        await t.commit();
 
         return res.status(201).json({
-            message: 'Το παιχνίδι δημιουργήθηκε επιτυχώς.',
-            game: newGame
+            message: 'Το παιχνίδι δημιουργήθηκε επιτυχώς.'
         });
     } catch (err) {
+        if (t && !t.finished) await t.rollback();
         console.error("Create Error:", err);
         return res.status(500).json({ message: 'Database error during creation.' });
     }
@@ -326,12 +333,16 @@ app.put('/api/cart/changeQuantity', authenticateToken, async (req, res) => {
             return res.status(400).json({ message: 'no cart found for user ' + userId });
         }
         const cart_id = cart.cart_id;
+
         const cartItem = await CartItemModel.findOne({
             where: { item_id: parsedItemId, cart_id: cart_id },
-            include: [{ model: GameModel, as: 'game', attributes: ['stock_quantity'] }]
+            include: [{ 
+                model: ProductModel, 
+                as: 'product' // Σύνδεση με Product για το stock
+            }]
         });
 
-        const availableStock = cartItem.game.stock_quantity;
+        const availableStock = cartItem.product.stock_quantity;
 
         if (newQuantity > availableStock) {
             return res.status(400).json({
@@ -355,6 +366,7 @@ app.put('/api/cart/changeQuantity', authenticateToken, async (req, res) => {
 app.post('/api/cart/add', authenticateToken, async (req, res) => {
     const userId = req.user.id;
     const { gameId, quantity = 1 } = req.body;
+    
     const parsedGameId = parseInt(gameId);
     const parsedQuantity = parseInt(quantity);
 
@@ -363,48 +375,46 @@ app.post('/api/cart/add', authenticateToken, async (req, res) => {
     }
 
     try {
-        const game = await GameModel.findByPk(parsedGameId);
+        const product = await ProductModel.findByPk(parsedGameId);
 
-        if (!game || game.is_active === 0) {
-            return res.status(400).json({ message: 'Gane not found or unavailable!' });
+        if (!product || product.is_active === 0) {
+            return res.status(400).json({ message: 'Product not found or unavailable!' });
         }
-        if (game.stock_quantity < parsedQuantity) {
+
+        if (product.stock_quantity < parsedQuantity) {
             return res.status(400).json({ message: 'No stock available' });
         }
 
-        const gamePrice = game.price;
-        const [cart, created] = await CartModel.findOrCreate({
-            where: { user_id: userId },
-            defaults: { user_id: userId }
-        });
+        const [cart] = await CartModel.findOrCreate({ where: { user_id: userId } });
 
-        const cartId = cart.cart_id;
         const [cartItem, itemCreated] = await CartItemModel.findOrCreate({
-            where: { cart_id: cartId, game_id: parsedGameId },
+            where: { 
+                cart_id: cart.cart_id, 
+                product_id: parsedGameId 
+            },
             defaults: {
-                cart_id: cartId,
-                game_id: parsedGameId,
+                cart_id: cart.cart_id,
+                product_id: parsedGameId,
                 quantity: parsedQuantity,
-                price_at_addition: gamePrice
+                price_at_addition: product.price
             }
         });
 
         if (!itemCreated) {
-            const newQuantity = cartItem.quantity + parsedQuantity;
+            const totalRequestedQuantity = cartItem.quantity + parsedQuantity;
 
-            if (game.stock_quantity < newQuantity) {
-                return res.status(400).json({ message: 'No stock available' });
+            if (product.stock_quantity < totalRequestedQuantity) {
+                return res.status(400).json({ message: 'No more stock available' });
             }
 
-            await cartItem.update({
-                quantity: newQuantity
-            });
+            await cartItem.update({ quantity: totalRequestedQuantity });
 
             return res.status(200).json({
-                message: 'Quantity of item was updated to ' + newQuantity,
+                message: 'Quantity of item was updated to ' + totalRequestedQuantity,
                 cartItem: cartItem
             });
         }
+
         return res.status(201).json({
             message: 'Item added to cart.',
             cartItem: cartItem
@@ -418,25 +428,38 @@ app.post('/api/cart/add', authenticateToken, async (req, res) => {
 app.get('/api/cart/content', authenticateToken, async (req, res) => {
     const userId = req.user.id;
     try {
-        const [cart, created] = await CartModel.findOrCreate({
+        const [cart] = await CartModel.findOrCreate({
             where: { user_id: userId },
             defaults: { user_id: userId }
         });
 
-        const cartId = cart.cart_id;
         const cartItemsList = await CartItemModel.findAll({
-            where: { cart_id: cartId },
+            where: { cart_id: cart.cart_id },
             include: [{
-                model: GameModel,
-                as: 'game',
-                attributes: ['title', 'platform', 'cover_image_url', 'stock_quantity', 'game_id']
+                model: ProductModel,
+                as: 'product',
+                attributes: ['product_id', 'title', 'price', 'cover_image_url', 'stock_quantity'],
+                include: [{
+                    model: GameModel,
+                    as: 'gameDetails',
+                    attributes: ['platform']
+                }]
             }],
-            // sort
             order: [['item_id', 'ASC']]
         });
 
         if (cartItemsList.length > 0) {
-            return res.status(200).json(cartItemsList);
+            const response = cartItemsList.map(item => ({
+                item_id: item.item_id,
+                quantity: item.quantity,
+                price_at_addition: item.price_at_addition,
+                product_id: item.product.product_id,
+                title: item.product.title,
+                cover_image_url: item.product.cover_image_url,
+                stock_quantity: item.product.stock_quantity,
+                platform: item.product.gameDetails ? item.product.gameDetails.platform : 'N/A'
+            }));
+            return res.status(200).json(response);
         }
         else {
             return res.status(200).json([]);
@@ -451,56 +474,73 @@ app.put('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
     const gameId = req.params.gameId;
     const game = req.body;
     const imageFile = req.files ? req.files.coverImage : null;
-    let gameData = {
-        title: game.title,
-        price: game.price,
-        stock_quantity: game.stock_quantity,
-        release_date: game.release_date ? new Date(game.release_date) : null,
-        developer: game.developer,
-        publisher: game.publisher,
-        genres: game.genres,
-        platform: game.platform,
-        description_: game.description_
-    }
+    const t = await sequelize.transaction();
     try {
+        let productData = {
+            title: game.title,
+            price: game.price,
+            stock_quantity: game.stock_quantity,
+            description_: game.description_
+        };
+
         if (imageFile) {
-            const titleSlug = gameData.title.trim()
-                .replace(/\s+/g, '_')
-                .replace(/[^a-zA-Z0-9_]/g, '')
-                .toLowerCase();
-            const platformSlug = gameData.platform.trim()
-                .replace(/\s+/g, '_')
-                .replace(/[^a-zA-Z0-9_]/g, '')
-                .toLowerCase();
-            const fileExtension = path.extname(imageFile.name);
-            const fileName = `${titleSlug}_${platformSlug}${fileExtension}`;
+            const titleSlug = game.title.trim().replace(/\s+/g, '_').toLowerCase();
+            const fileName = `${titleSlug}_${Date.now()}${path.extname(imageFile.name)}`;
             const uploadPath = path.join(UPLOAD_DIR, fileName);
-
-            try {
-                // Αποθήκευση του αρχείου στον δίσκο
-                await imageFile.mv(uploadPath);
-                gameData.cover_image_url = fileName; // Αποθηκεύουμε μόνο το όνομα/path στη DB
-                console.log(`Το αρχείο αποθηκεύτηκε ως: ${fileName}`);
-            } catch (err) {
-                console.error("File upload error:", err);
-                return res.status(500).json({ message: 'Αποτυχία αποθήκευσης αρχείου στον δίσκο.' });
-            }
-
+            await imageFile.mv(uploadPath);
+            productData.cover_image_url = fileName;
         }
 
-        const [updatedRows] = await GameModel.update(
-            gameData
-            ,
-            { where: { game_id: gameId } }
-        );
-        if (updatedRows > 0) {
-            const updatedGame = await GameModel.findByPk(gameId);
-            return res.json({ success: true, message: 'Game updated successfully.', game: updatedGame });
-        } else {
-            return res.status(404).json({ success: false, message: 'Game not found or no changes were made.' });
-        }
+        await ProductModel.update(productData, {
+            where: { product_id: gameId },
+            transaction: t
+        });
+
+        await GameModel.update({
+            developer: game.developer,
+            publisher: game.publisher,
+            genres: game.genres,
+            platform: game.platform,
+            release_date: game.release_date ? new Date(game.release_date) : null
+        }, {
+            where: { product_id: gameId },
+            transaction: t
+        });
+
+        await t.commit();
+
+        const rawGame = await ProductModel.findOne({
+            where: { product_id: gameId },
+            include: [{
+                model: GameModel,
+                as: 'gameDetails'
+            }]
+        });
+
+        const flatGame = {
+            product_id: rawGame.product_id,
+            title: rawGame.title,
+            price: rawGame.price,
+            stock_quantity: rawGame.stock_quantity,
+            description_: rawGame.description_,
+            cover_image_url: rawGame.cover_image_url,
+            is_active: rawGame.is_active,
+            developer: rawGame.gameDetails ? rawGame.gameDetails.developer : null,
+            publisher: rawGame.gameDetails ? rawGame.gameDetails.publisher : null,
+            genres: rawGame.gameDetails ? rawGame.gameDetails.genres : null,
+            platform: rawGame.gameDetails ? rawGame.gameDetails.platform : null,
+            release_date: rawGame.gameDetails ? rawGame.gameDetails.release_date : null
+        };
+
+        return res.json({
+            success: true,
+            message: 'Game updated successfully.',
+            game: flatGame
+        });
+
     } catch (err) {
-        console.error(err);
+        if (t && !t.finished) await t.rollback();
+        console.error("Update Error:", err);
         return res.status(500).json({ success: false, message: 'Database error during update.' });
     }
 
@@ -510,14 +550,26 @@ app.get('/api/games', async (req, res) => {
     const { sortBy } = req.query;  // get sort method
     try {
         Get_SortBy(sortBy);
-        const games = await GameModel.findAll({
-            where: {
-                is_active: 1
-            },
-            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url'],
+        const products = await ProductModel.findAll({
+            where: { is_active: 1, product_type: 'game' },
+            include: [{
+                model: GameModel,
+                as: 'gameDetails',
+                attributes: ['platform']
+            }],
+            attributes: ['product_id', 'title', 'price', 'cover_image_url'],
             order: [[sortField, sortOrder]],
         });
-        res.json(games)
+        const flattenedGames = products.map(p => {
+            return {
+                product_id: p.product_id,
+                title: p.title,
+                price: p.price,
+                cover_image_url: p.cover_image_url,
+                platform: p.gameDetails ? p.gameDetails.platform : 'N/A'
+            };
+        });
+        res.json(flattenedGames);
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
@@ -529,18 +581,32 @@ app.get('/api/games/:platform/:gameId', async (req, res) => {
     const { sortBy } = req.query;
     try {
         Get_SortBy(sortBy);
-        const game = await GameModel.findOne({
-            where: {
-                platform: platform,
-                game_id: gameId
-            },
-            attributes: ['game_id', 'title', 'price', 'stock_quantity', 'release_date'
-                , 'developer', 'publisher', 'genres', 'platform', 'description_', 'cover_image_url', 'is_active']
+        const game = await ProductModel.findOne({
+            where: { product_id: gameId, product_type: 'game' },
+            include: [{
+                model: GameModel,
+                as: 'gameDetails',
+                where: { platform: platform }
+            }]
         });
         if (!game) {
             return res.status(404).json({ message: 'Game not found.' });
         }
-        res.json(game);
+        const response = {
+            product_id: game.product_id,
+            title: game.title,
+            price: game.price,
+            stock_quantity: game.stock_quantity,
+            description_: game.description_,
+            cover_image_url: game.cover_image_url,
+            is_active: game.is_active,
+            developer: game.gameDetails?.developer,
+            publisher: game.gameDetails?.publisher,
+            genres: game.gameDetails?.genres,
+            platform: game.gameDetails?.platform,
+            release_date: game.gameDetails?.release_date
+        };
+        res.json(response);
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
@@ -551,15 +617,26 @@ app.get('/api/games/nintendo', async (req, res) => {
     const { sortBy } = req.query;  // get sort method
     try {
         Get_SortBy(sortBy);
-        const games = await GameModel.findAll({
-            where: {
-                is_active: 1,
-                platform: { [Op.in]: ['Nintendo Switch 2', 'Nintendo Switch'] }
-            },
-            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url'],
+        const products = await ProductModel.findAll({
+            where: { is_active: 1, product_type: 'game' },
+            attributes: ['product_id', 'title', 'price', 'cover_image_url'],
+            include: [{
+                model: GameModel,
+                as: 'gameDetails',
+                where: { platform: { [Op.in]: ['Nintendo Switch 2', 'Nintendo Switch'] } },
+                attributes: ['platform']
+            }],
             order: [[sortField, sortOrder]],
         });
-        res.json(games)
+
+        const flattened = products.map(p => ({
+            product_id: p.product_id,
+            title: p.title,
+            price: p.price,
+            cover_image_url: p.cover_image_url,
+            platform: p.gameDetails ? p.gameDetails.platform : 'Nintendo'
+        }));
+        res.json(flattened)
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
@@ -570,16 +647,26 @@ app.get('/api/games/playstation', async (req, res) => {
     const { sortBy } = req.query;  // get sort method
     try {
         Get_SortBy(sortBy);
-        console.log('Received sortBy:', sortBy);
-        const games = await GameModel.findAll({
-            where: {
-                is_active: 1,
-                platform: { [Op.in]: ['Playstation 5', 'Playstation 4'] }
-            },
-            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url'],
+
+        const products = await ProductModel.findAll({
+            where: { is_active: 1, product_type: 'game' },
+            attributes: ['product_id', 'title', 'price', 'cover_image_url'],
+            include: [{
+                model: GameModel,
+                as: 'gameDetails',
+                where: { platform: { [Op.in]: ['Playstation 5', 'Playstation 4'] } },
+                attributes: ['platform']
+            }],
             order: [[sortField, sortOrder]],
         });
-        res.json(games)
+        const flattened = products.map(p => ({
+            product_id: p.product_id,
+            title: p.title,
+            price: p.price,
+            cover_image_url: p.cover_image_url,
+            platform: p.gameDetails ? p.gameDetails.platform : 'Playstation'
+        }));
+        res.json(flattened)
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
@@ -591,16 +678,26 @@ app.get('/api/games/xbox', async (req, res) => {
     const { sortBy } = req.query;  // get sort method
     try {
         Get_SortBy(sortBy);
-        console.log('Received sortBy:', sortBy);
-        const games = await GameModel.findAll({
-            where: {
-                is_active: 1,
-                platform: 'Xbox Series'
-            },
-            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url'],
+
+        const products = await ProductModel.findAll({
+            where: { is_active: 1, product_type: 'game' },
+            attributes: ['product_id', 'title', 'price', 'cover_image_url'],
+            include: [{
+                model: GameModel,
+                as: 'gameDetails',
+                where: { platform: { [Op.in]: ['Xbox Series'] } },
+                attributes: ['platform']
+            }],
             order: [[sortField, sortOrder]],
         });
-        res.json(games)
+        const flattened = products.map(p => ({
+            product_id: p.product_id,
+            title: p.title,
+            price: p.price,
+            cover_image_url: p.cover_image_url,
+            platform: p.gameDetails ? p.gameDetails.platform : 'Xbox'
+        }));
+        res.json(flattened)
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
@@ -611,16 +708,26 @@ app.get('/api/games/pc', async (req, res) => {
     const { sortBy } = req.query;  // get sort method
     try {
         Get_SortBy(sortBy);
-        console.log('Received sortBy:', sortBy);
-        const games = await GameModel.findAll({
-            where: {
-                is_active: 1,
-                platform: 'PC'
-            },
-            attributes: ['game_id', 'title', 'price', 'platform', 'cover_image_url'],
+
+        const products = await ProductModel.findAll({
+            where: { is_active: 1, product_type: 'game' },
+            attributes: ['product_id', 'title', 'price', 'cover_image_url'],
+            include: [{
+                model: GameModel,
+                as: 'gameDetails',
+                where: { platform: { [Op.in]: ['PC'] } },
+                attributes: ['platform']
+            }],
             order: [[sortField, sortOrder]],
         });
-        res.json(games)
+        const flattened = products.map(p => ({
+            product_id: p.product_id,
+            title: p.title,
+            price: p.price,
+            cover_image_url: p.cover_image_url,
+            platform: p.gameDetails ? p.gameDetails.platform : 'pc'
+        }));
+        res.json(flattened)
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
@@ -632,17 +739,31 @@ app.get('/api/games/pc', async (req, res) => {
 app.get('/api/games/:gameId', async (req, res) => {
     const { gameId } = req.params;
     try {
-        const game = await GameModel.findOne({
-            where: {
-                game_id: gameId
-            },
-            attributes: ['game_id', 'title', 'price', 'stock_quantity', 'release_date'
-                , 'developer', 'publisher', 'genres', 'platform', 'description_', 'cover_image_url', 'is_active']
+        const game = await ProductModel.findOne({
+            where: { product_id: gameId, product_type: 'game' },
+            include: [{
+                model: GameModel,
+                as: 'gameDetails'
+            }]
         });
-        if (!game) {
-            return res.status(404).json({ message: 'Game not found.' });
-        }
-        res.json(game);
+        if (!game) return res.status(404).json({ message: 'Game not found.' });
+
+        const response = {
+            product_id: game.product_id,
+            title: game.title,
+            price: game.price,
+            stock_quantity: game.stock_quantity,
+            description_: game.description_,
+            cover_image_url: game.cover_image_url,
+            is_active: game.is_active,
+            developer: game.gameDetails.developer,
+            publisher: game.gameDetails.publisher,
+            genres: game.gameDetails.genres,
+            platform: game.gameDetails.platform,
+            release_date: game.gameDetails.release_date
+        };
+
+        res.json(response);
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
