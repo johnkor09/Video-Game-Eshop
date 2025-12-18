@@ -665,6 +665,25 @@ app.get('/api/games/:gameId', async (req, res) => {
     }
 });
 
+// app for orders
+
+app.get('/api/orders/content', authenticateToken, async (req, res) => {
+    const userID = req.user.id;
+    try {
+        const order = await OrdersModel.findAll({
+            where: {
+                user_id: userID,
+            },
+            attributes: ['order_id','price', 'date_ord', 'user_id'],
+        });
+        res.json(order);
+    } catch (err) {
+        console.error('Error with sending cart items', err);
+        return res.json({ success: false, message: 'Error with getting cart items' });
+    }
+});
+
+
 app.listen(port, () => {
     console.log('Server listening at http://localhost:' + port);
 });
