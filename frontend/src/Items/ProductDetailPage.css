@@ -77,12 +77,6 @@
     font-size: 20px;
 }
 
-.Buttons {
-    margin-left: 5%;
-    display: flex;
-    flex-direction: 0;
-    gap: 50px;
-}
 
 .cartButton {
     align-items: center;
@@ -98,4 +92,7 @@
 
 .cartButton:hover {
     transform: scale(1.05);
+}
+.cartButton:active {
+    transform: scale(0.95);
 }

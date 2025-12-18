@@ -19,7 +19,8 @@ export default function AdminPanel() {
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/api/games');
+                const response = await axios.get('http://localhost:4000/api/games/all');
+                console.log(response.data)
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);
@@ -34,7 +35,8 @@ export default function AdminPanel() {
 
     const getGameDetails = async (gameId) => {
         try {
-            const response = await axios.get('http://localhost:4000/api/games/' + gameId);
+            const response = await axios.get('http://localhost:4000/api/game/' + gameId);
+            console.log(response.data);
             setSelectedGame(response.data);
             setFormData(response.data);
         } catch (err) {
@@ -51,7 +53,7 @@ export default function AdminPanel() {
             setFormData({});
             return;
         }
-
+        console.log(selectedOption.value);
         getGameDetails(selectedOption.value);
     };
 
@@ -88,11 +90,11 @@ export default function AdminPanel() {
         }
 
         if (!selectedGame || !selectedGame.product_id) {
-        alert("Δεν έχει επιλεγεί έγκυρο παιχνίδι προς διαγραφή (Missing ID)");
-        return;
-    }
+            alert("Δεν έχει επιλεγεί έγκυρο παιχνίδι προς διαγραφή (Missing ID)");
+            return;
+        }
 
-        
+
 
         const confirmDelete = window.confirm(`Είσαι σίγουρος ότι θέλεις να διαγράψεις το παιχνίδι "${selectedGame.title}";`);
 
@@ -181,9 +183,26 @@ export default function AdminPanel() {
             alert('Αποτυχία ενημέρωσης παιχνιδιού: ' + (err.response?.data?.message || err.message));
         }
     };
+    const validateForm = () => {
+        if (!formData.title || !formData.price || !formData.stock_quantity || !formData.description_) {
+            return false;
+        }
+        if (formData.product_type === 'game') {
+            if (!formData.platform || !formData.developer || !formData.genres || !formData.release_date) {
+                return false;
+            }
+        }
+        if (formData.product_type === 'collectible') {
+            if (!formData.collectible_type || !formData.brand) {
+                return false;
+            }
+        }
+
+        return true;
+    };
 
     const handleUpload = async () => {
-        if (!formData.title || !formData.price || !formData.platform || !formData.developer || !formData.description_ || !formData.genres || !formData.publisher || !formData.stock_quantity || !formData.release_date) {
+        if (!validateForm()) {
             alert('Συμπληρωσε τα κενα');
             return;
         }
@@ -435,53 +454,6 @@ export default function AdminPanel() {
                                 />
                             </div>
                             <div className='info-grid'>
-                                <label className='info-text'>Developer:</label>
-                                <input className='info-input'
-                                    id='developer'
-                                    maxLength={100}
-                                    value={formData.developer || ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className='info-grid'>
-                                <label className='info-text'>Publisher:</label>
-                                <input className='info-input'
-                                    id='publisher'
-                                    maxLength={100}
-                                    value={formData.publisher || ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className='info-grid'>
-                                <label className='info-text'>Release Date:</label>
-                                <input className='info-input'
-                                    type='date'
-                                    id='release_date'
-                                    value={formData.release_date ? new Date(formData.release_date).toISOString().split('T')[0] : ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                        </div>
-                        <div className='info-panel'>
-                            <div className='info-grid'>
-                                <label className='info-text'>Platform:</label>
-                                <input className='info-input'
-                                    id='platform'
-                                    maxLength={100}
-                                    value={formData.platform || ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className='info-grid'>
-                                <label className='info-text'>Genre:</label>
-                                <input className='info-input'
-                                    id='genres'
-                                    maxLength={100}
-                                    value={formData.genres || ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className='info-grid'>
                                 <label className='info-text'>Price:</label>
                                 <input className='info-input'
                                     type='number'
@@ -504,6 +476,56 @@ export default function AdminPanel() {
                                     onChange={handleInputChange}
                                 />
                             </div>
+
+
+                        </div>
+                        <div className='info-panel'>
+                            {(formData.product_type === 'game' || !selectedGame) && (
+                                <>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Platform:</label>
+                                        <input className='info-input' id='platform' value={formData.platform || ''} onChange={handleInputChange} />
+                                    </div>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Developer:</label>
+                                        <input className='info-input' id='developer' value={formData.developer || ''} onChange={handleInputChange} />
+                                    </div>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Publisher:</label>
+                                        <input className='info-input'
+                                            id='publisher'
+                                            maxLength={100}
+                                            value={formData.publisher || ''}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Genre:</label>
+                                        <input className='info-input' id='genres' value={formData.genres || ''} onChange={handleInputChange} />
+                                    </div>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Release Date:</label>
+                                        <input className='info-input'
+                                            type='date'
+                                            id='release_date'
+                                            value={formData.release_date ? new Date(formData.release_date).toISOString().split('T')[0] : ''}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div>
+                                </>
+                            )}
+                            {formData.product_type === 'collectible' && (
+                                <>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Brand:</label>
+                                        <input className='info-input' id='brand' value={formData.brand || ''} onChange={handleInputChange} />
+                                    </div>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Type:</label>
+                                        <input className='info-input' id='collectible_type' value={formData.collectible_type || ''} onChange={handleInputChange} />
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <div className="Button-grid-info">
                             <button className="button-info" onClick={() => handleTrashClick()}><FaRegTrashCan className="buttonicon" color='red' /></button>

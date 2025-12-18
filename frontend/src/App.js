@@ -6,9 +6,10 @@ import Footer from './Footer.js';
 import Login from './Authentication/Login.js';
 import Signup from './Authentication/SignUp.js';
 import AdminPanel from './Admin/AdminPanel';
-import GameDetailPage from './Items/GameDetailPage';
+import ProductDetailPage from './Items/ProductDetailPage';
 import NintendoGames from './Items/NintendoGames';
 import XboxGames from './Items/XboxGames';
+import Collectibles from './Items/Collectibles';
 import PCGames from './Items/PCGames';
 import PlaystationGames from './Items/PlaystationGames';
 import Basket from './UserFunctions/Basket.js';
@@ -33,8 +34,9 @@ function App() {
             <Route path='/Games/Nintendo' element={<NintendoGames/>}/>
             <Route path='/Games/Playstation' element={<PlaystationGames/>}/>
             <Route path='/Games/Xbox' element={<XboxGames/>}/>
+            <Route path='/Games/Collectibles' element={<Collectibles/>}/>
             <Route path='/Games/Pc' element={<PCGames/>}/>
-            <Route path="/Games/:platform/:gameId" element={<GameDetailPage />} />
+            <Route path="/:product_type/:productId" element={<ProductDetailPage />} />
             <Route path='/:userId/basket' element={<Basket/>}/>
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
             {user && user.role ? (<>
