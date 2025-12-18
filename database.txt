@@ -16,49 +16,121 @@ CREATE table users(
 INSERT INTO users (password_,first_name,surname,email,admin_status) VALUES('admin','BestAdminEver','Goku','admin@gmail.com','1');
 INSERT INTO users (password_,first_name,surname,email,phone) VALUES('1234','John','Pork','johnpork@gmail.com','6912345678');
 
-CREATE table products (
-    product_id int not null AUTO_INCREMENT primary key,
-    title varchar(100) not null,
-    price decimal(10, 2) not null,
-    stock_quantity int default 0,
-    release_date date,
-    developer varchar(50),
-    publisher varchar(50),
-    genres varchar(100),
-    platform varchar(50) not null,
-    description_ text,
-    cover_image_url varchar(255),
-    category enum('Game', 'Collectible', 'Accessory') not null default 'Game',
-    is_active boolean default 1,
-    date_added datetime default current_timestamp
+CREATE TABLE products (
+    product_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    stock_quantity INT DEFAULT 0,
+    product_type ENUM('game', 'accessory', 'collectible') NOT NULL,
+    description_ TEXT,
+    cover_image_url VARCHAR(255),
+    is_active BOOLEAN DEFAULT 1,
+    date_added DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values ('Donkey Kong Bananza'
-, 79.89, 100, '2025-07-17', 'Nintendo EPD', 'Nintendo', 'Platform,Action-adventure', 'Nintendo Switch 2',
-'A ground-breaking adventure starring Donkey Kong.
+CREATE TABLE video_games (
+    product_id INT PRIMARY KEY,
+    developer VARCHAR(50),
+    publisher VARCHAR(50),
+    genres VARCHAR(100),
+    platform VARCHAR(50) NOT NULL,
+    release_date DATE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+);
+
+CREATE TABLE accessories (
+    product_id INT PRIMARY KEY,
+    accessory_type VARCHAR(50),
+    brand VARCHAR(50),
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+);
+
+CREATE TABLE collectibles (
+    product_id INT PRIMARY KEY,
+    collectible_type VARCHAR(50),
+    brand VARCHAR(50),
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+);
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Mega Man Amiibo (Collection No. 27)', 19.90, 10, 'collectible', 'Mega Man Amiibo figure from the Super Smash Bros. collection. Compatible with Nintendo Switch, Wii U and 3DS.', 'amiibo-megaman.webp');
+
+INSERT INTO collectibles (product_id, collectible_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Amiibo', 'Nintendo');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Frieren (Beyond Journey\'s End) Funko Pop!', 24.90, 15, 'collectible', "Collectible Funko Pop! Plus vinyl figure of Frieren from the popular Frieren: Beyond Journey's End series.", 'pop-frieren.webp');
+
+INSERT INTO collectibles (product_id, collectible_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Funko Pop', 'Funko');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Corrin Amiibo (Super Smash Bros. Collection No. 59)', 29.90, 5, 'collectible', 'Amiibo figure of Corrin (Player 1) from Fire Emblem Fates, part of the Super Smash Bros. collection.', 'amiibo-corrin.webp');
+
+INSERT INTO collectibles (product_id, collectible_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Amiibo', 'Nintendo');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Kazuya Amiibo (Super Smash Bros. Collection)', 21.90, 12, 'collectible', 'Kazuya Mishima Amiibo figure from Tekken, as featured in Super Smash Bros. Ultimate.', 'amiibo-kazuya.webp');
+
+INSERT INTO collectibles (product_id, collectible_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Amiibo', 'Nintendo');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Triple Pack: Mario, Peach & Bowser Amiibo', 59.90, 3, 'collectible', 'Set of three Amiibo figures featuring Mario, Peach and Bowser in their wedding outfits from Super Mario Odyssey.', 'amiibo_super_mario_odyssey_three_pack.webp');
+
+INSERT INTO collectibles (product_id, collectible_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Amiibo', 'Nintendo');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Goku - Funko Pop! Dragon Ball Z', 14.90, 20, 'collectible', 'Classic Funko Pop! figure of Son Goku from Dragon Ball Z in a fighting stance.', 'pop-goku.webp');
+
+INSERT INTO collectibles (product_id, collectible_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Funko Pop', 'Funko');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('SSGSS Gogeta - Funko Pop! Dragon Ball Super', 17.90, 8, 'collectible', 'Funko Pop! figure of Gogeta in Super Saiyan God Super Saiyan (SSGSS) form with energy effects.', 'pop-gogeta.webp');
+
+INSERT INTO collectibles (product_id, collectible_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Funko Pop', 'Funko');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('King Dedede Amiibo(Super Smash Bros. Collection No. 28)', 19.90, 7, 'collectible', "Amiibo figure of King Dedede, the king of Dream Land, from the Super Smash Bros. collection.", 'amiibo-king-dedede.webp');
+
+INSERT INTO collectibles (product_id, collectible_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Amiibo', 'Nintendo');
+    
+    
+    
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Donkey Kong Bananza', 79.89, 100, 'game', 'A ground-breaking adventure starring Donkey Kong.
 The big guy is back. Donkey Kong swings onto the Nintendo Switch 2 system with a brand-new action adventure.
 Help Donkey Kong make his way through the depths of the Underground World; the deeper he goes, the more amazing places he finds.
 There\'s no shortage of things DK can pulverize with his powerful punches. Let loose in this truly destructive adventure and help DK get his bananas back.
-Donkey Kong Bananza —only on Nintendo Switch 2.',
-'Donkey-Kong-Bananza-Physical.webp', 'Game');
+Donkey Kong Bananza —only on Nintendo Switch 2.', 'Donkey-Kong-Bananza-Physical.webp');
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values ('Marvel\'s Spider-Man 2 Standard Edition'
-, 79.90, 100, '2025-10-20', 'Insomniac Games', 'Sony Interactive Entertainment', 'Action-adventure', 'Playstation 5',
-'Spider-Men, Peter Parker and Miles Morales, return for an exciting new adventure in the critically acclaimed Marvel’s Spider-Man franchise for PS5.
-Swing, jump and utilise the new Web Wings to travel across Marvel’s New York, quickly switching between Peter Parker and Miles Morales to experience different stories and epic new powers, as the iconic villain Venom threatens to destroy their lives, their city and the ones they love.',
-'Marvel-Spiderman-2-ps5.webp', 'Game');
+INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
+VALUES (LAST_INSERT_ID(), 'Nintendo EPD', 'Nintendo', 'Platform,Action-adventure', 'Nintendo Switch 2', '2025-07-17');
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values ('Street Fighter 6'
-, 49.99, 100, '2023-6-02', 'CAPCOM', 'CAPCOM', 'Fighting', 'Xbox Series',
-'Street Fighter 6 is the next evolution of the Street Fighter series, and features innovative new gameplay features, plus enhanced visuals for every aspect of the game.
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Marvel\'s Spider-Man 2 Standard Edition', 79.90, 100, 'game', 'Spider-Men, Peter Parker and Miles Morales, return for an exciting new adventure in the critically acclaimed Marvel’s Spider-Man franchise for PS5.
+Swing, jump and utilise the new Web Wings to travel across Marvel’s New York, quickly switching between Peter Parker and Miles Morales to experience different stories and epic new powers, as the iconic villain Venom threatens to destroy their lives, their city and the ones they love.', 'Marvel-Spiderman-2-ps5.webp');
+
+INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
+VALUES (LAST_INSERT_ID(), 'Insomniac Games', 'Sony Interactive Entertainment', 'Action-adventure', 'Playstation 5', '2025-10-20');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Street Fighter 6', 49.99, 100, 'game', 'Street Fighter 6 is the next evolution of the Street Fighter series, and features innovative new gameplay features, plus enhanced visuals for every aspect of the game.
 Powered by Capcom\'s proprietary RE ENGINE, the Street Fighter 6 experience spans across three distinct game modes - Fighting Ground, World Tour and Battle Hub.
 Your path to becoming a World Warrior starts here.
-Your moment. Your fight.',
-'Street-Fighter-6-xbox.webp', 'Game');
+Your moment. Your fight.', 'Street-Fighter-6-xbox.webp');
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values ('Dragon Ball: Sparking! Zero Collector\'s Edition - PC'
-, 180.00, 100, '2024-10-11', 'Spike Chunsoft Co', 'Bandai Namco Entertainment', 'Fighting,Anime', 'PC',
-'The Dragon Ball Sparking Zero Collector’s Edition is a must-have for die-hard Dragon Ball fans, delivering a premium experience packed with exclusive collectibles, enhanced game features, and nostalgia for the legendary Dragon Ball Z series. This Collector’s Edition celebrates the return of the Sparking! (known as Budokai Tenkaichi in the West) series, known for its fast-paced combat, enormous character roster, and intense battles that capture the essence of Dragon Ball. From custom figures to exclusive in-game content, this edition brings players closer to the world of Dragon Ball like never before.
+INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
+VALUES (LAST_INSERT_ID(), 'CAPCOM', 'CAPCOM', 'Fighting', 'Xbox Series', '2023-06-02');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Dragon Ball: Sparking! Zero Collector\'s Edition - PC', 180.00, 100, 'game', 'The Dragon Ball Sparking Zero Collector’s Edition is a must-have for die-hard Dragon Ball fans, delivering a premium experience packed with exclusive collectibles, enhanced game features, and nostalgia for the legendary Dragon Ball Z series. This Collector’s Edition celebrates the return of the Sparking! (known as Budokai Tenkaichi in the West) series, known for its fast-paced combat, enormous character roster, and intense battles that capture the essence of Dragon Ball. From custom figures to exclusive in-game content, this edition brings players closer to the world of Dragon Ball like never before.
 
 Collector\'s Edition Contents
 
@@ -73,80 +145,59 @@ Early Access: Get a 48-hour head start to experience Dragon Ball Sparking Zero b
 Exclusive Character Skins: Access unique skins for fan-favorite characters like Goku, Vegeta, and Piccolo, inspired by rare and nostalgic designs from the manga and anime.
 Sparking Boost Pack: An in-game boost pack that includes Zeni, additional character slots, and an XP multiplier to help players level up characters faster.
 Bonus Arenas: Two exclusive battle arenas inspired by iconic locations in Dragon Ball Z, available only in the Collector’s Edition.
-',
-'PC-DRAGON-BALL-SPARKING-ZERO-COLLECTOR.webp', 'Game');
+', 'PC-DRAGON-BALL-SPARKING-ZERO-COLLECTOR.webp');
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values ('Metroid Prime 4 Beyond - Nintendo Switch'
-, 55.9, 10, '2025-12-4', 'Retro Studios', 'Nintendo', 'FPS,Action-adventure', 'Nintendo Switch',
-'A world unknown. A mind unleashed.
+INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
+VALUES (LAST_INSERT_ID(), 'Spike Chunsoft Co', 'Bandai Namco Entertainment', 'Fighting,Anime', 'PC', '2024-10-11');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Metroid Prime 4 Beyond - Nintendo Switch', 55.9, 10, 'game', 'A world unknown. A mind unleashed.
 
 Samus Aran, the galaxy’s greatest bounty hunter, must explore the mysterious planet of Viewros, wielding new psychic abilities to find a way home in Metroid Prime 4: Beyond on Nintendo Switch.
 
 Scan stone statues and ruins for clues on how to progress, unlocking more mysterious psychic abilities as you learn more about the Lamorn – an ancient alien race that once inhabited Viewros.
 
-Battle abhorrent alien creatures, ride across the landscape on the Vi-O-La vehicle, and confront Sylux – an enigmatic bounty hunter with a deep-seated grudge against the Galactic Federation...and Samus.',
-'metroid-prime-4-beyond-nintendo-switch-1.webp', 'Game');
+Battle abhorrent alien creatures, ride across the landscape on the Vi-O-La vehicle, and confront Sylux – an enigmatic bounty hunter with a deep-seated grudge against the Galactic Federation...and Samus.', 'metroid-prime-4-beyond-nintendo-switch-1.webp');
 
+INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
+VALUES (LAST_INSERT_ID(), 'Retro Studios', 'Nintendo', 'FPS,Action-adventure', 'Nintendo Switch', '2025-12-04');
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values ('The Legend of Heroes: Trails in the Sky'
-, 15.99, 7, '2004-06-24', 'nihon Falcom', 'nihon Falcom', 'JRPG', 'PC','Modern society owes much to a mystical technology known as “orbal energy.” Fifty years ago, during what’s come to be known as the “Orbal Revolution,” 
-the invention of this technology and the “orbments” developed from it led to a period of rapid human advancement, birthing innovations of all shapes and sizes -- not the least of which was the airliner,
- or “orbalship” industry. Although the positive impact of this revolution is obvious, every coin has a flipside; for every beneficial device developed with these new materials, so too were advanced weapons and other implements of war. Thus, 
- the land became mired with turmoil, and remains in such a state even now.
- Come join Estelle, Joshua, Scherazard, Olivier and the rest of the cast as they uncover the secret underbelly of Liberl in their first 50+ hour masterpiece, and see what Japanese gamers have been raving about for over ten years.'
-,
-'trails_in_the_sky_good.webp', 'Game');
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Trails in the Sky 1st Chapter - Nintendo Switch', 53.4, 7, 'game', 'Brace yourself for adventure! This beloved classic follows Estelle Bright
+and her adoptive brother, Joshua, as they begin their journey to
+become senior bracers. What starts as a simple mission grows into a
+battle against a mysterious organization threatening their homeland. As
+they uncover hidden conspiracies, Estelle and Joshua face increasing
+dangers that test their courage and strengthen their bond.
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values ('Total war:Warhammer 3'
-, 49.99, 24, '2022-02-17', 'paradox', 'SEGA', 'RTS', 'PC','Total War: Warhammer III is the epic conclusion to the trilogy, blending turn-based grand strategy with massive real-time tactical battles,
- plunging players into a world-ending conflict between the mortal realms and the Chaos gods, allowing them to lead diverse factions like Kislev, Grand Cathay, or demonic hordes, build empires, conquer vast lands, and engage in complex diplomacy or destructive warfare, 
- culminating in the massive combined-map "Immortal Empires" for owners of all three games.'
-,
-'Total_War_Warhammer_3.webp', 'Game');
+    Take flight into the 1st Chapter of the legendary series from Falcom.
+    This stunning JRPG reimagines the beloved classic with new
+    breathtaking visuals and refined gameplay.
+    Swap seamlessly between traditional turn-based combat and an all-new real-time action system to suit your style of adventure.
+    Meet unforgettable characters brought to life with brand-new voiceovers.
+    Discover the story that redefined the JRPG genre and set the Trails series on its legendary path!
+    Enjoy English and Japanese in-game voice and English, French, German, and Spanish in-game text.', 'Trails_in_the_Sky_1st_Chapter_NSW.webp');
 
+INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
+VALUES (LAST_INSERT_ID(), 'Falcom', 'Nintendo', 'JRPG,Adventure', 'Nintendo Switch', '2025-09-12');
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values ('Ghost of Yōtei - PS5'
-, 78.9, 15, '2025-10-02', 'Sucker Punch', 'Sony', 'Action-Adventure', 'Playstation 5',
-'At the Northern edge of Japan, a new warrior rises
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Ghost of Yōtei - PS5', 78.9, 15, 'game', 'At the Northern edge of Japan, a new warrior rises
 
 Set 300 years after the critically acclaimed Ghost of Tsushima, Ghost of Yōtei is a standalone experience set in 1600s rural Japan. The story follows a haunted, lone mercenary named Atsu. Thirsty for revenge, she travels through the beautiful, rugged landscapes of northern Japan, hunting those who killed her family many years earlier.
 
 Sixteen years after her family’s death, Atsu’s quest across Ezo brings her to unexplored lands in search of a gang of six outlaws, but she finds much more than vengeance. 
 
-Throughout her journey, Atsu will discover unlikely allies, and greater bonds than she could have imagined.',
-'Ghost-YOTEI-hero-560x560.webp', 'Game');
+Throughout her journey, Atsu will discover unlikely allies, and greater bonds than she could have imagined.', 'Ghost-YOTEI-hero-560x560.webp');
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values
-('Mega Man Amiibo (Collection No. 27)', 19.90, 10, '2015-02-20', 'Nintendo', 'Capcom', 'Super Smash Bros.', 'Amiibo',
-    'Mega Man Amiibo figure from the Super Smash Bros. collection. Compatible with Nintendo Switch, Wii U and 3DS.', 'amiibo-megaman.jpg', 'Collectible');
+INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
+VALUES (LAST_INSERT_ID(), 'Sucker Punch', 'Sony', 'Action-Adventure', 'Playstation 5', '2025-10-02');
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values
-('Frieren (Beyond Journey\'s End) Funko Pop!', 24.90, 15, '2024-03-01', 'Funko', 'Crunchyroll', 'Anime', 'Funko Pop',
-    "Collectible Funko Pop! Plus vinyl figure of Frieren from the popular Frieren: Beyond Journey's End series.", 'pop-frieren.webp', 'Collectible');
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('test game', 10.00, 10, 'game', 'test.', 'placeholder.webp');
 
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values
-('Corrin Amiibo (Super Smash Bros. Collection No. 59)', 29.90, 5, '2017-07-21', 'Nintendo', 'Nintendo', 'Fire Emblem', 'Amiibo', 
-    'Amiibo figure of Corrin (Player 1) from Fire Emblem Fates, part of the Super Smash Bros. collection.', 'amiibo-corrin.jpg', 'Collectible');
-
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values
-('Kazuya Amiibo (Super Smash Bros. Collection)', 21.90, 12, '2023-01-13', 'Nintendo', 'Bandai Namco', 'Tekken', 'Amiibo', 
-    'Kazuya Mishima Amiibo figure from Tekken, as featured in Super Smash Bros. Ultimate.', 'amiibo-kazuya.jpg', 'Collectible');
-
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values
-('Triple Pack: Mario, Peach & Bowser Amiibo', 59.90, 3, '2017-10-27', 'Nintendo', 'Nintendo', 'Super Mario', 'Amiibo', 
-    'Set of three Amiibo figures featuring Mario, Peach and Bowser in their wedding outfits from Super Mario Odyssey.', 'amiibo_super_mario_odyssey_three_pack.png', 'Collectible');
-
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values
-('Goku - Funko Pop! Dragon Ball Z', 14.90, 20, '2019-06-15', 'Funko', 'Toei Animation', 'Dragon Ball Z', 'Funko Pop', 
-    'Classic Funko Pop! figure of Son Goku from Dragon Ball Z in a fighting stance.', 'pop-goku.avif', 'Collectible');
-
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values
-('SSGSS Gogeta - Funko Pop! Dragon Ball Super', 17.90, 8, '2024-01-10', 'Funko', 'Toei Animation', 'Dragon Ball Super', 'Funko Pop', 
-    'Funko Pop! figure of Gogeta in Super Saiyan God Super Saiyan (SSGSS) form with energy effects.', 'pop-gogeta.avif', 'Collectible');
-
-insert into products (title, price, stock_quantity, release_date, developer, publisher, genres, platform, description_, cover_image_url, category) values
-('King Dedede Amiibo(Super Smash Bros. Collection No. 28)', 19.90, 7, '2015-02-20', 'Nintendo', 'Nintendo', 'Kirby', 'Amiibo',
-    "Amiibo figure of King Dedede, the king of Dream Land, from the Super Smash Bros. collection. Spaghettio's ALL TIME FAVORITE", 'amiibo-king-dedede.jpg', 'Collectible');
+INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
+VALUES (LAST_INSERT_ID(), 'imagination', 'patrick', 'amazing', 'none', '2001-11-09');
 
 CREATE table carts (
     cart_id int not null AUTO_INCREMENT primary key,
@@ -168,18 +219,21 @@ CREATE table cart_items (
     price_at_addition decimal(10, 2) not null, 
     
     foreign key (cart_id) references carts(cart_id),
-    foreign key (product_id) references products(product_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
     
 -- θελουμε μονο μια φορα το καθε παιχνιδι
-    unique key unique_item_in_cart (cart_id, product_id)
+    unique key unique_game_in_cart (cart_id, product_id)
 );
 
-create table Orders(
-    order_id int not null AUTO_INCREMENT PRIMARY key,
-    price decimal(10, 2) not null,
-    date_ord date,
+
+
+CREATE TABLE orders (
+    order_id int not null AUTO_INCREMENT primary key,
     user_id int not null,
-    FOREIGN key (user_id) REFERENCES users(user_id)
+    total_amount decimal(10, 2) not null,
+    status enum('Pending', 'Completed', 'Cancelled') default 'Pending',
+    created_at datetime default current_timestamp,
+    foreign key (user_id) references users(user_id)
 );
 
 CREATE TABLE order_items (

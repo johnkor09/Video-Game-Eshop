@@ -11,7 +11,8 @@ const CartModel = db.Cart;
 const AccessoryModel = db.Accessory;
 const CollectibleModel = db.Collectible;
 const CartItemModel = db.CartItem;
-const OrdersModel = db.Orders;
+const OrdersModel = db.Order;
+const OrdersModelItem = db.OrderItem;
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const fileUpload = require('express-fileupload');
@@ -451,12 +452,7 @@ app.get('/api/cart/content', authenticateToken, async (req, res) => {
             include: [{
                 model: ProductModel,
                 as: 'product',
-                attributes: ['product_id', 'title', 'price', 'cover_image_url', 'stock_quantity'],
-                include: [{
-                    model: GameModel,
-                    as: 'gameDetails',
-                    attributes: ['platform']
-                }]
+                attributes: ['product_id', 'title', 'price', 'cover_image_url', 'stock_quantity', 'product_type'],
             }],
             order: [['item_id', 'ASC']]
         });
@@ -470,7 +466,7 @@ app.get('/api/cart/content', authenticateToken, async (req, res) => {
                 title: item.product.title,
                 cover_image_url: item.product.cover_image_url,
                 stock_quantity: item.product.stock_quantity,
-                platform: item.product.gameDetails ? item.product.gameDetails.platform : 'N/A'
+                product_type: item.product.product_type
             }));
             return res.status(200).json(response);
         }
@@ -560,7 +556,7 @@ app.put('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
 });
 
 app.get('/api/product/:productId', async (req, res) => {
-    const {  productId } = req.params;
+    const { productId } = req.params;
     const { sortBy } = req.query;
 
     if (isNaN(parseInt(productId))) {
@@ -569,12 +565,12 @@ app.get('/api/product/:productId', async (req, res) => {
     try {
         Get_SortBy(sortBy);
         const product = await ProductModel.findOne({
-            where: { product_id: productId},
+            where: { product_id: productId },
             include: [
                 { model: GameModel, as: 'gameDetails' },
                 { model: AccessoryModel, as: 'accessoryDetails' },
                 { model: CollectibleModel, as: 'collectibleDetails' }
-                
+
             ]
         });
         if (!product) {
@@ -601,7 +597,7 @@ app.get('/api/product/:productId', async (req, res) => {
             res.json(response);
         }
 
-        if(product.product_type === 'accessory'){
+        if (product.product_type === 'accessory') {
             const response = {
                 product_id: product.product_id,
                 title: product.title,
@@ -617,7 +613,7 @@ app.get('/api/product/:productId', async (req, res) => {
             res.json(response);
         }
 
-        if(product.product_type === 'collectible'){
+        if (product.product_type === 'collectible') {
             const response = {
                 product_id: product.product_id,
                 title: product.title,
@@ -632,7 +628,7 @@ app.get('/api/product/:productId', async (req, res) => {
             };
             res.json(response);
         }
-        
+
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
@@ -640,37 +636,37 @@ app.get('/api/product/:productId', async (req, res) => {
 });
 
 app.get('/api/games/:platform', async (req, res) => {
-    const {platform} = req.params;
+    const { platform } = req.params;
     const platformArray = platform.split(',')
     const { sortBy } = req.query;  // get sort method
-    if(platform === 'all'){
+    if (platform === 'all') {
         try {
-        Get_SortBy(sortBy);
-        const products = await ProductModel.findAll({
-            where: { is_active: 1, product_type: 'game' },
-            attributes: ['product_id', 'title', 'price', 'cover_image_url', 'product_type'],
-            include: [{
-                model: GameModel,
-                as: 'gameDetails',
-                attributes: ['platform']
-            }],
-            order: [[sortField, sortOrder]],
-        });
+            Get_SortBy(sortBy);
+            const products = await ProductModel.findAll({
+                where: { is_active: 1, product_type: 'game' },
+                attributes: ['product_id', 'title', 'price', 'cover_image_url', 'product_type'],
+                include: [{
+                    model: GameModel,
+                    as: 'gameDetails',
+                    attributes: ['platform']
+                }],
+                order: [[sortField, sortOrder]],
+            });
 
-        const flattened = products.map(p => ({
-            product_id: p.product_id,
-            title: p.title,
-            price: p.price,
-            cover_image_url: p.cover_image_url,
-            platform: p.gameDetails ? p.gameDetails.platform : 'N/A',
-            product_type: p.product_type
-        }));
-        res.json(flattened)
-        return;
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send('Database error.');
-    }
+            const flattened = products.map(p => ({
+                product_id: p.product_id,
+                title: p.title,
+                price: p.price,
+                cover_image_url: p.cover_image_url,
+                platform: p.gameDetails ? p.gameDetails.platform : 'N/A',
+                product_type: p.product_type
+            }));
+            res.json(flattened)
+            return;
+        } catch (err) {
+            console.error(err);
+            return res.status(500).send('Database error.');
+        }
     }
     try {
         Get_SortBy(sortBy);
@@ -701,7 +697,7 @@ app.get('/api/games/:platform', async (req, res) => {
     }
 });
 
-app.get('/api/collectibles', async(req, res) => {
+app.get('/api/collectibles', async (req, res) => {
     const { sortBy } = req.query;  // get sort method
     try {
         Get_SortBy(sortBy);
@@ -781,7 +777,7 @@ app.get('/api/orders/content', authenticateToken, async (req, res) => {
             where: {
                 user_id: userID,
             },
-            attributes: ['order_id','price', 'date_ord', 'user_id'],
+            attributes: ['order_id', 'price', 'created_at', 'user_id'],
         });
         res.json(order);
     } catch (err) {

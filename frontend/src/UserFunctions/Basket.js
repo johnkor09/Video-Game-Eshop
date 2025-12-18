@@ -9,12 +9,12 @@ import { IoBagCheckOutline } from "react-icons/io5";
 
 export default function Basket() {
     const { user, token } = useAuth();
-    const [BasketGames, setBasketGames] = useState([]);
+    const [BasketProducts, setBasketProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [Checkout, setCheckout] = useState(false);
 
-    const getBasketGames = useCallback(async () => {
+    const getBasketProducts = useCallback(async () => {
         if (!user || !token) {
             setError("Log in first to view your cart.");
             setLoading(false);
@@ -29,9 +29,10 @@ export default function Basket() {
                 }
             );
             if (Array.isArray(response.data)) {
-            setBasketGames(response.data);
+            setBasketProducts(response.data);
+            console.log(response.data);
         } else {
-            setBasketGames(response.data.items || []);
+            setBasketProducts(response.data.items || []);
         }
         } catch (err) {
             console.error("Failed to get games data.", err);
@@ -42,8 +43,8 @@ export default function Basket() {
     }, [user, token]);
 
     useEffect(() => {
-        getBasketGames();
-    }, [getBasketGames]);
+        getBasketProducts();
+    }, [getBasketProducts]);
 
 
 
@@ -55,7 +56,7 @@ export default function Basket() {
         return <div className="error">{error}</div>;
     }
     const calculateTotal = () => {
-        return BasketGames.reduce((acc, item) => {
+        return BasketProducts.reduce((acc, item) => {
             return acc + (parseFloat(item.price_at_addition) * item.quantity);
         }, 0).toFixed(2);
     };
@@ -73,7 +74,7 @@ export default function Basket() {
                     },
                     data: { itemId: itemId }
                 });
-            await getBasketGames();
+            await getBasketProducts();
         } catch (err) {
             const message = err.response?.data?.message || "Αποτυχία διαγραφής αντικειμένου.";
             console.error("Failed to remove cart item.", err);
@@ -88,7 +89,7 @@ export default function Basket() {
         const newQuantity = parseInt(value, 10);
         if (newQuantity < 1 || isNaN(newQuantity)) return;
 
-        setBasketGames(prevGames =>
+        setBasketProducts(prevGames =>
             prevGames.map(item =>
                 item.item_id === itemId ? { ...item, quantity: newQuantity } : item
             )
@@ -107,7 +108,7 @@ export default function Basket() {
             const message = err.response?.data?.message || "Αποτυχία αλλαγης quantity.";
             console.error("Failed to change cart item quantity.", err);
             alert('Σφάλμα: ' + message);
-            await getBasketGames();
+            await getBasketProducts();
         }
     };
 
@@ -116,13 +117,13 @@ export default function Basket() {
         <div className='BasketPage'>
             <div className='Basket-Panel'>
                 <div className='Basket-Game-Grid'>
-                    {BasketGames.length === 0 ?
+                    {BasketProducts.length === 0 ?
                         (<div className='Empty-cart-text'>Looks like your cart is empty...</div>
                         ) :
                         (
-                            BasketGames?.map(item => (
+                            BasketProducts?.map(item => (
                                 <div key={item.item_id} className='Basket-Item' >
-                                    <Link to={'/Games/' + item.platform + '/' + item.product_id}  >
+                                    <Link to={'/'+item.product_type+'/' + item.product_id}  >
                                         <img
                                             src={'/game_images/' + item.cover_image_url || './game_images/placeholder.jpg'}
                                             alt={'Cover for' + item.title}
@@ -160,7 +161,7 @@ export default function Basket() {
                 <div className='Basket-Functions-Grid'>
                     <div className='Total-Text'>Total:</div>
                     <p className='grand-total'>Cart total price: €{calculateTotal()}</p>
-                    <button className='checkout-button' disabled={BasketGames.length === 0} onClick={() => setCheckout(true)}><IoBagCheckOutline color='greenyellow' className='Checkout-icon' /><div>Checkout</div></button>
+                    <button className='checkout-button' disabled={BasketProducts.length === 0} onClick={() => setCheckout(true)}><IoBagCheckOutline color='greenyellow' className='Checkout-icon' /><div>Checkout</div></button>
                     {Checkout && (
                         <div className="Pop-up">
                             <h2 className="Pop-header">Complete purchase?</h2>

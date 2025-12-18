@@ -6,6 +6,8 @@ module.exports = (sequelize) => {
     const Product = require('./Product')(sequelize);
     const Accessory = require('./Accessory')(sequelize);
     const Collectible = require('./Collectible')(sequelize);
+    const Order = require('./Order')(sequelize);
+    const OrderItem = require('./OrderItem')(sequelize);
 
     User.hasOne(Cart, {
         foreignKey: 'user_id',
@@ -69,6 +71,23 @@ module.exports = (sequelize) => {
         foreignKey: 'product_id',
         as: 'product'
     });
+    Order.hasMany(OrderItem, { 
+        foreignKey: 'order_id',
+        as: 'orderItems'
+    });
+    OrderItem.belongsTo(Order, { 
+        foreignKey: 'order_id',
+        as:  'order'
+    });
+
+    OrderItem.belongsTo(Product, { 
+        foreignKey: 'product_id',
+         as: 'product'
+    });
+    Product.hasMany(OrderItem, { 
+        foreignKey: 'product_id',
+        as: 'orderItems'
+    });
 
 
 
@@ -79,6 +98,8 @@ module.exports = (sequelize) => {
         Game,
         Product,
         Accessory,
-        Collectible
+        Collectible,
+        OrderItem,
+        Order
     };
 };
