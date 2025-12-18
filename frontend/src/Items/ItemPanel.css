@@ -1,4 +1,4 @@
-.game-panel-container {
+.item-panel-container {
     border-radius: 5px;
     background-color: rgb(255, 255, 255);
     border: 2px solid rgba(255, 255, 255, 0.5);
@@ -17,7 +17,7 @@
     padding: 10px;
 }
 
-.game-panel-link {
+.item-panel-link {
     text-decoration: none;
     color: inherit;
     display: flex;
@@ -26,30 +26,30 @@
 
 }
 
-.game-panel-image {
+.item-panel-image {
     width: 200px;
     height: 200px;
     object-fit:contain;
     margin-bottom: 10px;
 }
 
-.game-panel-info {
+.item-panel-info {
     text-decoration: none;
     color: inherit;
 }
 
-.game-panel-title {
+.item-panel-title {
     color: rgb(0, 0, 0);
     font-size: 1.2em;
     margin: 0 0 5px 0;
 }
 
-.game-panel-price {
+.item-panel-price {
     color: green;
     font-weight: bold;
 }
 
-.game-panel-platform {
+.item-panel-platform {
     font-size: 0.8em;
     color: gray;
 }

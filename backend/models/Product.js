@@ -7,30 +7,16 @@ module.exports = (sequelize) => {
             primaryKey: true,
             autoIncrement: true
         },
-        title: DataTypes.STRING,
-        
-        price: {
-            type: DataTypes.DECIMAL(10, 2),
-            allowNull: false
+        title: { type: DataTypes.STRING, allowNull: false },
+        price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+        stock_quantity: { type: DataTypes.INTEGER, defaultValue: 0 },
+        product_type: { 
+            type: DataTypes.ENUM('game', 'accessory', 'collectible'), 
+            allowNull: false 
         },
-        stock_quantity:{ 
-            type: DataTypes.INTEGER,
-            defaultValue: 0
-        },
-        release_date: DataTypes.DATE,
-        developer: DataTypes.STRING,
-        publisher: DataTypes.STRING,
-        genres: DataTypes.STRING,
-        platform: DataTypes.STRING,
-        description_: DataTypes.STRING,
+        description_: DataTypes.TEXT,
         cover_image_url: DataTypes.STRING,
-        category: {
-            type: DataTypes.ENUM('Game', 'Collectible', 'Accessory'),
-            allowNull: false,
-            defaultValue: 'Game'
-        },
-        is_active: DataTypes.BOOLEAN,
-        date_added: DataTypes.DATE
+        is_active: { type: DataTypes.BOOLEAN, defaultValue: true }
     }, {
         tableName: 'products',
         timestamps: false

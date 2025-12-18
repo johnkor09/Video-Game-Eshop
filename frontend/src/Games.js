@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import GameItemPanel from './Items/GameItemPanel.js';
+import GameItemPanel from './Items/ItemPanel.js';
 import './Games.css'
 import ComboBox from './ComboBox.js';
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/api/games?sortBy=${sortBy}&category=Game`);
+                const response = await axios.get(`http://localhost:4000/api/games/all?sortBy=${sortBy}`);
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);
@@ -52,7 +52,7 @@ export default function Home() {
                     <div className="gamesGrid">
                         <ComboBox setSortBy={setSortBy} />
                         {games.map(game => (
-                        <GameItemPanel game={game} key={game.product_id} />
+                        <GameItemPanel product={game} key={game.product_id} />
                     ))}
                 </div>
             )}
@@ -65,7 +65,7 @@ export default function Home() {
                 ) : (
                      <div className="gamesGrid">
                             {games.filter(game => game.platform === "Nintendo Switch 2" || game.platform === "Nintendo Switch").map(game => (
-                                <GameItemPanel game={game} key={game.product_id} />
+                                <GameItemPanel product={game} key={game.product_id} />
                             ))}
                     </div>
                 )}
@@ -80,7 +80,7 @@ export default function Home() {
                 ) : (
                         <div className="gamesGrid">
                             {games.filter(game => game.platform === "Playstation 5" || game.platform === "Playstation 4").map(game => (
-                                <GameItemPanel game={game} key={game.product_id} />
+                                <GameItemPanel product={game} key={game.product_id} />
                             ))}
                     </div>
                 )}
@@ -94,7 +94,7 @@ export default function Home() {
                 ) : (
                         <div className="gamesGrid">
                         {games.filter(game => game.platform === "Xbox Series").map(game => (
-                                <GameItemPanel game={game} key={game.product_id} />
+                                <GameItemPanel product={game} key={game.product_id} />
                             ))}
                     </div>
                 )}
@@ -108,7 +108,7 @@ export default function Home() {
                 ) : (
                         <div className="gamesGrid">
                         {games.filter(game => game.platform === "PC").map(game => (
-                                <GameItemPanel game={game} key={game.product_id} />
+                                <GameItemPanel product={game} key={game.product_id} />
                             ))}
                     </div>
                 )}

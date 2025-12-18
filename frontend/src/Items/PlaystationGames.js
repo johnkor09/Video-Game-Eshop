@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import GameItemPanel from './GameItemPanel.js';
+import GameItemPanel from './ItemPanel.js';
 import './PlaystationGames.css'
 import ComboBox from '../ComboBox.js';
 export default function PlaystationGames() {
@@ -11,7 +11,8 @@ export default function PlaystationGames() {
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/api/games/playstation?sortBy=${sortBy}`);
+const platforms = ['Playstation 5', 'Playstation 4'];
+                const response = await axios.get(`http://localhost:4000/api/games/${platforms}?sortBy=${sortBy}`);
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);
@@ -50,7 +51,7 @@ export default function PlaystationGames() {
                         <div className="gamesGrid">
                             <ComboBox setSortBy={setSortBy} />
                         {games.map(game => (
-                                <GameItemPanel game={game} key={game.product_id} />
+                                <GameItemPanel product={game} key={game.product_id} />
                             ))
                         }
                     </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import GameItemPanel from './GameItemPanel.js';
+import GameItemPanel from './ItemPanel.js';
 import ComboBox from '../ComboBox.js';
 import './NintendoGames.css'
 
@@ -12,7 +12,8 @@ export default function NintendoGames() {
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/api/games/nintendo?sortBy=${sortBy}`);
+                const platforms = ['Nintendo Switch 2', 'Nintendo Switch'];
+                const response = await axios.get(`http://localhost:4000/api/games/${platforms}?sortBy=${sortBy}`);
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);
@@ -50,7 +51,7 @@ export default function NintendoGames() {
                         <div className="gamesGrid">
                             <ComboBox setSortBy={setSortBy} />
                         {games.map(game => (
-                                <GameItemPanel game={game} key={game.product_id} />
+                                <GameItemPanel product={game} key={game.product_id} />
                             ))
                         }
                     </div>

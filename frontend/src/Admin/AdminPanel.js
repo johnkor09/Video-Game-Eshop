@@ -7,21 +7,20 @@ import { LuSave } from "react-icons/lu";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { LuHardDriveUpload } from "react-icons/lu";
 import './AdminPanel.css';
-
 export default function AdminPanel() {
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [formData, setFormData] = useState({ category: 'Game' });
+    const [formData, setFormData] = useState({});
     const [selectedGame, setSelectedGame] = useState(null);
     const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
     const [imageFile, setImageFile] = useState(null);
     const { token } = useAuth();
-    
     useEffect(() => {
         const getGames = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/api/games');
+                const response = await axios.get('http://localhost:4000/api/games/all');
+                console.log(response.data)
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);
@@ -36,9 +35,10 @@ export default function AdminPanel() {
 
     const getGameDetails = async (gameId) => {
         try {
-            const response = await axios.get('http://localhost:4000/api/games/' + gameId);
+            const response = await axios.get('http://localhost:4000/api/game/' + gameId);
+            console.log(response.data);
             setSelectedGame(response.data);
-            setFormData({ ...response.data, category: response.data.category || 'Game' });
+            setFormData(response.data);
         } catch (err) {
             console.error("Failed to get game details.", err);
             setError("Προβλημα με τον server!");
@@ -50,20 +50,20 @@ export default function AdminPanel() {
         setImagePreviewUrl(null);
         if (!selectedOption || selectedOption.value === 'none') {
             setSelectedGame(null);
-            setFormData({ category: 'Game' });
+            setFormData({});
             return;
         }
-
+        console.log(selectedOption.value);
         getGameDetails(selectedOption.value);
     };
 
     const gameOptions = games.map(game => ({
         value: game.product_id,
-        label: game.title,
+        label: `${game.title} (${game.platform || 'N/A'})`
     }));
 
     const selectOptions = [
-        { value: 'none', label: '--- Select a Product or None ---' },
+        { value: 'none', label: '--- Select a Game or None ---' },
         ...gameOptions
     ];
 
@@ -80,15 +80,23 @@ export default function AdminPanel() {
     };
 
     const handleTrashClick = async () => {
-        console.log("trashClick");
+        console.log("Selected Game State:", selectedGame);
+
         if (!selectedGame) {
-            setFormData({ category: 'Game' });
+            setFormData({});
             setImageFile(null);
             setImagePreviewUrl(null);
             return;
         }
 
-        const confirmDelete = window.confirm(`Είσαι σίγουρος ότι θέλεις να διαγράψεις το "${selectedGame.title}";`);
+        if (!selectedGame || !selectedGame.product_id) {
+            alert("Δεν έχει επιλεγεί έγκυρο παιχνίδι προς διαγραφή (Missing ID)");
+            return;
+        }
+
+
+
+        const confirmDelete = window.confirm(`Είσαι σίγουρος ότι θέλεις να διαγράψεις το παιχνίδι "${selectedGame.title}";`);
 
         if (!confirmDelete) return;
 
@@ -111,12 +119,11 @@ export default function AdminPanel() {
             setGames(prevGames => prevGames.filter(g => g.product_id !== selectedGame.product_id));
 
             setSelectedGame(null);
-            setFormData({ category: 'Game' });
+            setFormData({});
             setImagePreviewUrl(null);
 
         } catch (err) {
             console.error("Failed to delete game.", err);
-            alert('Αποτυχία διαγραφής: ' + (err.response?.data?.message || err.message));
         }
     }
 
@@ -165,21 +172,37 @@ export default function AdminPanel() {
                 }
             });
             alert('Το παιχνίδι ενημερώθηκε επιτυχώς!');
+            const updatedGame = response.data.game;
             setGames(prevGames =>
-                prevGames.map(g =>
-                    g.product_id === selectedGame.product_id ? response.data.product : g
-                )
+                prevGames.map(g => g.product_id === selectedGame.product_id ? updatedGame : g)
             );
-            setSelectedGame(response.data.product);
-            setFormData(response.data.product);
+            setSelectedGame(updatedGame);
+            setFormData(updatedGame);
         } catch (err) {
             console.error("Failed to update game.", err);
-            alert('Αποτυχία ενημέρωσης παιχνιδιού: ' + err.message);
+            alert('Αποτυχία ενημέρωσης παιχνιδιού: ' + (err.response?.data?.message || err.message));
         }
+    };
+    const validateForm = () => {
+        if (!formData.title || !formData.price || !formData.stock_quantity || !formData.description_) {
+            return false;
+        }
+        if (formData.product_type === 'game') {
+            if (!formData.platform || !formData.developer || !formData.genres || !formData.release_date) {
+                return false;
+            }
+        }
+        if (formData.product_type === 'collectible') {
+            if (!formData.collectible_type || !formData.brand) {
+                return false;
+            }
+        }
+
+        return true;
     };
 
     const handleUpload = async () => {
-        if (!formData.title || !formData.price || !formData.platform || !formData.developer || !formData.description_ || !formData.genres || !formData.publisher || !formData.stock_quantity || !formData.release_date) {
+        if (!validateForm()) {
             alert('Συμπληρωσε τα κενα');
             return;
         }
@@ -204,11 +227,6 @@ export default function AdminPanel() {
                 form.append(key, formData[key]);
             }
         });
-
-        if (!formData.category) {
-            form.append('category', 'Game');
-        }
-
         form.append('coverImage', imageFile);
 
         try {
@@ -252,6 +270,7 @@ export default function AdminPanel() {
             background: 'rgba(255, 255, 255, 0)',
             borderRadius: '16px',
             border: '1px solid rgba(255, 255, 255, 0.37)',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
             backdropFilter: 'blur(5.8px)',
             WebkitBackdropFilter: 'blur(5.8px)',
             color: 'black',
@@ -267,7 +286,7 @@ export default function AdminPanel() {
             borderRadius: '10px',
             backdropFilter: 'blur(10px)',
             zIndex: 9999,
-            
+
         }),
         menuPortal: (base) => ({
             ...base,
@@ -288,41 +307,37 @@ export default function AdminPanel() {
             color: 'rgba(0, 0, 0, 0.6)'
         }),
         menuList: (base) => ({
-        ...base,
-        backgroundColor: 'transparent',
-        '&::-webkit-scrollbar': {
-            width: '0px',
-            height: '0px',
-            background: 'transparent',
-        }}),
+            ...base,
+            backgroundColor: 'transparent',
+            '&::-webkit-scrollbar': {
+                width: '0px',
+                height: '0px',
+                background: 'transparent',
+            }
+        }),
         option: (base, state) => ({
-        ...base,
-        color: 'black',
-        borderRadius: '5px',
-        margin: '2px 5px',
-        width: 'auto',
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        ...(state.isSelected && {
-            backgroundColor: 'rgba(255, 255, 255, 0.5)', 
+            ...base,
             color: 'black',
+            borderRadius: '5px',
+            margin: '2px 5px',
+            width: 'auto',
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            ...(state.isSelected && {
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                color: 'black',
+            }),
+            ...(state.isFocused && {
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                color: 'black',
+            }),
+            '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(20px)', // παραπανω BLUR στο hover
+                WebkitBackdropFilter: 'blur(20px)',
+                color: 'black',
+            },
         }),
-        ...(state.isFocused && {
-            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-            color: 'black',
-        }),
-        '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.7)',
-            backdropFilter: 'blur(20px)', // παραπανω BLUR στο hover
-            WebkitBackdropFilter: 'blur(20px)',
-            color: 'black',
-        },
-    }),
     };
-
-    let folder = '/game_images/';
-    if (formData.category === 'Collectible') {
-        folder = '/collectibles_images/';
-    }
 
     return (
         <>
@@ -397,15 +412,14 @@ export default function AdminPanel() {
                     >{selectedGame ? `Edit Game: ${selectedGame.title}` : 'New Game Form'}
                     </div>
                     <div className='NewGameForm-info-grid'>
-                        <div className='Left-Column-Wrapper'>
-                            <div className='ImageInsert-button-container'>
-                                <input
-                                    type="file"
-                                    id="coverImageUpload"
-                                    style={{ display: 'none' }}
-                                    accept=".webp"
-                                    onChange={handleImageChange}
-                                />
+                        <div className='ImageInsert-button-container'>
+                            <input
+                                type="file"
+                                id="coverImageUpload"
+                                style={{ display: 'none' }}
+                                accept=".webp"
+                                onChange={handleImageChange}
+                            />
 
                             <label htmlFor="coverImageUpload" className='ImageInsert-button'>
                                 {selectedGame === null ?
@@ -422,30 +436,13 @@ export default function AdminPanel() {
                                     </>
                                     ) : (
                                         <img className='img-info'
-                                            src={imagePreviewUrl || (formData.cover_image_url ? folder + formData.cover_image_url : './game_images/placeholder.jpg')}
+                                            src={imagePreviewUrl || "/game_images/" + formData.cover_image_url || './game_images/placeholder.jpg'}
                                             alt={formData.title}
                                             onError={(e) => { e.target.onerror = null; e.target.src = './game_images/placeholder.jpg'; }}
                                         />
                                     )}
                             </label>
                         </div>
-
-                        <div className='info-grid category-selector'>
-                            <label className='info-text'>Category:</label>
-                            <select className='info-input'
-                                id='category'
-                                value={formData.category || 'Game'}
-                                onChange={handleInputChange}
-                                style={{ color: 'black' }}
-                            >
-                                <option value="Game">Game</option>
-                                <option value="Collectible">Collectible</option>
-                                <option value="Accessory">Accessory</option>
-                            </select>
-                        </div>
-
-                    </div>
-
                         <div className='info-panel'>
                             <div className='info-grid'>
                                 <label className='info-text'>Title:</label>
@@ -453,53 +450,6 @@ export default function AdminPanel() {
                                     id='title'
                                     maxLength={100}
                                     value={formData.title || ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className='info-grid'>
-                                <label className='info-text'>Developer:</label>
-                                <input className='info-input'
-                                    id='developer'
-                                    maxLength={100}
-                                    value={formData.developer || ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className='info-grid'>
-                                <label className='info-text'>Publisher:</label>
-                                <input className='info-input'
-                                    id='publisher'
-                                    maxLength={100}
-                                    value={formData.publisher || ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className='info-grid'>
-                                <label className='info-text'>Release Date:</label>
-                                <input className='info-input'
-                                    type='date'
-                                    id='release_date'
-                                    value={formData.release_date ? new Date(formData.release_date).toISOString().split('T')[0] : ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                        </div>
-                        <div className='info-panel'>
-                            <div className='info-grid'>
-                                <label className='info-text'>Platform:</label>
-                                <input className='info-input'
-                                    id='platform'
-                                    maxLength={100}
-                                    value={formData.platform || ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className='info-grid'>
-                                <label className='info-text'>Genre:</label>
-                                <input className='info-input'
-                                    id='genres'
-                                    maxLength={100}
-                                    value={formData.genres || ''}
                                     onChange={handleInputChange}
                                 />
                             </div>
@@ -526,6 +476,56 @@ export default function AdminPanel() {
                                     onChange={handleInputChange}
                                 />
                             </div>
+
+
+                        </div>
+                        <div className='info-panel'>
+                            {(formData.product_type === 'game' || !selectedGame) && (
+                                <>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Platform:</label>
+                                        <input className='info-input' id='platform' value={formData.platform || ''} onChange={handleInputChange} />
+                                    </div>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Developer:</label>
+                                        <input className='info-input' id='developer' value={formData.developer || ''} onChange={handleInputChange} />
+                                    </div>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Publisher:</label>
+                                        <input className='info-input'
+                                            id='publisher'
+                                            maxLength={100}
+                                            value={formData.publisher || ''}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Genre:</label>
+                                        <input className='info-input' id='genres' value={formData.genres || ''} onChange={handleInputChange} />
+                                    </div>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Release Date:</label>
+                                        <input className='info-input'
+                                            type='date'
+                                            id='release_date'
+                                            value={formData.release_date ? new Date(formData.release_date).toISOString().split('T')[0] : ''}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div>
+                                </>
+                            )}
+                            {formData.product_type === 'collectible' && (
+                                <>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Brand:</label>
+                                        <input className='info-input' id='brand' value={formData.brand || ''} onChange={handleInputChange} />
+                                    </div>
+                                    <div className='info-grid'>
+                                        <label className='info-text'>Type:</label>
+                                        <input className='info-input' id='collectible_type' value={formData.collectible_type || ''} onChange={handleInputChange} />
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <div className="Button-grid-info">
                             <button className="button-info" onClick={() => handleTrashClick()}><FaRegTrashCan className="buttonicon" color='red' /></button>

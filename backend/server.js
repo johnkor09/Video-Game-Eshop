@@ -4,15 +4,19 @@ let app = express();
 let port = 4000;
 const { sequelize } = require('./config/db');
 const db = require('./models/index')(sequelize);
-const UserModel = db.User;
 const ProductModel = db.Product;
+const UserModel = db.User;
+const GameModel = db.Game;
 const CartModel = db.Cart;
+const AccessoryModel = db.Accessory;
+const CollectibleModel = db.Collectible;
 const CartItemModel = db.CartItem;
 const OrdersModel = db.Orders;
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const fileUpload = require('express-fileupload');
 const path = require('path');
+const { platform } = require('os');
 const fs = require('fs').promises;
 require('dotenv').config(); // Για να διαβάζει το .env
 
@@ -170,17 +174,16 @@ app.post('/api/signup', async (req, res) => {
 });
 
 app.delete('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
-    const productId = req.params.gameId;
+    const gameId = req.params.gameId;
 
     try {
-        // 1. Βρείτε την εγγραφή για να πάρετε το URL της εικόνας
         const productToDelete = await ProductModel.findOne({
-            where: { product_id: productId },
+            where: { product_id: gameId },
             attributes: ['cover_image_url']
         });
 
         if (!productToDelete) {
-            return res.status(404).json({ message: 'Product not found.' });
+            return res.status(404).json({ message: 'Game not found.' });
         }
 
         const imageUrl = productToDelete.cover_image_url;
@@ -200,15 +203,14 @@ app.delete('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
             }
         }
 
-        // Η εντολή destroy διαγράφει την εγγραφή
         const deletedCount = await ProductModel.destroy({
-            where: { product_id: productId }
+            where: { product_id: gameId }
         });
 
         if (deletedCount > 0) {
-            return res.json({ success: true, message: 'Product deleted successfully.' });
+            return res.json({ success: true, message: 'Game deleted successfully.' });
         } else {
-            return res.status(404).json({ message: 'Product not found.' });
+            return res.status(404).json({ message: 'Game not found.' });
         }
     } catch (err) {
         console.error("Delete Error:", err);
@@ -217,16 +219,16 @@ app.delete('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
 });
 
 app.post('/api/games/upload', checkAuthAndAdmin, async (req, res) => {
-    const product = req.body;
+    const game = req.body;
     const imageFile = req.files ? req.files.coverImage : null;
-    let finalImageUrl = null;
+    let finalImageUrl = 'placeholder.jpg';
 
     if (imageFile) {
-        const titleSlug = product.title.trim()
+        const titleSlug = game.title.trim()
             .replace(/\s+/g, '_')
             .replace(/[^a-zA-Z0-9_]/g, '')
             .toLowerCase();
-        const platformSlug = product.platform.trim()
+        const platformSlug = game.platform.trim()
             .replace(/\s+/g, '_')
             .replace(/[^a-zA-Z0-9_]/g, '')
             .toLowerCase();
@@ -247,27 +249,43 @@ app.post('/api/games/upload', checkAuthAndAdmin, async (req, res) => {
         // Αν δεν ανέβηκε φωτογραφία, ίσως θέλετε ένα default όνομα:
         finalImageUrl = 'placeholder.jpg';
     }
+    const t = await sequelize.transaction();
 
     try {
         const newProduct = await ProductModel.create({
-            title: product.title,
-            price: product.price,
-            stock_quantity: product.stock_quantity,
-            release_date: product.release_date ? new Date(product.release_date) : null,
-            developer: product.developer,
-            publisher: product.publisher,
-            genres: product.genres,
-            platform: product.platform,
-            description_: product.description_,
+            title: game.title,
+            price: game.price,
+            stock_quantity: game.stock_quantity,
+            product_type: 'game', // Σημαντικό!
+            description_: game.description_,
             cover_image_url: finalImageUrl,
-            category: product.category
-        });
+            is_active: 1
+        }, { transaction: t });
+
+        await GameModel.create({
+            product_id: newProduct.product_id, // Το ID από το Product
+            release_date: game.release_date ? new Date(game.release_date) : null,
+            developer: game.developer,
+            publisher: game.publisher,
+            genres: game.genres,
+            platform: game.platform
+        }, { transaction: t });
+        await t.commit();
+
+        const flatGame = {
+            product_id: newProduct.product_id,
+            title: newProduct.title,
+            is_active: newProduct.is_active,
+            product_type: newProduct.product_type,
+            platform: game.platform
+        };
 
         return res.status(201).json({
-            message: 'Το προϊόν δημιουργήθηκε επιτυχώς.',
-            game: newProduct
+            message: 'Το παιχνίδι δημιουργήθηκε επιτυχώς.',
+            game: flatGame
         });
     } catch (err) {
+        if (t && !t.finished) await t.rollback();
         console.error("Create Error:", err);
         return res.status(500).json({ message: 'Database error during creation.' });
     }
@@ -328,12 +346,14 @@ app.put('/api/cart/changeQuantity', authenticateToken, async (req, res) => {
             return res.status(400).json({ message: 'no cart found for user ' + userId });
         }
         const cart_id = cart.cart_id;
-        const cartItem = await CartItemModel.findOne({
-            where: { item_id: parsedItemId, cart_id: cart.cart_id },
-            include: [{ model: ProductModel, as: 'product', attributes: ['stock_quantity'] }]
-        });
 
-        if (!cartItem) return res.status(404).json({ message: 'Cart item not found' });
+        const cartItem = await CartItemModel.findOne({
+            where: { item_id: parsedItemId, cart_id: cart_id },
+            include: [{
+                model: ProductModel,
+                as: 'product' // Σύνδεση με Product για το stock
+            }]
+        });
 
         const availableStock = cartItem.product.stock_quantity;
 
@@ -359,56 +379,55 @@ app.put('/api/cart/changeQuantity', authenticateToken, async (req, res) => {
 app.post('/api/cart/add', authenticateToken, async (req, res) => {
     const userId = req.user.id;
     const { productId, quantity = 1 } = req.body;
-    const parsedProductId = parseInt(productId);
+
+    const parsedproductId = parseInt(productId);
     const parsedQuantity = parseInt(quantity);
 
-    if (!parsedProductId || isNaN(parsedProductId) || parsedQuantity < 1 || isNaN(parsedQuantity)) {
-        return res.status(400).json({ message: 'Μη έγκυρο Product ID ή Ποσότητα.' });
+    if (!parsedproductId || isNaN(parsedproductId) || parsedQuantity < 1 || isNaN(parsedQuantity)) {
+        return res.status(400).json({ message: 'Μη έγκυρο Game ID ή Ποσότητα.' });
     }
 
     try {
-        const product = await ProductModel.findByPk(parsedProductId);
+        const product = await ProductModel.findByPk(parsedproductId);
 
         if (!product || product.is_active === 0) {
             return res.status(400).json({ message: 'Product not found or unavailable!' });
         }
+
         if (product.stock_quantity < parsedQuantity) {
             return res.status(400).json({ message: 'No stock available' });
         }
 
-        const productPrice = product.price;
-        const [cart, created] = await CartModel.findOrCreate({
-            where: { user_id: userId },
-            defaults: { user_id: userId }
-        });
+        const [cart] = await CartModel.findOrCreate({ where: { user_id: userId } });
 
-        const cartId = cart.cart_id;
         const [cartItem, itemCreated] = await CartItemModel.findOrCreate({
-            where: { cart_id: cartId, product_id: parsedProductId },
+            where: {
+                cart_id: cart.cart_id,
+                product_id: parsedproductId
+            },
             defaults: {
-                cart_id: cartId,
-                product_id: parsedProductId,
+                cart_id: cart.cart_id,
+                product_id: parsedproductId,
                 quantity: parsedQuantity,
-                price_at_addition: productPrice
+                price_at_addition: product.price
             }
         });
 
         if (!itemCreated) {
-            const newQuantity = cartItem.quantity + parsedQuantity;
+            const totalRequestedQuantity = cartItem.quantity + parsedQuantity;
 
-            if (product.stock_quantity < newQuantity) {
-                return res.status(400).json({ message: 'No stock available' });
+            if (product.stock_quantity < totalRequestedQuantity) {
+                return res.status(400).json({ message: 'No more stock available' });
             }
 
-            await cartItem.update({
-                quantity: newQuantity
-            });
+            await cartItem.update({ quantity: totalRequestedQuantity });
 
             return res.status(200).json({
-                message: 'Quantity of item was updated to ' + newQuantity,
+                message: 'Quantity of item was updated to ' + totalRequestedQuantity,
                 cartItem: cartItem
             });
         }
+
         return res.status(201).json({
             message: 'Item added to cart.',
             cartItem: cartItem
@@ -422,25 +441,38 @@ app.post('/api/cart/add', authenticateToken, async (req, res) => {
 app.get('/api/cart/content', authenticateToken, async (req, res) => {
     const userId = req.user.id;
     try {
-        const [cart, created] = await CartModel.findOrCreate({
+        const [cart] = await CartModel.findOrCreate({
             where: { user_id: userId },
             defaults: { user_id: userId }
         });
 
-        const cartId = cart.cart_id;
         const cartItemsList = await CartItemModel.findAll({
-            where: { cart_id: cartId },
+            where: { cart_id: cart.cart_id },
             include: [{
                 model: ProductModel,
                 as: 'product',
-                attributes: ['title', 'platform', 'cover_image_url', 'stock_quantity', 'product_id', 'category']
+                attributes: ['product_id', 'title', 'price', 'cover_image_url', 'stock_quantity'],
+                include: [{
+                    model: GameModel,
+                    as: 'gameDetails',
+                    attributes: ['platform']
+                }]
             }],
-            // sort
             order: [['item_id', 'ASC']]
         });
 
         if (cartItemsList.length > 0) {
-            return res.status(200).json(cartItemsList);
+            const response = cartItemsList.map(item => ({
+                item_id: item.item_id,
+                quantity: item.quantity,
+                price_at_addition: item.price_at_addition,
+                product_id: item.product.product_id,
+                title: item.product.title,
+                cover_image_url: item.product.cover_image_url,
+                stock_quantity: item.product.stock_quantity,
+                platform: item.product.gameDetails ? item.product.gameDetails.platform : 'N/A'
+            }));
+            return res.status(200).json(response);
         }
         else {
             return res.status(200).json([]);
@@ -452,213 +484,288 @@ app.get('/api/cart/content', authenticateToken, async (req, res) => {
 });
 
 app.put('/api/games/:gameId', checkAuthAndAdmin, async (req, res) => {
-    const productId = req.params.gameId;
-    const product = req.body;
+    const gameId = req.params.gameId;
+    const game = req.body;
     const imageFile = req.files ? req.files.coverImage : null;
-    
-    let productData = {
-        title: product.title,
-        price: product.price,
-        stock_quantity: product.stock_quantity,
-        release_date: product.release_date ? new Date(product.release_date) : null,
-        developer: product.developer,
-        publisher: product.publisher,
-        genres: product.genres,
-        platform: product.platform,
-        description_: product.description_,
-        category: product.category
-    }
+    const t = await sequelize.transaction();
     try {
+        let productData = {
+            title: game.title,
+            price: game.price,
+            stock_quantity: game.stock_quantity,
+            description_: game.description_
+        };
+
         if (imageFile) {
-            const titleSlug = productData.title.trim()
-                .replace(/\s+/g, '_')
-                .replace(/[^a-zA-Z0-9_]/g, '')
-                .toLowerCase();
-            const platformSlug = productData.platform.trim()
-                .replace(/\s+/g, '_')
-                .replace(/[^a-zA-Z0-9_]/g, '')
-                .toLowerCase();
-            const fileExtension = path.extname(imageFile.name);
-            const fileName = `${titleSlug}_${platformSlug}${fileExtension}`;
+            const titleSlug = game.title.trim().replace(/\s+/g, '_').toLowerCase();
+            const fileName = `${titleSlug}_${Date.now()}${path.extname(imageFile.name)}`;
             const uploadPath = path.join(UPLOAD_DIR, fileName);
-
-            try {
-                // Αποθήκευση του αρχείου στον δίσκο
-                await imageFile.mv(uploadPath);
-                productData.cover_image_url = fileName; // Αποθηκεύουμε μόνο το όνομα/path στη DB
-                console.log(`Το αρχείο αποθηκεύτηκε ως: ${fileName}`);
-            } catch (err) {
-                console.error("File upload error:", err);
-                return res.status(500).json({ message: 'Αποτυχία αποθήκευσης αρχείου στον δίσκο.' });
-            }
-
+            await imageFile.mv(uploadPath);
+            productData.cover_image_url = fileName;
         }
 
-        const [updatedRows] = await ProductModel.update(
-            productData
-            ,
-            { where: { product_id: productId } }
-        );
-        if (updatedRows > 0) {
-            const updatedProduct = await ProductModel.findByPk(productId);
-            return res.json({ success: true, message: 'Product updated successfully.', product: updatedProduct });
-        } else {
-            return res.status(404).json({ success: false, message: 'Product not found or no changes were made.' });
-        }
+        await ProductModel.update(productData, {
+            where: { product_id: gameId },
+            transaction: t
+        });
+
+        await GameModel.update({
+            developer: game.developer,
+            publisher: game.publisher,
+            genres: game.genres,
+            platform: game.platform,
+            release_date: game.release_date ? new Date(game.release_date) : null
+        }, {
+            where: { product_id: gameId },
+            transaction: t
+        });
+
+        await t.commit();
+
+        const rawGame = await ProductModel.findOne({
+            where: { product_id: gameId },
+            include: [{
+                model: GameModel,
+                as: 'gameDetails'
+            }]
+        });
+
+        const flatGame = {
+            product_id: rawGame.product_id,
+            title: rawGame.title,
+            price: rawGame.price,
+            stock_quantity: rawGame.stock_quantity,
+            description_: rawGame.description_,
+            cover_image_url: rawGame.cover_image_url,
+            is_active: rawGame.is_active,
+            developer: rawGame.gameDetails ? rawGame.gameDetails.developer : null,
+            publisher: rawGame.gameDetails ? rawGame.gameDetails.publisher : null,
+            genres: rawGame.gameDetails ? rawGame.gameDetails.genres : null,
+            platform: rawGame.gameDetails ? rawGame.gameDetails.platform : null,
+            release_date: rawGame.gameDetails ? rawGame.gameDetails.release_date : null
+        };
+
+        return res.json({
+            success: true,
+            message: 'Game updated successfully.',
+            game: flatGame
+        });
+
     } catch (err) {
-        console.error(err);
+        if (t && !t.finished) await t.rollback();
+        console.error("Update Error:", err);
         return res.status(500).json({ success: false, message: 'Database error during update.' });
     }
 
 });
 
-app.get('/api/games', async (req, res) => {
-    const { sortBy, category } = req.query;  // get sort method
-    try {
-        Get_SortBy(sortBy);
-
-        let categoryStatus = { is_active: 1 };  //Βρισκουμε το είδος
-        
-        // Κραταμε κατηγορία
-        if (category) {
-            categoryStatus.category = category;
-        }
-
-        const products = await ProductModel.findAll({
-            where: categoryStatus,
-            attributes: ['product_id', 'title', 'price', 'platform', 'cover_image_url', 'category'],
-            order: [[sortField, sortOrder]],
-        });
-        res.json(products)
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send('Database error.');
-    }
-});
-
-app.get('/api/games/:platform/:productId', async (req, res) => {
-    const { platform, productId } = req.params;
+app.get('/api/product/:productId', async (req, res) => {
+    const {  productId } = req.params;
     const { sortBy } = req.query;
+
+    if (isNaN(parseInt(productId))) {
+        return res.status(400).json({ message: 'Invalid ID format' });
+    }
     try {
         Get_SortBy(sortBy);
         const product = await ProductModel.findOne({
-            where: {
-                platform: platform,
-                product_id: productId
-            },
-            attributes: ['product_id', 'title', 'price', 'stock_quantity', 'release_date'
-                , 'developer', 'publisher', 'genres', 'platform', 'description_', 'cover_image_url', 'is_active', 'category']
+            where: { product_id: productId},
+            include: [
+                { model: GameModel, as: 'gameDetails' },
+                { model: AccessoryModel, as: 'accessoryDetails' },
+                { model: CollectibleModel, as: 'collectibleDetails' }
+                
+            ]
         });
         if (!product) {
-            return res.status(404).json({ message: 'Product not found.' });
+            return res.status(404).json({ message: 'Game not found.' });
         }
-        res.json(product);
+
+        if (product.product_type === 'game') {
+
+            const response = {
+                product_id: product.product_id,
+                title: product.title,
+                price: product.price,
+                stock_quantity: product.stock_quantity,
+                description_: product.description_,
+                cover_image_url: product.cover_image_url,
+                is_active: product.is_active,
+                developer: product.gameDetails?.developer,
+                publisher: product.gameDetails?.publisher,
+                genres: product.gameDetails?.genres,
+                platform: product.gameDetails?.platform,
+                release_date: product.gameDetails?.release_date,
+                product_type: product.product_type
+            };
+            res.json(response);
+        }
+
+        if(product.product_type === 'accessory'){
+            const response = {
+                product_id: product.product_id,
+                title: product.title,
+                price: product.price,
+                stock_quantity: product.stock_quantity,
+                description_: product.description_,
+                cover_image_url: product.cover_image_url,
+                is_active: product.is_active,
+                brand: product.accessoryDetails?.brand,
+                product_type: product.product_type,
+                accessory_type: product.collectible_type
+            };
+            res.json(response);
+        }
+
+        if(product.product_type === 'collectible'){
+            const response = {
+                product_id: product.product_id,
+                title: product.title,
+                price: product.price,
+                stock_quantity: product.stock_quantity,
+                description_: product.description_,
+                cover_image_url: product.cover_image_url,
+                is_active: product.is_active,
+                brand: product.collectibleDetails?.brand,
+                product_type: product.product_type,
+                collectible_type: product.collectibleDetails.collectible_type
+            };
+            res.json(response);
+        }
+        
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
     }
 });
 
-app.get('/api/games/nintendo', async (req, res) => {
+app.get('/api/games/:platform', async (req, res) => {
+    const {platform} = req.params;
+    const platformArray = platform.split(',')
+    const { sortBy } = req.query;  // get sort method
+    if(platform === 'all'){
+        try {
+        Get_SortBy(sortBy);
+        const products = await ProductModel.findAll({
+            where: { is_active: 1, product_type: 'game' },
+            attributes: ['product_id', 'title', 'price', 'cover_image_url', 'product_type'],
+            include: [{
+                model: GameModel,
+                as: 'gameDetails',
+                attributes: ['platform']
+            }],
+            order: [[sortField, sortOrder]],
+        });
+
+        const flattened = products.map(p => ({
+            product_id: p.product_id,
+            title: p.title,
+            price: p.price,
+            cover_image_url: p.cover_image_url,
+            platform: p.gameDetails ? p.gameDetails.platform : 'N/A',
+            product_type: p.product_type
+        }));
+        res.json(flattened)
+        return;
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Database error.');
+    }
+    }
+    try {
+        Get_SortBy(sortBy);
+        const products = await ProductModel.findAll({
+            where: { is_active: 1, product_type: 'game' },
+            attributes: ['product_id', 'title', 'price', 'cover_image_url', 'product_type'],
+            include: [{
+                model: GameModel,
+                as: 'gameDetails',
+                where: { platform: { [Op.in]: platformArray } },
+                attributes: ['platform']
+            }],
+            order: [[sortField, sortOrder]],
+        });
+
+        const flattened = products.map(p => ({
+            product_id: p.product_id,
+            title: p.title,
+            price: p.price,
+            cover_image_url: p.cover_image_url,
+            platform: p.gameDetails ? p.gameDetails.platform : 'N/A',
+            product_type: p.product_type
+        }));
+        res.json(flattened)
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Database error.');
+    }
+});
+
+app.get('/api/collectibles', async(req, res) => {
     const { sortBy } = req.query;  // get sort method
     try {
         Get_SortBy(sortBy);
         const products = await ProductModel.findAll({
-            where: {
-                is_active: 1,
-                platform: { [Op.in]: ['Nintendo Switch 2', 'Nintendo Switch'] },
-                category: 'Game'
-            },
-            attributes: ['product_id', 'title', 'price', 'platform', 'cover_image_url'],
+            where: { is_active: 1, product_type: 'collectible' },
+            attributes: ['product_id', 'title', 'price', 'cover_image_url', 'product_type'],
+            include: [{
+                model: CollectibleModel,
+                as: 'collectibleDetails',
+                attributes: ['collectible_type']
+            }],
             order: [[sortField, sortOrder]],
         });
-        res.json(products)
+
+        const flattened = products.map(p => ({
+            product_id: p.product_id,
+            title: p.title,
+            price: p.price,
+            cover_image_url: p.cover_image_url,
+            collectible_type: p.collectibleDetails ? p.collectibleDetails.collectible_type : '---'
+        }));
+        res.json(flattened)
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
     }
-});
-
-app.get('/api/games/playstation', async (req, res) => {
-    const { sortBy } = req.query;  // get sort method
-    try {
-        Get_SortBy(sortBy);
-        console.log('Received sortBy:', sortBy);
-        const products = await ProductModel.findAll({
-            where: {
-                is_active: 1,
-                platform: { [Op.in]: ['Playstation 5', 'Playstation 4'] },
-                category: 'Game'
-            },
-            attributes: ['product_id', 'title', 'price', 'platform', 'cover_image_url'],
-            order: [[sortField, sortOrder]],
-        });
-        res.json(products)
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send('Database error.');
-    }
-});
-
-
-app.get('/api/games/xbox', async (req, res) => {
-    const { sortBy } = req.query;  // get sort method
-    try {
-        Get_SortBy(sortBy);
-        console.log('Received sortBy:', sortBy);
-        const products = await ProductModel.findAll({
-            where: {
-                is_active: 1,
-                platform: 'Xbox Series',
-                category: 'Game'
-            },
-            attributes: ['product_id', 'title', 'price', 'platform', 'cover_image_url'],
-            order: [[sortField, sortOrder]],
-        });
-        res.json(products)
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send('Database error.');
-    }
-});
-
-app.get('/api/games/pc', async (req, res) => {
-    const { sortBy } = req.query;  // get sort method
-    try {
-        Get_SortBy(sortBy);
-        console.log('Received sortBy:', sortBy);
-        const products = await ProductModel.findAll({
-            where: {
-                is_active: 1,
-                platform: 'PC',
-                category: 'Game'
-            },
-            attributes: ['product_id', 'title', 'price', 'platform', 'cover_image_url'],
-            order: [[sortField, sortOrder]],
-        });
-        res.json(products)
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send('Database error.');
-    }
-});
+})
 
 
 
-app.get('/api/games/:gameId', async (req, res) => {
+
+app.get('/api/game/:gameId', async (req, res) => {
     const { gameId } = req.params;
     try {
-        const product = await ProductModel.findOne({
-            where: {
-                product_id: gameId
-            },
-            attributes: ['product_id', 'title', 'price', 'stock_quantity', 'release_date'
-                , 'developer', 'publisher', 'genres', 'platform', 'description_', 'cover_image_url', 'is_active', 'category']
+        console.log('Searching for product:', gameId);
+        const game = await ProductModel.findOne({
+            where: { product_id: gameId, product_type: 'game' },
+            include: [{
+                model: GameModel,
+                as: 'gameDetails'
+            }]
         });
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found.' });
-        }
-        res.json(product);
+        if (!game) return res.status(404).json({ message: 'Game not found.' });
+        console.log('done');
+
+        console.log('Record found, flattening response...');
+
+        const response = {
+            product_id: game.product_id,
+            title: game.title,
+            price: game.price,
+            stock_quantity: game.stock_quantity,
+            description_: game.description_,
+            cover_image_url: game.cover_image_url,
+            is_active: game.is_active,
+            product_type: game.product_type,
+            developer: game.gameDetails.developer,
+            publisher: game.gameDetails.publisher,
+            genres: game.gameDetails.genres,
+            platform: game.gameDetails.platform,
+            release_date: game.gameDetails.release_date
+        };
+
+        res.json(response);
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');

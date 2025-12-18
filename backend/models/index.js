@@ -1,45 +1,84 @@
-module.exports = (sequelize) => { 
+module.exports = (sequelize) => {
     const User = require('./User')(sequelize);
     const Cart = require('./Cart')(sequelize);
     const CartItem = require('./CartItem')(sequelize);
+    const Game = require('./Game')(sequelize);
     const Product = require('./Product')(sequelize);
+    const Accessory = require('./Accessory')(sequelize);
+    const Collectible = require('./Collectible')(sequelize);
 
-User.hasOne(Cart,{
-    foreignKey:'user_id',
-    as: 'cart',
-    onDelete: 'CASCADE'
-});
+    User.hasOne(Cart, {
+        foreignKey: 'user_id',
+        as: 'cart',
+        onDelete: 'CASCADE'
+    });
 
-Cart.belongsTo(User, {
-    foreignKey: 'user_id',
-    as: 'user'
-});
+    Product.hasOne(Game, {
+        foreignKey: 'product_id',
+        as: 'gameDetails'
+    });
+    Product.hasOne(Accessory, {
+        foreignKey: 'product_id',
+        as: 'accessoryDetails'
+    });
+    Product.hasOne(Collectible, {
+        foreignKey: 'product_id',
+        as: 'collectibleDetails'
+    });
 
-Cart.hasMany(CartItem,{
-    foreignKey: 'cart_id',
-    as: 'items',
-    onDelete: 'CASCADE'
-});
+    Game.belongsTo(Product, {
+        foreignKey: 'product_id'
+    });
+    Accessory.belongsTo(Product, {
+        foreignKey: 'product_id'
+    });
+    Collectible.belongsTo(Product, {
+        foreignKey: 'product_id'
+    });
 
-CartItem.belongsTo(Cart, {
-    foreignKey: 'cart_id',
-    as: 'cart'
-});
+    Cart.belongsTo(User, {
+        foreignKey: 'user_id',
+        as: 'user'
+    });
 
-Product.hasMany(CartItem, {
-    foreignKey: 'product_id',
-    as: 'cartItems'
-});
+    Cart.hasMany(CartItem, {
+        foreignKey: 'cart_id',
+        as: 'items',
+        onDelete: 'CASCADE'
+    });
 
-CartItem.belongsTo(Product, {
-    foreignKey: 'product_id',
-    as: 'product'
-});
+    CartItem.belongsTo(Cart, {
+        foreignKey: 'cart_id',
+        as: 'cart'
+    });
 
-return {
+    Game.hasMany(CartItem, {
+        foreignKey: 'product_id',
+        as: 'cartItems'
+    });
+    Accessory.hasMany(CartItem, {
+        foreignKey: 'product_id',
+        as: 'cartItems'
+    });
+    Collectible.hasMany(CartItem, {
+        foreignKey: 'product_id',
+        as: 'cartItems'
+    });
+
+    CartItem.belongsTo(Product, {
+        foreignKey: 'product_id',
+        as: 'product'
+    });
+
+
+
+    return {
         User,
         Cart,
         CartItem,
-        Product
+        Game,
+        Product,
+        Accessory,
+        Collectible
     };
 };
