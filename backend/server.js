@@ -8,6 +8,7 @@ const UserModel = db.User;
 const ProductModel = db.Product;
 const CartModel = db.Cart;
 const CartItemModel = db.CartItem;
+const OrdersModel = db.Orders;
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const fileUpload = require('express-fileupload');
