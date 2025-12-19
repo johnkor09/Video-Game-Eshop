@@ -25,7 +25,7 @@ export default function Login() {
     const handleLogin = async () => {
         setError('');
         try {
-            const api_url = 'http://localhost:4000/api/login';
+            const api_url = 'http://localhost:4000/api/auth/login';
             //εδω στελνουμε ενα request στο api δλδ στον backend server με τα δεδομενα δλδ email, password
             const response = await axios.post(api_url, Data);
 
