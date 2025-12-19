@@ -8,6 +8,7 @@ const ProductModel = db.Product;
 const GameModel = db.Game;
 const CollectibleModel = db.Collectible;
 const OrdersModel = db.Order;
+const OrderItemModel = db.OrderItem;
 const jwt = require('jsonwebtoken');
 const fileUpload = require('express-fileupload');
 const path = require('path');
@@ -322,21 +323,21 @@ app.get('/api/game/:gameId', async (req, res) => {
 
 // app for orders
 app.post('/api/orders/new', async (req, res) => {
-    const userId = req.user.id;
+    
     const { items } = req.body;
-
     if (!items || items.length === 0) {
         return res.status(400).json({ success: false, message: 'Order must contain products.' });
     }    
     const totalAmount = items.reduce((total, item) => total + item.quantity * item.unit_price, 0);
-    const transaction = await sequelize.transaction();
+    console.log(totalAmount)
     try {
-      
+      //temp values
         const newOrder = await OrdersModel.create({
-            user_id: userId,
+            user_id: 1,
             total_amount: totalAmount,
             status: 'Pending', // Default status
-        }, { transaction });
+            created_at: '2025-12-25',
+        });
 
         
         const orderItems = items.map(item => ({
@@ -346,10 +347,9 @@ app.post('/api/orders/new', async (req, res) => {
             unit_price: item.unit_price
         }));
 
-        await OrderItemsModel.bulkCreate(orderItems, { transaction });
+        await OrderItemModel.bulkCreate(orderItems);
 
        
-        await transaction.commit();
 
         // Return a response with the created order
         res.status(201).json({
@@ -358,10 +358,7 @@ app.post('/api/orders/new', async (req, res) => {
             order_id: newOrder.order_id,
         });
     } catch (err) {
-        // Rollback the transaction in case of an error
-        await transaction.rollback();
-
-        console.error('Error creating the order:', err);
+         console.error('Error creating the order:', err);
         res.status(500).json({ success: false, message: 'Failed to create order.' });
     }
 

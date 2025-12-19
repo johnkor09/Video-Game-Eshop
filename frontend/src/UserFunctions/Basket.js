@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaRegTrashCan } from "react-icons/fa6";
 import { IoBagCheckOutline } from "react-icons/io5";
+import PlaceOrder from '../PlaceOrder.js';
 
 export default function Basket() {
     const { user, token } = useAuth();
@@ -166,7 +167,7 @@ export default function Basket() {
                         <div className="Pop-up">
                             <h2 className="Pop-header">Complete purchase?</h2>
                             <div className="Pop-buttons">
-                                <button>Complete</button>
+                                <PlaceOrder/>
                                 <button onClick={() => setCheckout(false)}>Close</button>
                             </div>
                         </div>)}
