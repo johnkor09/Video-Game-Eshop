@@ -769,6 +769,51 @@ app.get('/api/game/:gameId', async (req, res) => {
 });
 
 // app for orders
+app.post('/api/orders/new', async (req, res) => {
+    const userId = req.user.id;
+    const { items } = req.body;
+
+    if (!items || items.length === 0) {
+        return res.status(400).json({ success: false, message: 'Order must contain products.' });
+    }    
+    const totalAmount = items.reduce((total, item) => total + item.quantity * item.unit_price, 0);
+    const transaction = await sequelize.transaction();
+    try {
+      
+        const newOrder = await OrdersModel.create({
+            user_id: userId,
+            total_amount: totalAmount,
+            status: 'Pending', // Default status
+        }, { transaction });
+
+        
+        const orderItems = items.map(item => ({
+            order_id: newOrder.order_id,
+            product_id: item.product_id,
+            quantity: item.quantity,
+            unit_price: item.unit_price
+        }));
+
+        await OrderItemsModel.bulkCreate(orderItems, { transaction });
+
+       
+        await transaction.commit();
+
+        // Return a response with the created order
+        res.status(201).json({
+            success: true,
+            message: 'Order created successfully!',
+            order_id: newOrder.order_id,
+        });
+    } catch (err) {
+        // Rollback the transaction in case of an error
+        await transaction.rollback();
+
+        console.error('Error creating the order:', err);
+        res.status(500).json({ success: false, message: 'Failed to create order.' });
+    }
+
+});
 
 app.get('/api/orders/content', authenticateToken, async (req, res) => {
     const userID = req.user.id;
@@ -776,9 +821,17 @@ app.get('/api/orders/content', authenticateToken, async (req, res) => {
         const order = await OrdersModel.findAll({
             where: {
                 user_id: userID,
+            }, include: {
+                model: OrderItemsModel,
+                attributes: ['product_id', 'quantity', 'unit_price'],
             },
             attributes: ['order_id', 'price', 'created_at', 'user_id'],
         });
+
+        if (orders.length === 0) {
+            return res.json({ success: false, message: 'No orders found for this user.' });
+        }
+
         res.json(order);
     } catch (err) {
         console.error('Error with sending cart items', err);
