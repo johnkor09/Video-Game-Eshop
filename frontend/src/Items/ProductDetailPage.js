@@ -83,8 +83,8 @@ const ProductDetailPage = () => {
     };
 
     const imageUrl = product.cover_image_url
-        ? `/game_images/${product.cover_image_url}`
-        : '/game_images/placeholder.webp';
+        ? `/product_images/${product.cover_image_url}`
+        : '/product_images/placeholder.webp';
 
     return (
         <div className='detailsPage'>

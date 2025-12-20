@@ -19,7 +19,7 @@ const GameItemPanel = ({ product }) => {
             detailUrl = `/other/${product.product_id}`;
     }
     const imageUrl = product.cover_image_url 
-        ? `/game_images/${product.cover_image_url}` 
+        ? `/product_images/${product.cover_image_url}` 
         : './game_images/placeholder.jpg';
         
         return (

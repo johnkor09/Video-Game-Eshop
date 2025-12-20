@@ -6,10 +6,37 @@
     margin-bottom: 50px;
 }
 
+.AdminPanel-Header {
+    background: rgba(255, 255, 255, 0.37);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
+    margin-top: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.AdminPanel-Header-Option {
+    padding: 10px 30px;
+    cursor: pointer;
+}
+
+.AdminPanel-Header-Option:hover {
+    background-color: rgba(255, 255, 255, 0.263);
+
+}
+
+.AdminPanel-Header-Options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 .AllAnalytics-grid {
     display: flex;
     gap: 5px;
-
 }
 
 .AdminPanel-grid {
@@ -152,7 +179,7 @@
     box-sizing: border-box;
 }
 
-.NewGameForm-panel {
+.NewProductForm-panel {
     border-radius: 10px;
     padding: 0px 20px;
     padding-bottom: 30px;
@@ -166,7 +193,7 @@
     border: 1px solid rgba(255, 255, 255, 0.37);
 }
 
-.NewGameForm-title {
+.NewProductForm-title {
     text-align: center;
     margin: 20px;
     font-size: 25px;
@@ -184,7 +211,7 @@
     align-self: center;
 }
 
-.NewGameForm-info-grid {
+.NewProductForm-info-grid {
     gap: 30px;
     display: flex;
     padding-bottom: 5px;
@@ -284,7 +311,7 @@
     transform: scale(1.5);
 }
 
-.NewGameInfo-description {
+.NewProductInfo-description {
     margin-top: 20px;
     padding-bottom: 5px;
     padding-left: 5px;
@@ -299,7 +326,7 @@
     text-align: center;
 }
 
-.NewGameInfo-descr-title {
+.NewProductInfo-descr-title {
     margin: 20px;
     font-size: 25px;
     font-weight: bold;
@@ -314,7 +341,7 @@
     text-align: center;
 }
 
-.NewGameInfo-descr-input {
+.NewProductInfo-descr-input {
     margin-top: 10px;
     height: 400px;
     width: 80%;
@@ -364,8 +391,17 @@
     align-self: center;
 }
 
-.EditExistingProducts-gamelist {
-    margin-left: 10%;
-    padding-top: 10px;
-    width: 80%; 
+.EditExistingProducts-productTypelist {
+    width: 20%;
+}
+
+.EditExistingProducts-productlist {
+    width: 60%;
+}
+
+.EditExistingProducts-Selects {
+    justify-content: center;
+    flex-wrap: wrap;
+    display: flex;
+    gap: 10px;
 }

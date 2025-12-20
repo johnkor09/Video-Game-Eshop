@@ -126,7 +126,7 @@ export default function Basket() {
                                 <div key={item.item_id} className='Basket-Item' >
                                     <Link to={'/'+item.product_type+'/' + item.product_id}  >
                                         <img
-                                            src={'/game_images/' + item.cover_image_url || './game_images/placeholder.jpg'}
+                                            src={'/product_images/' + item.cover_image_url || './product_images/placeholder.jpg'}
                                             alt={'Cover for' + item.title}
                                             className='Basket-Item-coverImage'
                                             onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x400/444444/ffffff?text=Image+Missing'; }}

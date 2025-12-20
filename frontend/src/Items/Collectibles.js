@@ -13,7 +13,7 @@ export default function Home() {
     useEffect(() => {
         const getCollectibles = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/api/collectibles?sortBy=${sortBy}`);
+                const response = await axios.get(`http://localhost:4000/api/collectibles/all?sortBy=${sortBy}`);
                 setCollectibles(response.data);
             } catch (err) {
                 console.error("Failed to get collectibles data.", err);

@@ -13,6 +13,8 @@ import Collectibles from './Items/Collectibles';
 import PCGames from './Items/PCGames';
 import PlaystationGames from './Items/PlaystationGames';
 import Basket from './UserFunctions/Basket.js';
+import AdminAnalytics from './Admin/AdminAnalytics.js'
+import AdminProducts from './Admin/AdminProducts.js'
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useAuth } from './Authentication/AuthContext';
@@ -24,25 +26,29 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Header />
-        <ItemTab/>
+        <ItemTab />
         <div className="Body">
+
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/Games" element={<Games />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path='/Games/Nintendo' element={<NintendoGames/>}/>
-            <Route path='/Games/Playstation' element={<PlaystationGames/>}/>
-            <Route path='/Games/Xbox' element={<XboxGames/>}/>
-            <Route path='/Games/Collectibles' element={<Collectibles/>}/>
-            <Route path='/Games/Pc' element={<PCGames/>}/>
+            <Route path='/Games/Nintendo' element={<NintendoGames />} />
+            <Route path='/Games/Playstation' element={<PlaystationGames />} />
+            <Route path='/Games/Xbox' element={<XboxGames />} />
+            <Route path='/Games/Collectibles' element={<Collectibles />} />
+            <Route path='/Games/Pc' element={<PCGames />} />
             <Route path="/:product_type/:productId" element={<ProductDetailPage />} />
-            <Route path='/:userId/basket' element={<Basket/>}/>
+            <Route path='/:userId/basket' element={<Basket />} />
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
             {user && user.role ? (<>
-              <Route path="/admin-panel" element={<AdminPanel />} />
+              <Route path="/admin-panel/analytics" element={<AdminPanel Panel={AdminAnalytics} />} />
+              <Route path="/admin-panel/analytics" element={<AdminPanel Panel={AdminAnalytics} />} />
+              <Route path="/admin-panel/products" element={<AdminPanel Panel={AdminProducts} />} />
             </>) : (null)}
           </Routes>
+
         </div>
         <Footer />
       </div>

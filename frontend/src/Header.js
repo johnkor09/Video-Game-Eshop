@@ -26,7 +26,7 @@ export default function Header() {
                                 {user.role ? (
                                     <>
                                         <GrUserAdmin className='button'
-                                            onClick={() => navigate('/admin-panel')}
+                                            onClick={() => navigate('/admin-panel/analytics')}
                                         />
                                     </>) : (<></>)}
                             </div>
