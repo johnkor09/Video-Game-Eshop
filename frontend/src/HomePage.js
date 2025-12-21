@@ -1,5 +1,6 @@
 import './HomePage.css';
-import { useState } from 'react';
+import{useEffect} from 'react';
+import {useState } from 'react';
 import IMG1 from './slide_images/pvz.jpg'
 import IMG2 from './slide_images/asuka.jpg'
 import IMG3 from './slide_images/oguri.jpeg'
@@ -12,7 +13,11 @@ export default function Home() {
     const pictures=[IMG1,IMG2,IMG3,IMG4,IMG5];
     const [picIndex,setIndex]=useState(0);
 
-
+  useEffect(()=>{
+    const inter=setInterval(goNext,5000);
+    return() => clearInterval(inter);
+  },[]);
+  
     function goNext()
     {
       setIndex(index=>{
