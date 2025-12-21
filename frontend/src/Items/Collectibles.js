@@ -61,7 +61,7 @@ export default function Home() {
                 <h1 className='title-Amiibo' onClick={() => navigate('/Collectibles/Amiibos')}>Amiibos</h1>
 
                 {collectibles.length === 0 ? (
-                    <div className="Text noCollectiblesMessage">No games found :(</div>
+                    <div className="Text noCollectiblesMessage">No collectibles found :(</div>
                 ) : (
                      <div className="collectiblesGrid">
                             {collectibles.filter(collectible => collectible.collectible_type === "Amiibo" ).map(collectible => (
@@ -75,7 +75,7 @@ export default function Home() {
                 <h1 className='title-Funko-Pop' onClick={() => navigate('/Collectibles/FunkoPop')}>Funko Pop</h1>
 
                 {collectibles.length === 0 ? (
-                    <div className="Text noCollectiblesMessage">No games found :(</div>
+                    <div className="Text noCollectiblesMessage">No collectibles found :(</div>
                 ) : (
                      <div className="collectiblesGrid">
                             {collectibles.filter(collectible => collectible.collectible_type === 'Funko Pop' ).map(collectible => (

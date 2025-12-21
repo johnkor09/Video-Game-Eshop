@@ -24,11 +24,10 @@ function Get_SortBy(sortBy) {
 }
 
 exports.GetAllGames = async (req, res) => {
-    const { platformfromparams } = req.params;
-    const platform = platformfromparams || 'all';
-    const platformArray = platform.split(',')
+    const { platform } = req.params;
+    
     const { sortBy } = req.query;  // get sort method
-    if (platform === 'all') {
+    if (!platform || platform === 'all') {
         try {
             Get_SortBy(sortBy);
             const products = await ProductModel.findAll({
@@ -57,6 +56,7 @@ exports.GetAllGames = async (req, res) => {
             return res.status(500).send('Database error.');
         }
     }
+    const platformArray = platform.split(',');
     try {
         Get_SortBy(sortBy);
         const products = await ProductModel.findAll({

@@ -1,0 +1,43 @@
+.accessoriesGrid {
+    flex-wrap: wrap;
+    display: flex;
+    gap: 10px;
+}
+
+.Accessory-title {
+    color: white;
+    font-size: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+    background-color: rgb(89, 133, 255);
+    margin-top: 20px;
+    align-self: center;
+    text-align: center;
+}
+
+.title-Controller {
+    color: white;
+    font-size: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 30px;
+    align-self: center;
+    text-align: center;
+    background-color: rgba(255, 0, 0, 1);
+    cursor: pointer;
+}
+
+.title-VR{
+    color: white;
+    font-size: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 30px;
+    align-self: center;
+    text-align: center;
+    background-color: rgb(247, 189, 81);
+    cursor: pointer;
+}

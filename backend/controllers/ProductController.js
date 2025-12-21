@@ -77,7 +77,7 @@ exports.GetSpecificProduct = async(req, res)=>{
                     is_active: product.is_active,
                     brand: product.accessoryDetails?.brand,
                     product_type: product.product_type,
-                    accessory_type: product.collectible_type
+                    accessory_type: product.accessoryDetails.accessory_type
                 };
                 res.json(response);
             }

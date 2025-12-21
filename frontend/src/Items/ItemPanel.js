@@ -13,7 +13,7 @@ const GameItemPanel = ({ product }) => {
             detailUrl = `/collectible/${product.product_id}`; 
             break;
         case 'accessory':
-            detailUrl = `/accessories/${product.product_id}`;
+            detailUrl = `/accessory/${product.product_id}`;
             break;
         default:
             detailUrl = `/other/${product.product_id}`;

@@ -9,6 +9,7 @@ import AdminPanel from './Admin/AdminPanel';
 import ProductDetailPage from './Items/ProductDetailPage';
 import NintendoGames from './Items/NintendoGames';
 import XboxGames from './Items/XboxGames';
+import Accessories from './Items/Accessories';
 import Collectibles from './Items/Collectibles';
 import PCGames from './Items/PCGames';
 import PlaystationGames from './Items/PlaystationGames';
@@ -33,6 +34,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/Games" element={<Games />} />
+            <Route path="/Accessories" element={<Accessories />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path='/Games/Nintendo' element={<NintendoGames />} />

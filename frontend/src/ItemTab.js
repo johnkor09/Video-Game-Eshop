@@ -14,7 +14,7 @@ export default function ItemTab() {
                     className="CategoryStyle"
                     onClick={() => navigate('/Games')}
                     >Games</h4>
-                <h4 className="CategoryStyle">Accessories</h4>
+                <h4 className="CategoryStyle" onClick={() => navigate('/Accessories')}>Accessories</h4>
                 <h4 className="CategoryStyle" onClick={()=> navigate('/Games/Collectibles')}>Collectibles</h4>
                 <div className='searchBar'>
                     <HiSearch className="SearchButton" />

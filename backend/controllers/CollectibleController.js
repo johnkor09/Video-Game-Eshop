@@ -24,11 +24,9 @@ function Get_SortBy(sortBy) {
 }
 
 exports.GetAllcollectibles = async (req, res) => {
-    const { collectible_typefromparams } = req.params;
-    const collectible_type = collectible_typefromparams || 'all';
-    const collectible_typeArray = collectible_type.split(',')
+    const { collectible_type } = req.params;
     const { sortBy } = req.query;  // get sort method
-    if (collectible_type === 'all') {
+    if (!collectible_type || collectible_type === 'all') {
         try {
             Get_SortBy(sortBy);
             const products = await ProductModel.findAll({
@@ -57,6 +55,7 @@ exports.GetAllcollectibles = async (req, res) => {
             return res.status(500).send('Database error.');
         }
     }
+    const collectible_typeArray = collectible_type.split(',');
     try {
         Get_SortBy(sortBy);
         const products = await ProductModel.findAll({

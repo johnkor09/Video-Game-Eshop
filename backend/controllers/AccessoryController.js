@@ -1,7 +1,7 @@
 const { sequelize } = require('../config/db');
 const db = require('../models/index')(sequelize);
 const ProductModel = db.Product;
-const CollectibleModel = db.Accessory;
+const accessoryModel = db.Accessory;
 const { Op } = require('sequelize');
 
 let sortField = 'product_id';
@@ -24,19 +24,17 @@ function Get_SortBy(sortBy) {
 }
 
 exports.GetAllaccessory = async (req, res) => {
-    const { accessory_typefromparams } = req.params;
-    const accessory_type = accessory_typefromparams || 'all';
-    const accessory_typeArray = accessory_type.split(',')
+    const { accessory_type } = req.params;
     const { sortBy } = req.query;  // get sort method
-    if (accessory_type === 'all') {
+    if (!accessory_type || accessory_type === 'all') {
         try {
             Get_SortBy(sortBy);
             const products = await ProductModel.findAll({
-                where: { is_active: 1, product_type: 'collectible' },
+                where: { is_active: 1, product_type: 'accessory' },
                 attributes: ['product_id', 'title', 'price', 'cover_image_url', 'product_type'],
                 include: [{
-                    model: CollectibleModel,
-                    as: 'collectibleDetails',
+                    model: accessoryModel,
+                    as: 'accessoryDetails',
                     attributes: ['accessory_type']
                 }],
                 order: [[sortField, sortOrder]],
@@ -47,7 +45,7 @@ exports.GetAllaccessory = async (req, res) => {
                 title: p.title,
                 price: p.price,
                 cover_image_url: p.cover_image_url,
-                accessory_type: p.collectibleDetails ? p.collectibleDetails.accessory_type : 'N/A',
+                accessory_type: p.accessoryDetails ? p.accessoryDetails.accessory_type : 'N/A',
                 product_type: p.product_type
             }));
             res.json(flattened)
@@ -57,14 +55,15 @@ exports.GetAllaccessory = async (req, res) => {
             return res.status(500).send('Database error.');
         }
     }
+    const accessory_typeArray = accessory_type.split(',');
     try {
         Get_SortBy(sortBy);
         const products = await ProductModel.findAll({
-            where: { is_active: 1, product_type: 'collectible' },
+            where: { is_active: 1, product_type: 'accessory' },
             attributes: ['product_id', 'title', 'price', 'cover_image_url', 'product_type'],
             include: [{
-                model: CollectibleModel,
-                as: 'collectibleDetails',
+                model: accessoryModel,
+                as: 'accessoryDetails',
                 where: { accessory_type: { [Op.in]: accessory_typeArray } },
                 attributes: ['accessory_type']
             }],
@@ -76,7 +75,7 @@ exports.GetAllaccessory = async (req, res) => {
             title: p.title,
             price: p.price,
             cover_image_url: p.cover_image_url,
-            accessory_type: p.collectibleDetails ? p.collectibleDetails.accessory_type : 'N/A',
+            accessory_type: p.accessoryDetails ? p.accessoryDetails.accessory_type : 'N/A',
             product_type: p.product_type
         }));
         res.json(flattened)
