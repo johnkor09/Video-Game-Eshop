@@ -12,8 +12,8 @@ export default function NintendoGames() {
     useEffect(() => {
         const getGames = async () => {
             try {
-                const platforms = ['Nintendo Switch 2', 'Nintendo Switch'];
-                const response = await axios.get(`http://localhost:4000/api/games/${platforms}?sortBy=${sortBy}`);
+                const platform = ['Nintendo Switch 2', 'Nintendo Switch'];
+                const response = await axios.get(`http://localhost:4000/api/games/${platform}?sortBy=${sortBy}`);
                 setGames(response.data);
             } catch (err) {
                 console.error("Failed to get games data.", err);

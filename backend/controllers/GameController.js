@@ -50,8 +50,8 @@ exports.GetAllGames = async (req, res) => {
                 platform: p.gameDetails ? p.gameDetails.platform : 'N/A',
                 product_type: p.product_type
             }));
-            res.json(flattened)
-            return;
+            return res.json(flattened);
+            
         } catch (err) {
             console.error(err);
             return res.status(500).send('Database error.');
@@ -79,7 +79,7 @@ exports.GetAllGames = async (req, res) => {
             platform: p.gameDetails ? p.gameDetails.platform : 'N/A',
             product_type: p.product_type
         }));
-        res.json(flattened)
+        return res.json(flattened);
     } catch (err) {
         console.error(err);
         return res.status(500).send('Database error.');
