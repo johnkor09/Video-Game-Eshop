@@ -198,6 +198,105 @@ VALUES ('test game', 10.00, 10, 'game', 'test.', 'placeholder.webp');
 INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
 VALUES (LAST_INSERT_ID(), 'imagination', 'patrick', 'amazing', 'none', '2001-11-09');
 
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Sony PS5 DualSense Wireless Controller - White', 74.90, 100, 'accessory', '
+Sony PlayStation 5 DualSense Wireless Controller
+Elevate your gaming experience with the groundbreaking PS5 DualSense Wireless Controller. Designed to deliver a deeper, more immersive sensory experience, it brings the worlds of your favorite games to life right in the palms of your hands.
+
+Key Features:
+Haptic Feedback: Feel physically responsive feedback to your in-game actions with dual actuators that replace traditional rumble motors.
+
+Adaptive Triggers: Experience varying levels of force and tension as you interact with your gear and environments.
+
+Built-in Microphone & Headset Jack: Chat with friends online using the integrated mic or by connecting a headset to the 3.5mm jack.
+
+Signature Comfort: Enjoy an evolved, two-tone design that combines an iconic layout with enhanced sticks and a reimagined light bar.
+
+Create Button: Capture and broadcast your most epic gaming moments with ease.', 'SONY-DUALSENSE-white.webp');
+
+INSERT INTO accessories (product_id, accessory_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Controller', 'Sony');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Nintendo Switch Pro Controller - Gray', 84.90, 100, 'accessory', '
+Nintendo Switch Pro Controller
+Take your gaming sessions up a notch with the Nintendo Switch Pro Controller. Engineered for comfort and precision, this premium wireless controller is the perfect choice for anyone who prefers a traditional gamepad layout for extended play in TV or tabletop mode.
+
+Key Features:
+Superior Ergonomics: Features a comfortable, classic design with textured grips, ensuring a secure hold during intense gaming sessions.
+
+Exceptional Battery Life: Game for up to 40 hours on a single charge—one of the longest-lasting batteries in any modern controller.
+
+HD Rumble: Experience subtle, precise vibration feedback that adds a new layer of immersion to supported Nintendo Switch games.
+
+Motion Controls & NFC: Fully supports motion-sensing games and features a built-in NFC reader for instant Amiibo functionality.
+
+Precision D-Pad: Includes a full-sized, cross-style +Control Pad for pinpoint accuracy in platformers and fighting games.', 'Nintendo-Switch-Pro-Controller.webp');
+
+INSERT INTO accessories (product_id, accessory_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Controller', 'Nintendo');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Microsoft Xbox Series Wireless Controller Shock-Blue', 69.90, 100, 'accessory', '
+Here is a professional, short description for the Xbox Wireless Controller (Series X|S), specifically written for an e-shop listing:
+
+Microsoft Xbox Wireless Controller
+Experience the modernized design of the Xbox Wireless Controller, featuring sculpted surfaces and refined geometry for enhanced comfort during gameplay. Whether you\'re playing on console, PC, or mobile, stay on target and capture your best moments with ease.
+
+Key Features:
+Refined Ergonomics: Sculpted surfaces and a streamlined design provide a more comfortable grip for long gaming sessions.
+
+Hybrid D-Pad: A redesigned, circular d-pad allows for precise inputs and better control over diagonal movements.
+
+Textured Grips: Stay in control with textured grips on the triggers, bumpers, and back-case.
+
+Dedicated Share Button: Seamlessly capture and share screenshots, recordings, and more with a single press.
+
+Multi-Device Compatibility: Easily pair and switch between devices including Xbox Series X|S, Xbox One, Windows PC, Android, and iOS.
+
+Custom Mapping: Use the Xbox Accessories app to remap buttons and create custom controller profiles for your favorite games.
+
+Technical Specs:
+Connectivity: Xbox Wireless / Bluetooth / USB-C.
+
+Audio: 3.5mm stereo headset jack.
+
+Battery Life: Up to 40 hours of play (uses 2x AA batteries).', 'Microsoft-Xbox-Series-Wireless-Controller-Shock-Blue.webp');
+INSERT INTO accessories (product_id, accessory_type, brand) 
+VALUES (LAST_INSERT_ID(), 'Controller', 'Microsoft');
+
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Sony PlayStation VR2 for PS5', 349.90, 100, 'accessory', '
+Sony PlayStation VR2
+Step into the next generation of virtual reality with the PlayStation VR2. Designed exclusively for the PS5, this headset combines cutting-edge visual fidelity with revolutionary sensory features to deliver a truly transformative gaming experience.
+
+Key Features:
+4K HDR OLED Visuals: Enjoy breathtaking environments with two 2000 x 2040 displays, delivering 4K HDR imagery at up to 120fps for smooth, crisp motion.
+
+Sense Technology: Feel the rush with headset feedback, 3D Audio, and highly accurate eye tracking that mirrors your emotions and focus in-game.
+
+Inside-Out Tracking: Play with freedom—four cameras built into the headset track your every movement without the need for an external camera.
+
+VR2 Sense Controllers: Immerse yourself with finger touch detection, haptic feedback, and adaptive triggers that simulate the tension of your gear.
+
+Simple Setup: Get into the game faster with a single-cable connection that plugs directly into your PS5 console’s front USB-C port.
+
+Technical Specs:
+Field of View: Approx. 110 degrees.
+
+Sensors: Six-axis motion sensing system (3-axis gyro, 3-axis accelerometer), IR proximity sensor, and IR camera for eye tracking.
+
+Connection: High-speed USB-C.
+
+Audio: Built-in microphone and 3.5mm stereo headset jack.
+
+Box Contents: VR Headset, 2x PS VR2 Sense Controllers (L/R) with attached straps, USB cable (for pairing/charging), Stereo headphones, Three pairs of earpieces.', 'Sony-PlayStation-VR2.webp');
+
+INSERT INTO accessories (product_id, accessory_type, brand) 
+VALUES (LAST_INSERT_ID(), 'VR', 'Sony');
+
+
+
 CREATE table carts (
     cart_id int not null AUTO_INCREMENT primary key,
     user_id int unique,
