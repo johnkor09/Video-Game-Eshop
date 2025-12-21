@@ -1,0 +1,33 @@
+.Message {
+    background-color: white;
+    border-radius: 3px;
+    border: 2px solid;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 30%;
+    height: 20%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.head {
+    background-color: rgb(255, 255, 255);
+    color: black;
+    text-align: center;
+    padding: 40px 5px;
+    margin-top: -5%;
+}
+
+.Return {
+    cursor: pointer;
+    margin: 0;
+    height: 30px;
+    width: 160px;
+    transform: scale(1.5);
+    margin-left: 40%;
+}
+

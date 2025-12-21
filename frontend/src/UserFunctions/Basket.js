@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaRegTrashCan } from "react-icons/fa6";
 import { IoBagCheckOutline } from "react-icons/io5";
+import { useNavigate } from 'react-router-dom';
 
 export default function Basket() {
     const { user, token } = useAuth();
@@ -13,6 +14,7 @@ export default function Basket() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [Checkout, setCheckout] = useState(false);
+    const navigate = useNavigate();
 
     const getBasketProducts = useCallback(async () => {
         if (!user || !token) {
@@ -120,6 +122,7 @@ export default function Basket() {
 
             if (response.data.success) {
                 console.log('Order placed successfully');
+                navigate('/OrderComplete');             
             } else {
                 setError(response.data.message);
             }

@@ -33,13 +33,14 @@ app.post('/api/orders/new', async (req, res) => {
         return res.status(400).json({ success: false, message: 'Order must contain products.' });
     }
     const totalAmount = items.reduce((total, item) => total + item.quantity * item.price_at_addition, 0);
+    
     try {
         const newOrder = await OrdersModel.create({
             user_id: user.id,
             total_amount: totalAmount,
             status: 'Pending', // Default status
-            created_at: '2025-12-25',
         });
+        
         const orderItems = items.map(item => ({
             order_id: newOrder.order_id,
             product_id: item.product_id,

@@ -15,6 +15,7 @@ import PlaystationGames from './Items/PlaystationGames';
 import Basket from './UserFunctions/Basket.js';
 import AdminAnalytics from './Admin/AdminAnalytics.js'
 import AdminProducts from './Admin/AdminProducts.js'
+import OrderComplete from './OrderComplete.js';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useAuth } from './Authentication/AuthContext';
@@ -42,6 +43,7 @@ function App() {
             <Route path="/:product_type/:productId" element={<ProductDetailPage />} />
             <Route path='/:userId/basket' element={<Basket />} />
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+            {user && (<Route path='/OrderComplete' element={<OrderComplete />} />)}
             {user && user.role ? (<>
               <Route path="/admin-panel/analytics" element={<AdminPanel Panel={AdminAnalytics} />} />
               <Route path="/admin-panel/analytics" element={<AdminPanel Panel={AdminAnalytics} />} />
