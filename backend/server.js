@@ -28,28 +28,24 @@ app.use('/api/product', productRoutes);
 
 // app for orders
 app.post('/api/orders/new', async (req, res) => {
-    
-    const { items } = req.body;
+    const { user, BasketProducts: items } = req.body;
     if (!items || items.length === 0) {
         return res.status(400).json({ success: false, message: 'Order must contain products.' });
-    }    
-    const totalAmount = items.reduce((total, item) => total + item.quantity * item.unit_price, 0);
-    console.log(totalAmount)
+    }
+    const totalAmount = items.reduce((total, item) => total + item.quantity * item.price_at_addition, 0);
     try {
-      //temp values
         const newOrder = await OrdersModel.create({
-            user_id: 1,
+            user_id: user.id,
             total_amount: totalAmount,
             status: 'Pending', // Default status
             created_at: '2025-12-25',
         });
-
-        
         const orderItems = items.map(item => ({
             order_id: newOrder.order_id,
             product_id: item.product_id,
+            title: item.title,
             quantity: item.quantity,
-            unit_price: item.unit_price
+            unit_price: item.price_at_addition * item.quantity
         }));
 
         await OrderItemModel.bulkCreate(orderItems);

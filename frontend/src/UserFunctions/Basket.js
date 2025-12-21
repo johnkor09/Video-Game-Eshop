@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaRegTrashCan } from "react-icons/fa6";
 import { IoBagCheckOutline } from "react-icons/io5";
-import PlaceOrder from '../PlaceOrder.js';
 
 export default function Basket() {
     const { user, token } = useAuth();
@@ -112,7 +111,22 @@ export default function Basket() {
             await getBasketProducts();
         }
     };
+    const handleCheckout = async () => {
+        setError('');
+        try {
+            const api_url = 'http://localhost:4000/api/orders/new';
 
+            const response = await axios.post(api_url, { user,BasketProducts });
+
+            if (response.data.success) {
+                console.log('Order placed successfully');
+            } else {
+                setError(response.data.message);
+            }
+        } catch (err) {
+            setError('Unable to communicate with the server.');
+        }
+    };
 
     return (
         <div className='BasketPage'>
@@ -167,7 +181,8 @@ export default function Basket() {
                         <div className="Pop-up">
                             <h2 className="Pop-header">Complete purchase?</h2>
                             <div className="Pop-buttons">
-                                <PlaceOrder/>
+                                <button onClick={handleCheckout}>Complete</button>
+                                {error && <div>{error}</div>}
                                 <button onClick={() => setCheckout(false)}>Close</button>
                             </div>
                         </div>)}

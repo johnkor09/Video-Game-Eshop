@@ -24,6 +24,7 @@ module.exports = (sequelize) => {
                 key: 'product_id'
             }
         },
+        title: { type: DataTypes.STRING, allowNull: false },
         quantity: {
             type: DataTypes.INTEGER,
             allowNull: false

@@ -239,6 +239,7 @@ CREATE TABLE order_items (
     order_item_id int not null AUTO_INCREMENT primary key,
     order_id int not null,
     product_id int not null,
+    title VARCHAR(255) NOT NULL,
     quantity int not null,
     unit_price decimal(10, 2) not null, -- Η τιμή που είχε το προϊόν όταν αγοράστηκε
     foreign key (order_id) references orders(order_id),
