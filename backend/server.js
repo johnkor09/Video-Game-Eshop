@@ -14,11 +14,13 @@ const cartRoutes = require('./routes/CartRoutes');
 const productRoutes = require('./routes/ProductRoutes');
 const adminRoutes = require('./routes/AdminRoutes');
 const authRoutes = require('./routes/AuthRoutes');
+const userRoutes = require('./routes/userRoutes');
 const { authenticateToken } = require('./middleware/auth');
 app.use(cors());
 app.use(express.json());
 
 app.use('/api/games', gameRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/collectibles', collectibleRoutes);
 app.use('/api/accessories', accessoryRoutes);

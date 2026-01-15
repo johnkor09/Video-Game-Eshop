@@ -9,6 +9,7 @@ export default function AdminAnalytics() {
             <div className='AdminPanel-Header-Options'>
                 <div className='AdminPanel-Header-Option' onClick={()=> navigate('/admin-panel/analytics')}>Analytics</div>
                 <div className='AdminPanel-Header-Option' onClick={()=> navigate('/admin-panel/products')}>Products</div>
+                <div className='AdminPanel-Header-Option' onClick={()=> navigate('/admin-panel/customers')}>Customers</div>
             </div>
 
         </div>

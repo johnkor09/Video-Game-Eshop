@@ -16,6 +16,7 @@ import PlaystationGames from './Items/PlaystationGames';
 import Basket from './UserFunctions/Basket.js';
 import AdminAnalytics from './Admin/AdminAnalytics.js'
 import AdminProducts from './Admin/AdminProducts.js'
+import AdminCustomers from './Admin/AdminCustomers.js'
 import OrderComplete from './OrderComplete.js';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -47,9 +48,9 @@ function App() {
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
             {user && (<Route path='/OrderComplete' element={<OrderComplete />} />)}
             {user && user.role ? (<>
+              <Route path="/admin-panel/customers" element={<AdminPanel Panel={AdminCustomers} />} />
               <Route path="/admin-panel/analytics" element={<AdminPanel Panel={AdminAnalytics} />} />
-              <Route path="/admin-panel/analytics" element={<AdminPanel Panel={AdminAnalytics} />} />
-              <Route path="/admin-panel/products" element={<AdminPanel Panel={AdminProducts} />} />
+              <Route path="/admin-panel/products" element={<AdminPanel Panel={AdminProducts} />} />customers
             </>) : (null)}
           </Routes>
 
