@@ -14,6 +14,7 @@ import Collectibles from './Items/Collectibles';
 import PCGames from './Items/PCGames';
 import PlaystationGames from './Items/PlaystationGames';
 import Basket from './UserFunctions/Basket.js';
+import AccountCenter from './UserFunctions/AccountCenter.js';
 import AdminAnalytics from './Admin/AdminAnalytics.js'
 import AdminProducts from './Admin/AdminProducts.js'
 import AdminCustomers from './Admin/AdminCustomers.js'
@@ -45,6 +46,7 @@ function App() {
             <Route path='/Games/Pc' element={<PCGames />} />
             <Route path="/:product_type/:productId" element={<ProductDetailPage />} />
             <Route path='/:userId/basket' element={<Basket />} />
+            <Route path='/:userId/Account' element={<AccountCenter />} />
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
             {user && (<Route path='/OrderComplete' element={<OrderComplete />} />)}
             {user && user.role ? (<>

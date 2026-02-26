@@ -2,7 +2,7 @@ import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingBasket } from "react-icons/fa";
 import { CiLogin, CiLogout } from "react-icons/ci";
-import { GrUserAdmin } from "react-icons/gr";
+import { GrUserAdmin, GrUserSettings } from "react-icons/gr";
 import { useAuth } from './Authentication/AuthContext';
 
 
@@ -10,8 +10,10 @@ export default function Header() {
     let navigate = useNavigate();
     const { isLoggedIn, user, logout } = useAuth();
     let detailUrl = 0;
+    let accUrl = 0;
     if (user) {
         detailUrl = '/' + user.id + '/basket';
+        accUrl= '/' + user.id + '/Account';
     }
     return (
         <>
@@ -28,7 +30,12 @@ export default function Header() {
                                         <GrUserAdmin className='button'
                                             onClick={() => navigate('/admin-panel/analytics')}
                                         />
-                                    </>) : (<></>)}
+                                    </>) : (
+                                    <>
+                                        <GrUserSettings className='button'
+                                            onClick={() => navigate(accUrl)}
+                                        />
+                                    </>)}
                             </div>
 
                             <span className="WelcomeText">

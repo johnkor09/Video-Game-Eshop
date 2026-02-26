@@ -1,0 +1,35 @@
+.AccountCenterPage {
+    margin-top: 5%;
+    justify-content: center;
+    display: flex;
+}
+
+.AccountCenter-grid {
+    display: flex;
+    gap: 100px;
+}
+
+.AccountCenter-Panel-Options {
+    height: 800px;
+    width: 300px;
+    background: rgba(255, 255, 255, 0.37);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
+    display: flex;
+}
+
+.AccountCenter-Panel-Option-Selection {
+    height: 800px;
+    width: 1500px;
+    background: rgba(255, 255, 255, 0.37);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    border: 1px solid rgba(255, 255, 255, 0.37);
+    display: flex;
+
+}
