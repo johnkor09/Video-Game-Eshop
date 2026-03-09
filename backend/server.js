@@ -1,7 +1,6 @@
 let express = require('express');
 let cors = require('cors');
 let app = express();
-let port = 4000;
 const { sequelize } = require('./config/db');
 const db = require('./models/index')(sequelize);
 const OrdersModel = db.Order;
@@ -93,6 +92,8 @@ app.get('/api/orders/content', authenticateToken, async (req, res) => {
 });
 
 
-app.listen(port, () => {
-    console.log('Server listening at http://localhost:' + port);
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(4000, () => console.log('Server running on 4000'));
+}
+
+module.exports = app;

@@ -31,7 +31,7 @@ exports.signup = async (req, res) => {
 
         const data = {
             id: newUser.user_id,
-            name: newUser.name,
+            name: newUser.first_name,
             email: newUser.email,
             role: newUser.admin_status
         };
