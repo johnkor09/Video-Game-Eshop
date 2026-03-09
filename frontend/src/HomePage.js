@@ -1,10 +1,10 @@
 import './HomePage.css';
 import { useState, useCallback,useEffect } from 'react';
-import IMG1 from './slide_images/pvz.jpg'
-import IMG2 from './slide_images/asuka.jpg'
-import IMG3 from './slide_images/oguri.jpeg'
-import IMG4 from './slide_images/mu.png'
-import IMG5 from './slide_images/yo-phone-linging.jpg'
+import IMG1 from './slide_images/ps5.jpg'
+import IMG2 from './slide_images/switch2.jpg'
+import IMG3 from './slide_images/yakuza.jpg'
+import IMG4 from './slide_images/ror2.jpg'
+import IMG5 from './slide_images/slay_2.png'
 import { FaArrowRight } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa";
 
