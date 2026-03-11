@@ -161,7 +161,21 @@ Battle abhorrent alien creatures, ride across the landscape on the Vi-O-La vehic
 INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
 VALUES (LAST_INSERT_ID(), 'Retro Studios', 'Nintendo', 'FPS,Action-adventure', 'Nintendo Switch', '2025-12-04');
 
--- trails original>>>>
+INSERT INTO products (title, price, stock_quantity, product_type, description_, cover_image_url) 
+VALUES ('Trails in the Sky 1st Chapter - Nintendo Switch', 53.4, 7, 'game', 'Brace yourself for adventure! This beloved classic follows Estelle Bright
+and her adoptive brother, Joshua, as they begin their journey to
+become senior bracers. What starts as a simple mission grows into a
+battle against a mysterious organization threatening their homeland. As
+they uncover hidden conspiracies, Estelle and Joshua face increasing
+dangers that test their courage and strengthen their bond.
+
+    Take flight into the 1st Chapter of the legendary series from Falcom.
+    This stunning JRPG reimagines the beloved classic with new
+    breathtaking visuals and refined gameplay.
+    Swap seamlessly between traditional turn-based combat and an all-new real-time action system to suit your style of adventure.
+    Meet unforgettable characters brought to life with brand-new voiceovers.
+    Discover the story that redefined the JRPG genre and set the Trails series on its legendary path!
+    Enjoy English and Japanese in-game voice and English, French, German, and Spanish in-game text.', 'Trails_in_the_Sky_1st_Chapter_NSW.webp');
 
 INSERT INTO video_games (product_id, developer, publisher, genres, platform, release_date)
 VALUES (LAST_INSERT_ID(), 'Falcom', 'Nintendo', 'JRPG,Adventure', 'Nintendo Switch', '2025-09-12');
