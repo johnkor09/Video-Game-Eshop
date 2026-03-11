@@ -7,6 +7,6 @@ router.get('/content', authenticateToken, cartController.CartContent);
 router.post('/add', authenticateToken, cartController.AddItemToCart);
 router.put('/changeQuantity', authenticateToken, cartController.ChangeQuantity);
 router.delete('/removeItem', authenticateToken, cartController.RemoveCartItem);
-
+router.delete('/clear', authenticateToken, cartController.ClearCart);
 
 module.exports = router;

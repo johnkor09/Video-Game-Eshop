@@ -120,8 +120,10 @@ export default function Basket() {
 
             const response = await axios.post(api_url, { user,BasketProducts });
 
+
             if (response.data.success) {
                 console.log('Order placed successfully');
+                ClearCart();
                 navigate('/OrderComplete');             
             } else {
                 setError(response.data.message);
@@ -129,8 +131,23 @@ export default function Basket() {
         } catch (err) {
             setError('Unable to communicate with the server.');
         }
-    };
 
+    };
+    const ClearCart = async () => {
+        setError('');
+        try {
+            const api_url = 'http://localhost:4000/api/cart/clear';
+            await axios.delete(api_url, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                data: { user }
+            });
+
+        } catch (err) {
+            setError('Unable to communicate with the server.');
+        }
+    };
     return (
         <div className='BasketPage'>
             <div className='Basket-Panel'>

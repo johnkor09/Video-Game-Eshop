@@ -191,3 +191,19 @@ exports.CartContent=async(req,res)=>{
         return res.json({ success: false, message: 'Error with getting cart items' });
     }
 }
+
+exports.ClearCart=async (req, res) => {
+    const userId = req.user.id;
+    try {
+        const [cart] = await CartModel.findOrCreate({
+            where: { user_id: userId },
+            defaults: { user_id: userId }
+        });
+        const cartItemsList = await CartItemModel.destroy({
+            where: { cart_id: cart.cart_id }
+        });
+    } catch (err) {
+        console.error('Error with sending cart items', err);
+        return res.json({ success: false, message: 'Error with getting cart items' });
+    }
+}
