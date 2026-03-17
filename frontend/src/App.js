@@ -49,10 +49,10 @@ function App() {
             <Route path='/:userId/Account' element={<AccountCenter />} />
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
             {user && (<Route path='/OrderComplete' element={<OrderComplete />} />)}
-            {user && user.role ? (<>
+            {user && user.admin_status ? (<>
               <Route path="/admin-panel/customers" element={<AdminPanel Panel={AdminCustomers} />} />
               <Route path="/admin-panel/analytics" element={<AdminPanel Panel={AdminAnalytics} />} />
-              <Route path="/admin-panel/products" element={<AdminPanel Panel={AdminProducts} />} />customers
+              <Route path="/admin-panel/products" element={<AdminPanel Panel={AdminProducts} />} />
             </>) : (null)}
           </Routes>
 

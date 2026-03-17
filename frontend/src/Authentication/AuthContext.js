@@ -17,12 +17,12 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const loadUser = () => {
             const storedToken = localStorage.getItem('userToken');
-            
+
             if (storedToken) {
                 try {
                     // αποκρυπτογραφει το token
                     const decoded = jwtDecode(storedToken);
-                    
+
                     // ελεγχει αν εληξε το token (το exp είναι σε δευτερόλεπτα)
                     const currentTime = Date.now() / 1000;
                     if (decoded.exp < currentTime) {
@@ -51,9 +51,9 @@ export const AuthProvider = ({ children }) => {
         //  ετσι μενει ο χρηστης για 2 ωρες (δλδ μεχρι να ληξει το token) αν κλεισει η εφαρμογη 
         // ειναι σαν τα cookies 
         // εννοειται πως αν ληξει γινεται logout
-        localStorage.setItem('userToken', newToken); 
+        localStorage.setItem('userToken', newToken);
         setToken(newToken);
-        
+
         // Αποκωδικοποιούμε αμέσως για να ενημερωθεί το UI
         try {
             const decoded = jwtDecode(newToken);
@@ -69,11 +69,18 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+    const updateUser = (newData) => {
+        setUser(prev => ({ ...prev, ...newData }));
+        // Προαιρετικά: Αν θέλεις να κρατάς το νέο όνομα ακόμα και μετά από refresh 
+        // χωρίς να αλλάξεις το token (δύσκολο), θα έπρεπε να αλλάξεις το Token από το backend.
+    };
+
     const value = {
         token,
         user,
         isLoggedIn: !!token, // true αν υπάρχει token, αλλιώς false
         isAuthLoading,
+        updateUser,
         login,
         logout,
     };

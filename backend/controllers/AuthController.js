@@ -33,7 +33,7 @@ exports.signup = async (req, res) => {
             id: newUser.user_id,
             name: newUser.first_name,
             email: newUser.email,
-            role: newUser.admin_status
+            admin_status: newUser.admin_status
         };
 
         const token = jwt.sign(data, JWT_SECRET, { expiresIn: '2h' });
@@ -62,6 +62,8 @@ exports.login = async (req, res) => {
         });
 
         if (user) {
+            console.log("=== BPHKA XPHSTH ===");
+            console.log("Admin Status:", user.admin_status, "| Τύπος:", typeof user.admin_status);
             const isMatch = await bcrypt.compare(password, user.password_);
 
             if (isMatch) {
@@ -69,7 +71,7 @@ exports.login = async (req, res) => {
                     id: user.user_id,
                     name: user.first_name,
                     email: user.email,
-                    role: user.admin_status
+                    admin_status: user.admin_status
                 };
                 const token = jwt.sign(data, JWT_SECRET, { expiresIn: '2h' });
 

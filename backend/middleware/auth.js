@@ -32,7 +32,10 @@ const checkAuthAndAdmin = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        if (decoded.role === 1) {
+
+        // ΑΛΛΑΓΗ ΕΔΩ: Ελέγχουμε το decoded.role, γιατί έτσι το έστειλες στο login!
+        // Πρόσθεσα και το "=== true" για σιγουριά, αν η βάση το επιστρέφει ως boolean.
+        if (decoded.admin_status === 1 || decoded.admin_status === true) {
             req.user = decoded;
             next();
         } else {

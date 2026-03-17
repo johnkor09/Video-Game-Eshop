@@ -15,23 +15,33 @@ export default function AdminCustomers() {
 
     useEffect(() => {
         const fetchCustomers = async () => {
-            setLoading(true);
-            setError(null);
+    setLoading(true);
+    setError(null);
 
-            try {
-                const url = 'http://localhost:4000/api/users';
+    try {
+        const url = 'http://localhost:4000/api/users';
+        
+        // 1. Πάρε το token
+        const token = localStorage.getItem('userToken'); 
 
-                const response = await axios.get(url);
-                setCustomers(response.data);
-
-            } catch (err) {
-                console.error("Failed to get customers data.", err);
-                setError("Πρόβλημα με τον server ή δεν βρέθηκαν πελάτες.");
-                setCustomers([]);
-            } finally {
-                setLoading(false);
+        // 2. Στείλε το στο header
+        const response = await axios.get(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
-        };
+        });
+        
+        setCustomers(response.data);
+
+    } catch (err) {
+        console.error("Failed to get customers data.", err);
+        // Αν το error είναι 401, σημαίνει ότι το token έληξε ή δεν είσαι admin
+        setError(err.response?.status === 401 ? "Δεν έχετε δικαιώματα πρόσβασης." : "Πρόβλημα με τον server.");
+        setCustomers([]);
+    } finally {
+        setLoading(false);
+    }
+};
         fetchCustomers();
     }, []);
 

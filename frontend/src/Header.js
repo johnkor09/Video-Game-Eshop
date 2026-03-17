@@ -25,7 +25,7 @@ export default function Header() {
                     {isLoggedIn ? (
                         <>
                             <div >
-                                {user.role ? (
+                                {user.admin_status ? (
                                     <>
                                         <GrUserAdmin className='button'
                                             onClick={() => navigate('/admin-panel/analytics')}
