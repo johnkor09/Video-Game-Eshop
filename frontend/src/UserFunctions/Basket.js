@@ -118,7 +118,13 @@ export default function Basket() {
         try {
             const api_url = 'http://localhost:4000/api/orders/new';
 
-            const response = await axios.post(api_url, { user,BasketProducts });
+            const response = await axios.post(api_url,
+                { user, BasketProducts },
+                {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                });
 
 
             if (response.data.success) {
