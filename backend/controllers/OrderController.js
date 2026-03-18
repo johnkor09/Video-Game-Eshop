@@ -54,7 +54,7 @@ exports.GetOrder = async (req, res) => {
             attributes: ['order_id', 'price', 'created_at', 'user_id'],
         });
 
-        if (orders.length === 0) {
+        if (order.length === 0) {
             return res.json({ success: false, message: 'No orders found for this user.' });
         }
 
