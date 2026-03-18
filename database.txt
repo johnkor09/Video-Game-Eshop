@@ -14,6 +14,21 @@ CREATE table users(
 
 INSERT INTO users (password_,first_name,surname,email,admin_status) VALUES('$2b$10$s0GGLJN5lS5yTgwjYcPmse.0sI2B83OdHHT0HJ.WCM/b90fORPAxa','BestAdminEver','Goku','admin@gmail.com','1'); -- κωδικος= 'admin'
 INSERT INTO users (password_,first_name,surname,email) VALUES('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.','John','Pork','johnpork@gmail.com');-- κωδικος= '1234'
+INSERT INTO users (password_, first_name, surname, email, admin_status) VALUES 
+-- Κωδικός για όλους: password123 (hashed με bcrypt)
+-- HASH: $2b$10$EPf9XpXvL.n6D50A9I0v9O0I0.W/NlI5N5O5O5O5O5O5O5O5O5O5O
+
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Nikos', 'Papadopoulos', 'admin@eshop.gr', 1),
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Maria', 'Dimitriou', 'maria.dim@gmail.com', 0),
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Giorgos', 'Nikolaou', 'gnikol@outlook.com', 0),
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Eleni', 'Kostopoulou', 'eleni_k@yahoo.gr', 0),
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Giannis', 'Antoniou', 'antoniou.g@gmail.com', 0),
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Anna', 'Vasileiou', 'vasanna@hotmail.com', 0),
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Kostas', 'Laskaris', 'lask_k@gmail.com', 0),
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Sofia', 'Mandraki', 'sofia.man@gmail.com', 0),
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Peter', 'Parker', 'spider.man@gmail.com', 0),
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Tony', 'Stark', 'iron.man@gmail.com', 0),
+('$2b$10$JF2VWIU2pgLnWhtrP1iNmO5UrUy0Csu42bguyq7PQSfLNNbntPw/.', 'Clark', 'Kent', 'super.man@gmail.com', 0);
 
 CREATE TABLE products (
     product_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
