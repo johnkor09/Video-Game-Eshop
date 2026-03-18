@@ -45,8 +45,8 @@ describe('Auth Middleware Tests', () => {
     });
 
     describe('checkAuthAndAdmin', () => {
-        it('θα πρέπει να επιστρέψει 403 αν ο χρήστης δεν είναι admin (role !== 1)', () => {
-            const userData = { id: 2, role: 0 }; // Απλός χρήστης
+        it('θα πρέπει να επιστρέψει 403 αν ο χρήστης δεν είναι admin (admin_status !== 1)', () => {
+            const userData = { id: 2, admin_status: 0 }; // Απλός χρήστης
             const token = jwt.sign(userData, JWT_SECRET);
             
             req.headers.authorization = `Bearer ${token}`;
@@ -56,8 +56,8 @@ describe('Auth Middleware Tests', () => {
             expect(res.json).toHaveBeenCalledWith({ message: 'Forbidden. Admin access required.' });
         });
 
-        it('θα πρέπει να καλέσει την next() αν ο χρήστης είναι admin (role === 1)', () => {
-            const adminData = { id: 1, role: 1 };
+        it('θα πρέπει να καλέσει την next() αν ο χρήστης είναι admin (admin_status === 1)', () => {
+            const adminData = { id: 1, admin_status: 1 };
             const token = jwt.sign(adminData, JWT_SECRET);
             
             req.headers.authorization = `Bearer ${token}`;

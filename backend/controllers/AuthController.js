@@ -62,8 +62,7 @@ exports.login = async (req, res) => {
         });
 
         if (user) {
-            console.log("=== BPHKA XPHSTH ===");
-            console.log("Admin Status:", user.admin_status, "| Τύπος:", typeof user.admin_status);
+            
             const isMatch = await bcrypt.compare(password, user.password_);
 
             if (isMatch) {
@@ -85,6 +84,7 @@ exports.login = async (req, res) => {
         }
         //αν δεν βρει χρηστη
         return res.status(401).json({
+            
             success: false,
             message: "Wrong email or password."
         });

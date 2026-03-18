@@ -24,4 +24,6 @@ router.delete('/products/:productId',
     AdminController.deleteProduct
 );
 
+router.get('/analytics', checkAuthAndAdmin, AdminController.GetAnalytics)
+
 module.exports = router;

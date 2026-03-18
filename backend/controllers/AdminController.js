@@ -7,6 +7,7 @@ const AccessoryModel = db.Accessory;
 const CollectibleModel = db.Collectible;
 const GameModel = db.Game;
 const ProductModel = db.Product;
+const OrderModel = db.Order;
 
 const UPLOAD_DIR = path.join(__dirname, '..', '..', 'frontend', 'public', 'product_images');
 
@@ -178,5 +179,40 @@ exports.updateProduct = async (req, res) => {
         if (t && !t.finished) await t.rollback();
         console.error("Update Error:", err);
         return res.status(500).json({ success: false, message: 'Database error during update.' });
+    }
+};
+
+exports.GetAnalytics = async (req, res) => {
+    try {
+        const now = new Date();
+        const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+
+        // Helper function για να παίρνουμε σύνολα
+        const getStats = async (startDate) => {
+            const result = await OrderModel.findAll({
+                where: startDate ? { created_at: { [Op.gte]: startDate } } : {},
+                attributes: [
+                    [sequelize.fn('SUM', sequelize.col('total_amount')), 'total_income'],
+                    [sequelize.fn('COUNT', sequelize.col('order_id')), 'total_sales']
+                ],
+                raw: true
+            });
+            return {
+                income: parseFloat(result[0].total_income || 0).toFixed(2),
+                sales: result[0].total_sales || 0
+            };
+        };
+
+        const weekly = await getStats(startOfWeek);
+        const monthly = await getStats(startOfMonth);
+        const annual = await getStats(startOfYear);
+        const total = await getStats(null); // Όλες οι παραγγελίες
+
+        res.json({ weekly, monthly, annual, total });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error fetching analytics');
     }
 };
